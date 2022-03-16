@@ -271,7 +271,7 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID)
+        public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
@@ -284,6 +284,10 @@ namespace PrototypeWithAuth.CRUD
                         var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
 
                         request.PaymentStatusID = (int)newStatus;
+                        if(newInstallmentAmt != null)
+                        {
+                            request.Installments = (uint)newInstallmentAmt;
+                        }
                         _context.Update(request);
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
@@ -302,6 +306,17 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
 
+        }
+        public async Task UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
+        {
+            var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
+            request.PaymentStatusID = (int)newStatus;
+            if(newInstallmentAmt != null)
+            {
+                request.Installments = (uint)newInstallmentAmt;
+            }
+            _context.Update(request);
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveFromInventoryAsync(int requestId)

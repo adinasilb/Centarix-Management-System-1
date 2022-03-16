@@ -67,7 +67,7 @@
 
                                         <label class="control-label">Sum</label>
                                         <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
+                                            <span class="input-group-text pr-1">&#x20aa;</span>
                                             <input value="@String.Format("{0:0.00}",CostShekel)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                     <div class="form-group">
                                         <label class="control-label"></label>
                                         <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
+                                            <span class="input-group-text pr-1">&#36;</span>
                                             <input value="@String.Format("{0:0.00}",CostDollar)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
@@ -85,7 +85,7 @@
                                     <div class="form-group">
                                         <label class=" control-label">Shipping</label>
                                         <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
+                                            <span class="input-group-text pr-1">&#x20aa;</span>
                                             <input value="@String.Format("{0:0.00}",ShippingTotalShekel)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
@@ -94,8 +94,8 @@
                                     <div class="form-group">
                                         <label class=" control-label"></label>
                                         <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
-                                            <input value="@String.Format("{0:0.00}", ShippingTotalShekel)" class="form-control-plaintext border-bottom" disabled />
+                                            <span class="input-group-text pr-1">&#36;</span>
+                                            <input value="@String.Format("{0:0.00}", ShippingTotalDollar)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +105,7 @@
                                         <div class="form-group">
                                             <label class="control-label">VAT</label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
+                                                <span class="input-group-text pr-1">&#x20aa;</span>
                                                 <input value="@String.Format("{0:0.00}",ShekelVAT)" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
@@ -115,7 +115,7 @@
 
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
+                                                <span class="input-group-text pr-1">&#36;</span>
                                                 <input value="@String.Format("{0:0.00}",DollarVAT)" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
@@ -124,31 +124,33 @@
                                         <div class="form-group">
                                             <label class=" control-label">Total + Shipping + VAT</label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input value="@String.Format("{0:0.00}", TotalShekel)" class="form-control-plaintext border-bottom" disabled />
+                                                <span class="input-group-text pr-1">&#x20aa;</span>
+                                                <input value="@String.Format("{0:0.00}", TotalShekel)" class="form-control-plaintext border-bottom total-shekel" disabled />
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-3">
                                         <label class=" control-label"></label>
                                         <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
-                                            <input value="@String.Format("{0:0.00}", TotalDollar)" class="form-control-plaintext border-bottom" disabled />
+                                            <span class="input-group-text pr-1">&#36;</span>
+                                            <input value="@String.Format("{0:0.00}", TotalDollar)" class="form-control-plaintext border-bottom total-dollar" disabled />
                                         </div>
                                     </div>
                                 </div>
                             <div class="row">
-                                <div class="input-group">
-                                    <input type="checkbox" asp-for="PartialPayment" id="partialPayment" class="form-check-input filled-in " />
-                                    <label class="form-check-label" asp-for="PartialPayment" id="partialPayment">Partial Payment</label>
-                                    <input type="hidden" asp-for="PartialPayment" />
+                                <div class="col-3 pl-0 ">
+                                    <div class="input-group pt-5">
+                                        <input type="checkbox" asp-for="PartialPayment" id="partialPayment" class="form-check-input filled-in " />
+                                        <label class="form-check-label" asp-for="PartialPayment" id="partialPayment">Partial Payment</label>
+                                    </div>
                                 </div>
-                                <div class="col-2">
-                                        <label class=" control-label d-none pay-now">Pay Now</label>
+                                <div class="col-3 pl-0">
+                                        <label class=" control-label d-none pay-partial">Pay Now</label>
                                         <div class="input-group">
-                                            <span class="input-group-text d-none pay-now">@Html.Raw(currencySymbol)</span>
-                                            <input asp-for="PartialAmtToPay" class="form-control-plaintext border-bottom d-none pay-now" disabled />
+                                            <span class="input-group-text d-none pay-partial pr-1">@Html.Raw(currencySymbol)</span>
+                                            <input asp-for="PartialAmtToPay" class="form-control-plaintext border-bottom d-none pay-partial" disabled />
                                             <input type="hidden" asp-for="PercentageToPay" value="1" />
+                                            <input type="hidden" asp-for="Payments.FirstOrDefault().Request.Currency" class="payment-currency"/>
                                         </div>
                                     </div>
                             </div>
@@ -265,18 +267,28 @@
         $('.payModalForm').on('click', "#partialPayment", function (e) {
         console.log("pay partial")
         if ($("#partialPayment:checkbox").is(":checked")) {
-            $(".pay-now").addClass("d-none")
+            $(".pay-partial").addClass("d-none")
+            $('#PartialAmtToPay').prop('disabled', true)
             $("#partialPayment:checkbox").prop("checked", false)
         }
         else {
-            $(".pay-now").removeClass("d-none")
+            $(".pay-partial").removeClass("d-none")
             $("#partialPayment:checkbox").prop("checked", true)
+            $('#PartialAmtToPay').prop('disabled', false)
         }
 
     });
     $('.payModalForm').on('change', '#PartialAmtToPay', function(e) {
-        $()
-    }
+        var total = $('.payment-currency').val() == 'NIS' ? '.total-shekel' : '.total-dollar';
+        console.log(total);
+        console.log($('.payment-currency').val());
+        console.log($(total).attr('value'))
+        //console.log($('.total-dollar').val())
+        console.log($('#PartialAmtToPay').val())
+        var percentage = $('#PartialAmtToPay').val() / $(total).attr('value')
+        console.log(percentage)
+        $('#PercentageToPay').val(percentage)
+    });
 
 </script>
 <script src="~/js/TermsModal.js"></script>

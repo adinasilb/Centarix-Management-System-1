@@ -76,11 +76,10 @@ namespace PrototypeWithAuth.CRUD
                     }
 
                     //var paymentsList =Read(new List<Expression<Func<Payment, bool>>> { p => p.IsPaid == false }).AsEnumerable();
-                    var totalPaidSoFar = 0m;
-                    foreach (Payment payment in paymentsPayModalViewModel.Payments)
+                    foreach (Payment vmPayment in paymentsPayModalViewModel.Payments)
                     {
                         //var requestToUpdate = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID });
-                        //Payment payment = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { p => p.RequestID == request.RequestID });
+                        Payment payment = await _paymentsProc.ReadOneAsync( new List<Expression<Func<Payment, bool>>> { p => p.PaymentID == vmPayment.PaymentID });
                         //if (requestToUpdate.PaymentStatusID == 7)
                         //{
                         //    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
@@ -114,22 +113,16 @@ namespace PrototypeWithAuth.CRUD
                         {
                             var fullCost = payment.Sum;
                             var paymentSum = fullCost * paymentsPayModalViewModel.PercentageToPay;
-                            payment.Sum = Math.Round(paymentSum, 2);
-                            totalPaidSoFar += payment.Sum;
-                            if(payment.PaymentID == paymentsPayModalViewModel.Payments.LastOrDefault().PaymentID)
-                            {
-                                var amtLeftToPay = paymentsPayModalViewModel.PartialAmtToPay - totalPaidSoFar; //if lost a cent or two by rounding, add it here
-                                payment.Sum += amtLeftToPay;
-                            }
+                            payment.Sum = Math.Round(paymentSum, 2);                            
                             var newPayment = new Payment()
                             {
                                 Sum = fullCost - paymentSum,
                                 PaymentDate = DateTime.Today,
-                                InstallmentNumber = 2, //what if already an installment?
+                                InstallmentNumber = 2,
                                 RequestID = payment.RequestID
                             };
                             _context.Add(newPayment);
-                            await _requestsProc.UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID);
+                            await _requestsProc.UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID, 2);
                         }
                         _context.Update(payment);
                     }

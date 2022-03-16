@@ -524,8 +524,15 @@ namespace PrototypeWithAuth.ViewModels
             var invoiceColumn = new List<StringWithBool>();
             try
             {
-                invoiceColumn.Add(new StringWithBool { String = "# " + payment.FirstOrDefault().Invoice.InvoiceNumber });
-                invoiceColumn.Add(new StringWithBool { String = payment.FirstOrDefault().Invoice.InvoiceDate.GetElixirDateFormat() });
+                if(!payment.FirstOrDefault().HasInvoice)
+                {
+                    invoiceColumn.Add(new StringWithBool { String = "N/A", Bool = false });
+                }
+                else
+                {
+                    invoiceColumn.Add(new StringWithBool { String = "# " + payment.FirstOrDefault().Invoice.InvoiceNumber });
+                    invoiceColumn.Add(new StringWithBool { String = payment.FirstOrDefault().Invoice.InvoiceDate.GetElixirDateFormat() });
+                }
             }
             catch(Exception ex)
             {
