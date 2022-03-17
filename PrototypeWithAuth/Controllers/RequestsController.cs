@@ -221,6 +221,13 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(addInvoiceIcon);
                             buttonText = "Add To All";
                             break;
+                        case AppUtility.SidebarEnum.MissingPaymentDetails:
+                            wheres.Add(r => r.Payments.Where(p=>p.IsPaid)
+                            .Where(p => p.PaymentReferenceDate == null/*TODO what is default?*/ || p.PaymentTypeID == null || p.CompanyAccountID == null
+                            || (p.CreditCardID == null || p.Reference == null || p.CheckNumber == null)).Count() > 0);
+                            checkboxString = "";
+                            iconList.Add(payNowIcon);
+                            break;
                     }
                     orderby = r => r.ParentRequest.OrderDate;
                     select = r => new RequestIndexPartialRowViewModel
