@@ -222,9 +222,9 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Add To All";
                             break;
                         case AppUtility.SidebarEnum.MissingPaymentDetails:
-                            wheres.Add(r => r.Payments.Where(p=>p.IsPaid)
-                            .Where(p => p.PaymentReferenceDate == null/*TODO what is default?*/ || p.PaymentTypeID == null || p.CompanyAccountID == null
-                            || (p.CreditCardID == null || p.Reference == null || p.CheckNumber == null)).Count() > 0);
+                            wheres.Add(r => r.Payments.Where(p => p.IsPaid &&
+                            (p.PaymentReferenceDate.Equals(new DateTime()) || p.PaymentTypeID == null || p.CompanyAccountID == null
+                            || (p.CreditCardID == null && p.Reference == null && p.CheckNumber == null))).Count() > 0);
                             checkboxString = "";
                             iconList.Add(payNowIcon);
                             break;
