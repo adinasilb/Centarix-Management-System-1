@@ -6,6 +6,8 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using System.Globalization;
+
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -437,14 +439,18 @@ namespace PrototypeWithAuth.ViewModels
             try
             {
                 decimal amount;
-                if(r.Currency.Equals(AppUtility.CurrencyEnum.NIS.ToString()))
+                string currencyFormat;
+                if (r.Currency.Equals(AppUtility.CurrencyEnum.NIS.ToString()))
                 {
                     amount = payments.FirstOrDefault().Sum;
-                } else
+                    currencyFormat = "he-il";
+                } 
+                else
                 {
                     amount = payments.FirstOrDefault().Sum / r.ExchangeRate;
+                    currencyFormat = "en-US";
                 }
-                return new List<StringWithBool>() { new StringWithBool { String = Math.Round(amount, 2).ToString() } };
+                return new List<StringWithBool>() { new StringWithBool { String = string.Format(new CultureInfo(currencyFormat), "{0:c}", Math.Round(amount, 2)), Bool = false } };
             }
             catch(Exception ex)
             {

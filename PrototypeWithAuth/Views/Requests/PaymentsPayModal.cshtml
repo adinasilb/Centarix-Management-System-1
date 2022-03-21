@@ -20,6 +20,38 @@
                 else
                 {
                     <input type="hidden" asp-for="AccountingEnum" />
+                    var header = "Pay " +Model.Payments.FirstOrDefault().Request.Product.Vendor.VendorEnName.ToLower();
+                    var paymentTypeDnone = Model.Payment.CompanyAccountID == null ? "d-none" : "";
+                    var dateDnone = "d-none";
+                    var cardNumDnone = "d-none";
+                    var cardNumDisabled = "disabled";
+                    var paymentReferenceDnone = "d-none";
+                    var paymentReferenceDisabled = "disabled";
+                    var checkNumDnone = "d-none";
+                    var checkNumDisabled = "disabled";
+                    switch (Model.Payment.PaymentTypeID)
+                    {
+                        case 1:
+                            cardNumDnone = "";
+                            cardNumDisabled = "";
+                            paymentReferenceDnone = "";
+                            paymentReferenceDisabled = "";
+                            break;
+                        case 2:
+                            dateDnone = "";
+                            checkNumDnone = "";
+                            checkNumDisabled = "";
+                            break;
+                        case 3:
+                            dateDnone = "";
+                            paymentReferenceDnone = "";
+                            paymentReferenceDisabled = "";
+                            break;
+                    }
+                    if(Model.AccountingEnum == AppUtility.SidebarEnum.MissingPaymentDetails)
+                    {
+                        header = "Update Payment Details";
+                    }
                     @for (int i = 0; i < Model.Payments.Count; i++)
                     {
                         <input type="hidden" asp-for="Payments[i].PaymentID" />
@@ -31,7 +63,7 @@
                         <div class="container ">
                             <div class="row modal-header-padding">
                                 <div class="col-6">
-                                    <span class="heading-1">Pay @Model.Payments.FirstOrDefault().Request.Product.Vendor.VendorEnName.ToLower()</span>
+                                    <span class="heading-1">@header</span>
                                 </div>
                                 <hr />
                                 @{
@@ -137,23 +169,26 @@
                                         </div>
                                     </div>
                                 </div>
-                            <div class="row">
-                                <div class="col-3 pl-0 ">
-                                    <div class="input-group pt-5">
-                                        <input type="checkbox" asp-for="PartialPayment" id="partialPayment" class="form-check-input filled-in " />
-                                        <label class="form-check-label" asp-for="PartialPayment" id="partialPayment">Partial Payment</label>
-                                    </div>
-                                </div>
-                                <div class="col-3 pl-0">
-                                        <label class=" control-label d-none pay-partial">Pay Now</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text d-none pay-partial pr-1">@Html.Raw(currencySymbol)</span>
-                                            <input asp-for="PartialAmtToPay" class="form-control-plaintext border-bottom d-none pay-partial" disabled />
-                                            <input type="hidden" asp-for="PercentageToPay" value="1" />
-                                            <input type="hidden" asp-for="Payments.FirstOrDefault().Request.Currency" class="payment-currency"/>
+                                @if(Model.AccountingEnum == AppUtility.SidebarEnum.PayNow) //confirm which sections should show in
+                            {
+                                <div class="row">
+                                    <div class="col-3 pl-0 ">
+                                        <div class="input-group pt-5">
+                                            <input type="checkbox" asp-for="PartialPayment" id="partialPayment" class="form-check-input filled-in " />
+                                            <label class="form-check-label" asp-for="PartialPayment" id="partialPayment">Partial Payment</label>
                                         </div>
                                     </div>
-                            </div>
+                                    <div class="col-3 pl-0">
+                                            <label class=" control-label d-none pay-partial">Pay Now</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text d-none pay-partial pr-1">@Html.Raw(currencySymbol)</span>
+                                                <input asp-for="PartialAmtToPay" class="form-control-plaintext border-bottom d-none pay-partial" disabled />
+                                                <input type="hidden" asp-for="PercentageToPay" value="1" />
+                                                <input type="hidden" asp-for="Payments.FirstOrDefault().Request.Currency" class="payment-currency"/>
+                                            </div>
+                                        </div>
+                                </div>
+                            }
                             <div class="row ">
                                 <div class="col-3 pl-0">
                                     <div class="payment-type form-group">
@@ -168,7 +203,7 @@
                                     </div>
                                 </div>
                                 <div class="col-3">
-                                    <div class="payment-type form-group d-none">
+                                    <div class="payment-type form-group @paymentTypeDnone">
                                         <label class="control-label">Payment Type</label>
                                         @Html.DropDownListFor(vm => vm.Payment.PaymentTypeID,
                                             new SelectList(
@@ -179,30 +214,30 @@
                                             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
                                     </div>
                                 </div>
-                                <div class="col-3 credit-card d-none">
+                                <div class="col-3 credit-card @cardNumDnone">
                                     <div class="form-group ">
                                         <label class="control-label credit-card d-none">Card #</label>
-                                        <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " disabled asp-for="Payment.CreditCardID"></select>
+                                        <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist "  name="Payment.CreditCardID" value = "@Model.Payment.CreditCardID" id="Payment_CreditCardID" @cardNumDisabled></select>
                                     </div>
                                 </div>
                                 <div class="col-3 pl-0">
-                                    <div class="form-group payment-date d-none">
+                                    <div class="form-group payment-date @dateDnone">
                                         <label class="control-label wire d-none">Transfer Date</label>
                                         <label class="control-label credit-card">Reference Date</label>
                                         <label class="control-label bank-check d-none">Cash Out Date</label>
                                         <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@((Model.Payment.PaymentReferenceDate != new DateTime()) ? Model.Payment.PaymentReferenceDate.ToShortDateString() : "")" />
                                     </div>
                                 </div>
-                                <div class="col-3 wire d-none">
+                                <div class="col-3 wire @paymentReferenceDnone">
                                     <div class="form-group ">
                                         <label class="control-label">Payment Reference</label>
-                                        <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
+                                        <input  type="text"  name="Payment.Reference" class="form-control-plaintext border-bottom reference-1" value="@Model.Payment.Reference" id="Payment_Reference" @paymentReferenceDisabled/>
                                     </div>
                                 </div>
-                                <div class="col-3 bank-check d-none">
+                                <div class="col-3 bank-check @checkNumDnone">
                                     <div class="form-group ">
                                         <label class="control-label">Check Number</label>
-                                        <input class="form-control-plaintext border-bottom" type="text" disabled asp-for="Payment.CheckNumber" />
+                                        <input class="form-control-plaintext border-bottom"  type="text"  name="Payment.CheckNumber" value="@Model.Payment.CheckNumber" id="Payment_CheckNumber" @checkNumDisabled/>
                                     </div>
                                 </div>
                             </div>
