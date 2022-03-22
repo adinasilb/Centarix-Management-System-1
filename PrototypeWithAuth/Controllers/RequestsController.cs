@@ -4219,7 +4219,10 @@ namespace PrototypeWithAuth.Controllers
                 },
                 Guid = Guid.NewGuid(),
                 Error = Error,
-                Vendor = vendor
+                Vendor = vendor,
+                PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
+                CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
+
             };
             return PartialView(addInvoiceViewModel);
         }
