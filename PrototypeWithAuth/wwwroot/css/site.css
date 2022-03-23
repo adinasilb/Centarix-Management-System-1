@@ -3305,3 +3305,7 @@ input[type=text]#search {
     background-position: 95%;
     filter: grayscale(100%)
 }
+
+.css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+    color: var(--opac-87) !important;
+}

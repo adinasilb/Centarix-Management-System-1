@@ -1051,3 +1051,6 @@ body .icon-more-popover {
     background-color: var(--biomarkers-25);
 }
 
+.btn-filter-style {
+    border-radius: 0.5rem;
+}

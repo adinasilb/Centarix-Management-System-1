@@ -44,6 +44,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json.Converters;
+using PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -1468,6 +1469,47 @@ namespace PrototypeWithAuth.Controllers
             return Json(json);
         }
 
+
+        [HttpGet]
+        [HttpPost]
+        public async Task<JsonResult> GetIndexTableJson(string indexTableJsonViewModelString)
+        {
+            var indexTableJsonViewModel = JsonConvert.DeserializeObject<IndexTableJsonViewModel>(indexTableJsonViewModelString);
+            string json = "";
+            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabInfo.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType };
+            var selectedFilters = new SelectedRequestFilters
+            {
+                SelectedVendorsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedVendors.Select(v => v.VendorID).ToList(),
+                SelectedOwnersIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedOwners.Select(v => v.Id).ToList(),
+                SelectedCategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedCategories.Select(v => v.ID).ToList(),
+                SelectedLocationsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedLocations.Select(v => v.LocationTypeID).ToList(),
+                SelectedSubcategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedSubcategories.Select(v => v.ID).ToList()
+            };
+            if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
+            {
+                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
+                json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
+            else
+            {
+                var viewModel = await GetIndexViewModel(requestIndexObject, new List<int>(), new List<int>(), selectedFilters: selectedFilters, indexTableJsonViewModel.InventoryFilterViewModel.NumFilters, requestsSearchViewModel: null);
+                json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
+                   new JsonSerializerSettings
+                   {
+                       Converters = new List<JsonConverter> { new StringEnumConverter() },
+                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                   });
+            }
+
+            return Json(json);
+        }
+
+
         private bool CheckIfIndexTableByVendor(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarType)
         {
             bool isByVendor = false;
@@ -2108,11 +2150,12 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
-                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
+                    tempRequestListViewModel.RequestIndexObject.TabValue = AppUtility.IndexTabs.Requests.ToString(); //redirect to requests instead of received
                 }
                 else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
-                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 6; //redirect to requests instead of received
+                    tempRequestListViewModel.RequestIndexObject.TabValue = AppUtility.IndexTabs.Requests.ToString(); //redirect to requests instead of received
+
                 }
 
                 var action = "UploadQuoteModal"; //for order now and add to cart
@@ -2559,7 +2602,7 @@ namespace PrototypeWithAuth.Controllers
 
                     }
 
-                    tempRequestListViewModel.RequestIndexObject.RequestStatusID = 2;
+                    tempRequestListViewModel.RequestIndexObject.TabValue = AppUtility.IndexTabs.Ordered.ToString();
                     tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
                 }
                 catch (Exception ex)
@@ -4911,7 +4954,7 @@ namespace PrototypeWithAuth.Controllers
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
-            requestIndexObject.ListID = newList.ListID;
+            requestIndexObject.TabValue = newList.ListID.ToString();
             if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
                 return await GetIndexTableJson(requestIndexObject);

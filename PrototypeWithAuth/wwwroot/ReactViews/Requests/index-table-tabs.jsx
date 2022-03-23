@@ -1,47 +1,44 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom'
-import _IndexTableData from './index-table-data.jsx'
-import * as Routes from '../Constants/Routes.jsx'
+﻿import React, { useEffect, useRef, } from 'react';
 import { useDispatch, connect } from 'react-redux';
 import { ajaxPartialIndexTable } from '../Utility/root-function.jsx'
+import IndexFilter from './index-filter.jsx'
+import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 
-export default function _IndexTableTabs(props) {
+
+function _IndexTableTabs(props) {
     console.log("indextable tabs")
-    const location = useLocation();
     const dispatch = useDispatch();
-    const didMount = useRef(false);
-
-    useEffect(() => {
-        if (didMount.current) {
-            alert("in pagenumber use effect");
-            document.getElementById("loading").style.display = "block";
-            document.getElementsByClassName('page-number')[0].value = props.pageNumber
-            document.getElementsByClassName('tab-name')[0].value = props.selectedTab
-            ajaxPartialIndexTable(dispatch, "/Requests/GetIndexTableJson", "GET")
-        } else {
-            didMount.current = true;
-        }
-
-    }, [props.pageNumber, props.selectedTab]);
     return (      
-        <div>
+        <div>{props.viewModel?.tabs != null ?
             <div className="item-table">
-                        <ul className="pl-0">
-                            {props.tabs.map((t,i) => (
-                                <li key={i } className={"list-inline-item m-0"}>
-                                    <Link to={{
-                                        pathname: Routes.INDEX_TABLE_TABS,
-                                        state: { tabValue: t.TabValue, pageNumber: location.state?.pageNumber ?? "1" }
-                                    }} className={" new-button " + (props.selectedTab == t.TabValue ? " active " : " ")} data-val="3" href="#"><i className="new-icon icon-centarix-icons-04"></i>  <label className="new-button-text">{ t.TabName}</label> </Link>
-                                </li>
-                            ))}
-                    </ul>
+                <ul className="pl-0">
+                    {props.viewModel?.tabs.map((t, i) => (
+                        <li key={t.TabValue} className={"list-inline-item m-0"}>
+                            <div variant="text" className={" new-button" + (props.viewModel.tabValue == t.TabValue ? " active " : " ")} onClick={() => {
+                                dispatch(Actions.setTabInfo(t.TabValue));
+                            }} ><i className="new-icon icon-centarix-icons-04"></i>  <label className="new-button-text">{t.TabValue}</label> </div>
+                        </li>
+                    ))}
+                    {props.navigationInfo.sideBarType != "Search " ?
+                        <li className="list-inline-item m-0">
+                            <IndexFilter />
+                        </li>
+                        : ""}
+                </ul>
             </div>
-
-        <div>
-                <_IndexTableData key={"indexTableData"} pageNumber={location.state?.pageNumber ?? "1"} />
-        </div>
+            : ""}
    </div>
         )
 }
 
+const mapStateToProps = state => {
+    console.log("mstp tabs")
+    return {
+        viewModel: state.tabInfo,
+        navigationInfo: state.navigationInfo
+    };
+};
+
+export default connect(
+    mapStateToProps
+)(_IndexTableTabs)

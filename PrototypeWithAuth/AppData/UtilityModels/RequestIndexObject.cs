@@ -12,8 +12,7 @@ namespace PrototypeWithAuth.AppData
         //do not put any extra complex objects into this class
         public string ErrorMessage { get; set; }
         private int _PageNumber;
-        private int _RequestStatusID;
-        private AppUtility.IndexTabs _TabName;
+        private string _TabValue;
         private List<string> _SelectedPriceSort;
         private AppUtility.PageTypeEnum _PageType;
         public int PageNumber
@@ -30,29 +29,6 @@ namespace PrototypeWithAuth.AppData
                 }
             }
             set { _PageNumber = value; }
-        }
-        public int RequestStatusID
-        {
-            get
-            {
-                if (_RequestStatusID == 0 && (PageType == AppUtility.PageTypeEnum.RequestSummary || PageType == AppUtility.PageTypeEnum.OperationsInventory))
-                {
-                    return 3;
-                }
-                else if (_RequestStatusID == 0 && PageType == AppUtility.PageTypeEnum.OperationsRequest)
-                {
-                    return 2;
-                }
-                else if (_RequestStatusID == 0)
-                {
-                    return 6;
-                }
-                else
-                {
-                    return _RequestStatusID;
-                }
-            }
-            set { _RequestStatusID = value; }
         }
         private AppUtility.SidebarEnum _SidebarType;
         public AppUtility.SidebarEnum SidebarType
@@ -118,25 +94,24 @@ namespace PrototypeWithAuth.AppData
         //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
         public AppUtility.ModalType ModalType { get; set; }
 
-        public int ListID { get; set; }
-        public AppUtility.IndexTabs TabName
+        public string TabValue
         {
             get
             {
-                if (_TabName == AppUtility.IndexTabs.None && PageType == AppUtility.PageTypeEnum.RequestSummary)
+                if (_TabValue ==null && PageType == AppUtility.PageTypeEnum.RequestSummary)
                 {
-                    return AppUtility.IndexTabs.Main;
+                    return AppUtility.IndexTabs.Main.ToString();
                 }
-                else if (_TabName == AppUtility.IndexTabs.None)
+                else if (_TabValue == null)
                 {
-                    return AppUtility.IndexTabs.Requests;
+                    return AppUtility.IndexTabs.Requests.ToString();
                 }
                 else
                 {
-                    return _TabName;
+                    return _TabValue;
                 }
             }
-            set { _TabName = value; }
+            set { _TabValue = value; }
         }
     }
 }
