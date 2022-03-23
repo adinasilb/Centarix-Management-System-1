@@ -4616,8 +4616,6 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.Guids.LastOrDefault());
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuote, tempRequestListViewModel.Guids.LastOrDefault());
-                //await _tempRequestJsonsProc.RemoveAllAsync(tempRequestListViewModel.Guids, _userManager.GetUserId(User));
                 return new EmptyResult();
             }
 

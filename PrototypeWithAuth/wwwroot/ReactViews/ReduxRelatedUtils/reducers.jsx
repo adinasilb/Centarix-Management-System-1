@@ -9,10 +9,9 @@ export default combineReducers({
     navigationInfo: (state = {}, action) => {
         return state;
     },
-    tempRequestJson: tempRequestJsonReducer,
     categoryPopoverViewModel: categoryPopoverReducer,
     pricePopoverViewModel: pricePopoverReducer,
     tabInfo: tabInfoReducer,
-    inventoryFilterViewModel: inventoryFilterReducer
+    inventoryFilterViewModel: inventoryFilterReducer,
     tempRequestList: tempRequestReducer
 })

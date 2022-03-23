@@ -88,7 +88,20 @@ function TermsModal(props) {
     };
 
     var onSubmit = (data, e) => {
+        var url = "/Requests/UploadQuoteModal";
+        var formData = new FormData()
+        
+        formData.append(data.ParentQuote)
+        console.log(formData)
+        fetch(url, {
+            method: "POST",
+            body: formData
+        })
+            .then((response) => { return response.json(); })
+            .then(result => {
 
+                //dispatch(Actions.removeModal(ModalKeys.terms modal));
+            });
 
     }
 
