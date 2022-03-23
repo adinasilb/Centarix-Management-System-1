@@ -6,6 +6,8 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using System.Globalization;
+
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -187,8 +189,8 @@ namespace PrototypeWithAuth.ViewModels
                     Columns = GetAccountingNotificationsColumns().ToList();
                     break;
                 case AppUtility.IndexTableTypes.AccountingPaymentsInstallments:
-                    //Columns = GetAccountingPaymentsInstallmentsColumns().ToList();
-                    //break;
+                    Columns = GetAccountingPaymentsInstallmentsColumns().ToList();
+                    break;
                 case AppUtility.IndexTableTypes.AccountingPaymentsDefault:
                     Columns = GetAccountingPaymentsDefaultColumns().ToList();
                     break;
@@ -399,7 +401,7 @@ namespace PrototypeWithAuth.ViewModels
         {
             try
             {
-                if (r.OrderMethod.DescriptionEnum.ToString() == AppUtility.OrderMethod.Save.ToString())
+                if (r.OrderMethod?.DescriptionEnum?.ToString() == AppUtility.OrderMethod.Save.ToString())
                 {
                     return new List<StringWithBool>() { new StringWithBool { String = "Centarix", Bool = false } };
                 }
@@ -432,6 +434,29 @@ namespace PrototypeWithAuth.ViewModels
                 return new List<StringWithBool>() { new StringWithBool { String = "installment number has an error", Bool = true } };
             }
         }*/
+        private List<StringWithBool> GetInstallmentAmount()
+        {
+            try
+            {
+                decimal amount;
+                string currencyFormat;
+                if (r.Currency.Equals(AppUtility.CurrencyEnum.NIS.ToString()))
+                {
+                    amount = payments.FirstOrDefault().Sum;
+                    currencyFormat = "he-il";
+                } 
+                else
+                {
+                    amount = payments.FirstOrDefault().Sum / r.ExchangeRate;
+                    currencyFormat = "en-US";
+                }
+                return new List<StringWithBool>() { new StringWithBool { String = string.Format(new CultureInfo(currencyFormat), "{0:c}", Math.Round(amount, 2)), Bool = false } };
+            }
+            catch(Exception ex)
+            {
+                return new List<StringWithBool>() { new StringWithBool { String = "installment price has an error", Bool = true } };
+            }
+        }
         private List<StringWithBool> GetStatusColumn()
         {
             var statusColumn = new List<StringWithBool>();
@@ -524,8 +549,15 @@ namespace PrototypeWithAuth.ViewModels
             var invoiceColumn = new List<StringWithBool>();
             try
             {
-                invoiceColumn.Add(new StringWithBool { String = "# " + payment.FirstOrDefault().Invoice.InvoiceNumber });
-                invoiceColumn.Add(new StringWithBool { String = payment.FirstOrDefault().Invoice.InvoiceDate.GetElixirDateFormat() });
+                if(!payment.FirstOrDefault().HasInvoice)
+                {
+                    invoiceColumn.Add(new StringWithBool { String = "N/A", Bool = false });
+                }
+                else
+                {
+                    invoiceColumn.Add(new StringWithBool { String = "# " + payment.FirstOrDefault().Invoice.InvoiceNumber });
+                    invoiceColumn.Add(new StringWithBool { String = payment.FirstOrDefault().Invoice.InvoiceDate.GetElixirDateFormat() });
+                }
             }
             catch(Exception ex)
             {
@@ -854,16 +886,10 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID,
                 ShowTooltip = true
             };
-            yield return new RequestIndexPartialColumnViewModel()
-            {
-                Title = "Category",
-                Width = 11,
-                ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected,
-                                                                    r.Product),
-                FilterEnum = AppUtility.FilterEnum.Category,
-                ShowTooltip = true
-            };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, ValueWithError = AppUtility.GetAmountColumn(r) };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, ValueWithError = GetVendorName() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "Price",
@@ -872,6 +898,7 @@ namespace PrototypeWithAuth.ViewModels
                                                                     requestIndexObject.SelectedCurrency),
                 FilterEnum = AppUtility.FilterEnum.Price
             };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Current Payment", Width = 12, ValueWithError = GetInstallmentAmount() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Payment Date", Width = 12, ValueWithError = GetPaymentDate() };
             yield return new RequestIndexPartialColumnViewModel()
             {
@@ -882,7 +909,6 @@ namespace PrototypeWithAuth.ViewModels
                 //AjaxID = r.RequestID
             };
         }
-
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLabQuotesColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 3, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString } }, AjaxID = r.RequestID };

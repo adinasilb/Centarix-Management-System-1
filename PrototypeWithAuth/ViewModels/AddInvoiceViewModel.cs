@@ -18,5 +18,10 @@ namespace PrototypeWithAuth.Models
         public Guid Guid { get; set; }
         public StringWithBool Error { get; set; }
         public Vendor Vendor { get; set; }
+        public bool Paid { get; set; }
+        public Payment Payment { get; set; }
+        public IEnumerable<PaymentType> PaymentTypes { get; set; }
+        public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
+
     }
 }

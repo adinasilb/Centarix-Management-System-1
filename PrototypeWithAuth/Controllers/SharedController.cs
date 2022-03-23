@@ -1006,8 +1006,8 @@ namespace PrototypeWithAuth.Controllers
                  ///REMEMBER TO IGNORE QUERY FILTERS
                 wheres.Clear();
                 //we need both categories
-                wheres.Add(r => r.RequestStatusID == 3);
-                wheres.Add(r => !r.IsClarify && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count());
+                wheres.Add(r => r.RequestStatusID == 3 || r.RequestStatusID == 2);
+                //wheres.Add(r => !r.IsClarify && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count());
                 wheres.Add(r => Years.Contains(r.ParentRequest.OrderDate.Year));
                 if (Months != null && Months.Count() > 0)
                 {

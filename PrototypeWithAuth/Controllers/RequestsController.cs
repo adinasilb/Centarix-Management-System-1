@@ -222,6 +222,13 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(addInvoiceIcon);
                             buttonText = "Add To All";
                             break;
+                        case AppUtility.SidebarEnum.MissingPaymentDetails:
+                            wheres.Add(r => r.Payments.Where(p => p.IsPaid &&
+                            (p.PaymentReferenceDate.Equals(new DateTime()) || p.PaymentTypeID == null || p.CompanyAccountID == null
+                            || (p.CreditCardID == null && p.Reference == null && p.CheckNumber == null))).Count() > 0);
+                            checkboxString = "";
+                            iconList.Add(payNowIcon);
+                            break;
                     }
                     orderby = r => r.ParentRequest.OrderDate;
                     select = r => new RequestIndexPartialRowViewModel
@@ -248,7 +255,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case AppUtility.SidebarEnum.Installments:
                         case AppUtility.SidebarEnum.StandingOrders:
-                            payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
+                            //payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
                             checkboxString = "";
                             iconList.Add(payNowIcon);
 
@@ -3921,7 +3928,7 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
-                    wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false)
+                    wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ /*&& r.Payments.FirstOrDefault().HasInvoice*/ && r.Payments.FirstOrDefault().IsPaid == false)
                     || (
                           (r.PaymentStatusID == 5/*installments*/ || r.PaymentStatusID == 7/*standingorder*/ || r.Product is RecurringOrder)
                           && r.Payments.Where(p => ((p.PaymentDate.Month <= DateTime.Today.Month && p.PaymentDate.Year == DateTime.Today.Year) || p.PaymentDate.Year < DateTime.Today.Year) && p.IsPaid == false).Count() > 0)
@@ -3938,8 +3945,8 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     wheres.Add(r => r.PaymentStatusID == 5);
-                    wheres.Add(r => r.Payments.Where(p => p.IsPaid == false && p.HasInvoice && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-                    paymentWheres = p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5);
+                    //wheres.Add(r => r.Payments.Where(p => p.IsPaid == false && p.HasInvoice && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    paymentWheres = p => p.IsPaid == false /*&& p.PaymentDate < DateTime.Now.AddDays(5)*/;
                     requestPaymentList = GetPaymentsForEachRequest(wheres, includes, paymentWheres);
                     return requestPaymentList;
                     break;
@@ -4067,7 +4074,7 @@ namespace PrototypeWithAuth.Controllers
                 Payments = payments,
                 //Requests = requestsToPay,
                 AccountingEnum = accountingPaymentsEnum,
-                Payment = payments.FirstOrDefault(), //so if has payment details, will show up
+                Payment = payments.FirstOrDefault(), //so if has payment details (standing order), will show up
                 PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
                 CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
                 ShippingToPay = await GetShippingsToPay(payments),
@@ -4255,7 +4262,10 @@ namespace PrototypeWithAuth.Controllers
                 },
                 Guid = Guid.NewGuid(),
                 Error = Error,
-                Vendor = vendor
+                Vendor = vendor,
+                PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
+                CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
+
             };
             return PartialView(addInvoiceViewModel);
         }

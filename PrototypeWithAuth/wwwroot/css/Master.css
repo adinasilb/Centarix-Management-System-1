@@ -672,6 +672,36 @@ table td, table td .btn, .text, table th {
     border: .125rem solid var(--income-color) !important;
     color: var(--income-color)
 }
+.Requests .section-font-color {
+    color: var(--order-inv-color)
+}
+.TimeKeeper .section-font-color {
+    color: var(--timekeeper-color)
+}
+.Accounting .section-font-color {
+    color: var(--acc-color)
+}
+.Operations .section-font-color {
+    color: var(--operations-color)
+}
+.Biomarkers .section-font-color {
+    color: var(--biomarkers-color)
+}
+.Users .section-font-color {
+    color: var(--user-color)
+}
+.Protocols .section-font-color {
+    color: var(--protocols-color)
+}
+.Income .section-font-color {
+    color: var(--income-color)
+}
+.Reports .section-font-color {
+    color: var(--expense-color)
+}
+.LabManagement .section-font-color {
+    color: var(--lab-man-color)
+}
 
 .new-modal-body .row,
 .modal-body .row,
