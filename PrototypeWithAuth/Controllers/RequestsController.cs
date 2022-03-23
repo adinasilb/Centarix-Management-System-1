@@ -1483,7 +1483,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var indexTableJsonViewModel = JsonConvert.DeserializeObject<IndexTableJsonViewModel>(indexTableJsonViewModelString);
             string json = "";
-            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabInfo.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType };
+            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabInfo.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, PageNumber = indexTableJsonViewModel.PageNumber };
             var selectedFilters = new SelectedRequestFilters
             {
                 SelectedVendorsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedVendors.Select(v => v.VendorID).ToList(),

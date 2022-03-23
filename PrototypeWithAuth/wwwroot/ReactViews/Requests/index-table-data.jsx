@@ -10,18 +10,6 @@ function _IndexTableData(props) {
     var viewModel = props.viewModel;
     const dispatch = useDispatch();
     const didMount = useRef(false);
-    const history = useHistory();
-    useEffect(() => {
-       alert("in use effect data")
-        if (didMount.current) {
-            alert("in pagenumber use effect");
-            document.getElementById("loading").style.display = "block";
-            ajaxPartialIndexTable(dispatch, "/Requests/GetIndexTableJson", "GET")
-        } else {
-            didMount.current = true;
-        }
-
-    }, [props.viewModel.PageNumber]);
         return (
             <div key="indexTableDataDiv">               
                 <div style={{ position: "absolute", left: "13rem", top: "6rem", zIndex: "1000" }}><span className="text danger-text error-msg"></span></div>
@@ -47,8 +35,7 @@ function _IndexTableData(props) {
                                         {viewModel.PageNumbersToShow.map((v, i) => (
                                             <li key={v.Value} className={v.Classes}>
                                                 <Button size="sm" className="page-link" variant="text" onClick={() => {
-                                                    viewModel.PageNumber = v.Value;
-                                                    dispatch(Actions.setIndexTableViewModel(viewModel));
+                                                    dispatch(Actions.setPageNumber(v.Value));
                                                 }} > {v.Value}</Button>
                                             </li>
                                                 ))

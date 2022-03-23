@@ -16,7 +16,7 @@ export default function IndexFilter(props) {
 
                             <div >
 
-                                <input type="text" placeholder="Search" className="text  custom-button  section-outline-color mx-3 search-by-name" />
+                                <input type="text" placeholder="Search" className="text filter-and-search  custom-button  section-outline-color mx-3 search-by-name" />
                                 <button type="button" aria-describedby="filterPopover"
                                     className={"text custom-button " + buttonClass} value="Filter"   {...bindTrigger(popupState)}>
                                     Filter
@@ -32,7 +32,7 @@ export default function IndexFilter(props) {
 
 
 
-                                    <IndexFiterResults popupState={popupState} />
+                                    <IndexFiterResults  popupState={popupState} />
 
 
                                 </Popover>

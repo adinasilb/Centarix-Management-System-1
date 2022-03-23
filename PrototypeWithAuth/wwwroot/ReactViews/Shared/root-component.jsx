@@ -16,7 +16,8 @@ export default function RootComponent(props) {
         categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel },
         tabInfo: {
             tabValue: props.viewModel?.TabValue, tabs: [ ...props.viewModel?.Tabs]},
-        inventoryFilterViewModel: { ...props.viewModel?.InventoryFilterViewModel }
+        inventoryFilterViewModel: { ...props.viewModel?.InventoryFilterViewModel },
+        pageNumber: props.viewModel.PageNumber
     }, composeWithDevTools());
     const Scripts = lazy(() => import('../scripts.jsx'));  
     const App = lazy(() => import('./app.jsx'));
