@@ -7,6 +7,7 @@
     "build": "rimraf wwwroot/dist && webpack"
   },
   "dependencies": {
+    "@date-io/date-fns": "^2.13.1",
     "@fortawesome/fontawesome-free": "^6.0.0",
     "@hookform/devtools": "^4.0.2",
     "@hookform/error-message": "^2.0.0",
@@ -22,9 +23,11 @@
     "babel-plugin-direct-import": "^1.0.0",
     "babel-plugin-import": "^1.13.3",
     "css-loader": "^5.2.7",
+    "date-fns": "^2.28.0",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
     "isomorphic-style-loader": "^5.3.2",
+    "material-ui-chip-input": "^2.0.0-beta.2",
     "mdb-react-ui-kit": "file:MDB-React-Pro/mdb-react-ui-kit-2.4.0.tgz",
     "mdbreact": "file:MDB-React-Pro/mdbreact-5.0.1.tgz",
     "mini-css-extract-plugin": "^1.6.2",

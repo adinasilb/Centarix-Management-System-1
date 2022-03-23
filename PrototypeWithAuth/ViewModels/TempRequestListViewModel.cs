@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class TempRequestListViewModel
     {
-        public Guid GUID { get; set; }
+        public List<Guid> Guids { get; set; }
         public int SequencePosition { get; set; }
         public List<TempRequestViewModel> TempRequestViewModels { get; set; }
         public RequestIndexObject RequestIndexObject { get; set; }
