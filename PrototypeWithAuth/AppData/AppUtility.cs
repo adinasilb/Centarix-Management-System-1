@@ -71,6 +71,8 @@ namespace PrototypeWithAuth.AppData
             StandingOrders,
             [Display(Name = "No Invoice")]
             NoInvoice,
+            [Display(Name = "Missing Payment Details")]
+            MissingPaymentDetails,
             [Display(Name = "Didn't Arrive")]
             DidntArrive,
             [Display(Name = "Partial Delivery")]

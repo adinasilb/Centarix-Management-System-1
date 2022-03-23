@@ -7,25 +7,20 @@ import FloatingActionBar from '../Requests/floating-action-bar.jsx';
 export default function App(props) {
     const location = useLocation();
     const history = useHistory();
-
+    console.log("app")
     useEffect(() => {
         history.push(props.viewEnum);
     }, [props.viewEnum]);
     return (
 
-        <div>
-            
-            {console.log("app view Model")}
-            {console.log(props.viewModel)}
-            <FloatingActionBar showFloatingActionBar={false} />
-            
+        <div>           
+            <FloatingActionBar showFloatingActionBar={false} />            
             <Switch >
-                <Route path={Routes.INDEX_TABLE_DATA} render={(innerProps) => <PageLoader {...innerProps} pageNumber={location.state?.pageNumber ?? "1"} viewEnum={props.viewEnum} />} />
-                <Route path={Routes.INDEX_TABLE_TABS} render={(innerProps) => <PageLoader {...innerProps} pageNumber={location.state?.pageNumber ?? "1"} viewEnum={props.viewEnum} tabs={props.viewModel.Tabs}  selectedTab={location.state?.selectedTab ?? props.viewModel.TabName} />} />
+                <Route path={Routes.INDEX_TABLE} render={(innerProps) => <PageLoader {...innerProps} viewEnum={props.viewEnum} />} />
+    
                 <Route path={Routes.INDEX_TABLE_DATA_BY_VENDOR} render={(innerProps) => <PageLoader {...innerProps} viewEnum={props.viewEnum} />} />
-                <Route path={Routes.SETTINGS_INVENTORY} render={(innerProps) => <PageLoader {...innerProps} viewModel={props.viewModel} viewEnum={props.viewEnum} />} />
-                <Route path={Routes.ORDER_TAB} render={(innerProps) => <PageLoader  {...innerProps} viewModel={props.viewModel} viewEnum={props.viewEnum} />} />
-
+                <Route path={Routes.SETTINGS_INVENTORY} render={(innerProps) => <PageLoader {...innerProps} viewEnum={props.viewEnum} />} />
+                <Route path={Routes.ORDER_TAB} render={(innerProps) => <PageLoader  {...innerProps}  viewEnum={props.viewEnum} />} />
             </Switch>
 
         </div>

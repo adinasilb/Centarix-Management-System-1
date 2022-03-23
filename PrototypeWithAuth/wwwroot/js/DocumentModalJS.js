@@ -116,7 +116,7 @@ $(function () {
 
     }
 
-    $("body, .modal").off("change", ".file-select").on("change", ".file-select", function (e) {
+    $(".modal").off("change").on("change", '.file-select', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
 
@@ -126,59 +126,61 @@ $(function () {
             console.log("disable more files")
         }
 
-        var filePath = $(this)[0].value;
-        console.log(filePath)
+        var inputButton = $('#save-documents');
+        var filePath = $(".file-select")[0].value;
 
         var fileName = filePath.split("\\")[2]
         $(".document-name").text(fileName)
+
         $(".document-name#FileName").val(fileName)
+
 
         var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
         console.log("extn: " + extn);
-
         //if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "ppt" && extn != "pptx" && extn !="") {
         //	alert("invalid file extension");
         //	return;
         //}
 
+        //var $form = $(this).parents('form');
         console.log("in save doc files");
+        //console.log("form: " + $form);
+        //$(this).ajaxSubmit();
+        //var url = $("#documentModalForm").data('string');
+        console.log("input button: " + inputButton);
+        var url = inputButton.attr("href");
+        var $isEdittable = $('.isEdittable').val();
+        //alert($isEdittable)
+        var $showSwitch = $('.showSwitch').val();
+        console.log("url : " + url);
+        var formData = new FormData($(".documentModalForm")[0]);
+        var $CustomMainObjectID = $("#CustomMainObjectID").val();
+        console.log(...formData)
+        var targetFile = formData.getAll("FilesToSave")
+        console.log(targetFile)
+        for (var i = 0; i < targetFile.length; i++) {
+            console.log(targetFile[i])
+            UploadFile(targetFile[i], formData);
+        }
 
+        $(".carousel-item").remove();
+
+
+        var $enumString = $('.folderName').val();
+        var $requestId = $('.objectID').val();
         var section = $("#masterSectionType").val();
-        var $foldername = $('.folderName').val();
+        var guid = $("#Guid").val();
+        var $CustomMainObjectID = $("#CustomMainObjectID").val();
 
-        if ($(this).hasClass("direct-upload")) {
-            console.log("direct upload")
-            $(this).closest(".document-card").find(".open-document-modal").addClass("active-document-modal");
-            var $foldername = $(".active-document-modal").data("string");
-            $.fn.DirectlyUploadDocFromCard(section, $foldername)
-            $(this).val(null);
 
+        if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+            section = "Operations"
+        } else if ($(".open-document-modal.active-document-modal").hasClass('labManagement') || $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
+            section = "LabManagement"
         }
-        else {
-            var $requestId = $('.objectID').val();
-            var guid = $("#Guid").val();
-            var $CustomMainObjectID = $("#CustomMainObjectID").val();
-            var $isEdittable = $('.isEdittable').val();
-            var $showSwitch = $('.showSwitch').val();
-            var parentFolder = $('.parentFolderName').val();
-
-            var formData = new FormData($(".documentModalForm")[0]);
-
-            var targetFile = formData.getAll("FilesToSave")
-            console.log(targetFile)
-            for (var i = 0; i < targetFile.length; i++) {
-                console.log(targetFile[i])
-                UploadFile(targetFile[i], formData);
-            }
-            $(".carousel-item").remove();
-            
-            $.fn.OpenDocumentsModal(true, $foldername, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
-        }
-        var folderInput = "#" + $foldername + "Input";
-        $(folderInput).addClass("contains-file");
-        if ($(folderInput).rules()) {
-            $(folderInput).valid();
-        }
+        $.fn.ChangeColorsOfModal($enumString, section);
+        var parentFolder = $('.parentFolderName').val();
+        $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
         return true;
     });
 

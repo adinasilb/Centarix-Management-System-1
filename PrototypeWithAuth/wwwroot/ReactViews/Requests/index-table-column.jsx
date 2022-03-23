@@ -1,7 +1,9 @@
 ﻿import React, { useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import { MDBBtn, MDBPopover, MDBPopoverBody } from 'mdbreact';
+import { Link, useHistory } from 'react-router-dom';
+import { Popover, Typography, Tooltip } from '@mui/material';
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import * as Routes from '../Constants/Routes.jsx'
+
 export default function IndexTableColumn(props) {
     const history = useHistory();
     const [state, setState] = useState({ col: props.columnData, vendorID: props.vendorID, sideBar: props.sideBar });
@@ -21,29 +23,35 @@ export default function IndexTableColumn(props) {
                         if (icon.IconPopovers?.length >= 1) {
                           
                             return (
-                                <div key={"icon" + i} className="table-icon-div">
-                                    <MDBPopover
-                                        placement="bottom"
-                                        popover
-                                        clickable
-                                    >
-                                        <MDBBtn flat className={"btn p-0 m-0 no-box-shadow "} value={col.AjaxID + "more"}> <i className={icon.IconClass + " hover-bold px-1"} style={{ fontSize: "2rem" }}></i>
-                                        </MDBBtn>
-                                        <div>
-                                            <MDBPopoverBody>
-                                                {icon.IconPopovers.map((iconpopover, i) => (
-                                                    <div key={"iconPopover" + i} className="row px-3 icon-more-popover accounting-popover">
-                                                        <Link className={"btn-link popover-text no-hover requests " + iconpopover.AjaxCall} to={{ pathname: history.location.pathname + iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
-                                                            <i className={iconpopover.Icon} style={{ color : ""+iconpopover.Color }}></i>
-                                                            <label className="m-2 ">{iconpopover.DescriptionDisplayName}</label>
-                                                        </Link>
-                                                    </div>
-                                                )
-                                                )}
-                                            </MDBPopoverBody>
+                                <PopupState key={"icon" + i} variant="popover" popupId={col.AjaxID + "more"}>
+                                    {(popupState) => (
+                                <div className="table-icon-div">                             
+                                            <i className={icon.IconClass + " hover-bold px-1"} style={{ fontSize: "2rem" }} aria-describedby={col.AjaxID + "more"}  {...bindTrigger(popupState)}></i>
+                       
+                                            <Popover
+                                                
+                                        id={col.AjaxID + "more"}
+                                        {...bindPopover(popupState)}
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'center',
+                                        }}
+                                            >
+                                               
+                                        <Typography sx={{ p: 2 }}> {icon.IconPopovers.map((iconpopover, i) => (
+                                            <span key={"iconPopover" + i} className="row px-3 icon-more-popover accounting-popover">
+                                                <Link className={" popover-text requests black-87 " + iconpopover.AjaxCall} to={{ pathname: history.location.pathname + iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
+                                                    <i className={iconpopover.Icon} style={{ color: "" + iconpopover.Color }}></i>
+                                                    <label className="m-2 ">{iconpopover.DescriptionDisplayName}</label>
+                                                </Link>
+                                            </span>
+                                        )
+                                        )}</Typography>
+                                    </Popover>
+
                                         </div>
-                                    </MDBPopover>
-                                </div>
+                                    )}
+                                </PopupState>
                             );
                         }
                         else if (icon.IconClass == "Clarify") {
@@ -90,10 +98,11 @@ export default function IndexTableColumn(props) {
                         }
                         else {
                             return (<div key={"icon" + i} className="table-icon-div">
-                                <Link className={"btn p-0 m-0 no-box-shadow requests " + icon.IconAjaxLink} to={{ pathname: icon.IconAjaxLink, state: { ID: col.AjaxID} }} data-toggle="tooltip" data-placement="top"
-                                    title={icon.TooltipTitle} value={col.AjaxID}>
-                                    <i style={{ fontSize: "2rem", color: icon.Color }} className={icon.IconClass + " hover-bold"}></i>
-                                </Link>
+                                <Tooltip title={icon.TooltipTitle??""} arrow>
+                                 <Link className={"d-flex requests " + icon.IconAjaxLink} to={{ pathname: icon.IconAjaxLink, state: { ID: col.AjaxID } }}  value={col.AjaxID}>
+                                        <i style={{ fontSize: "2rem", color: icon.Color }} className={icon.IconClass + " hover-bold"}></i>
+                                    </Link>
+                                    </Tooltip>
                             </div>
                             )
                         }
@@ -119,11 +128,13 @@ export default function IndexTableColumn(props) {
                     else if ((col.AjaxLink != null && col.AjaxLink != "") || col.ShowTooltip == true) {
                         var title = col.ShowTooltip ? ve.String : "";
 
-                        return (<div key={"value" + i}><a className={"btn p-0 m-0 inv-link-clr " + col.AjaxLink + " no-box-shadow"} data-toggle="tooltip" data-placement="top" title={title} value={col.AjaxID} data-target="item" href="#/">
-                            <div className="d-block">
-                                <p className={"m-0 text-center " + dangerColor} style={{ overflow: "hidden", textOverflow: "ellipsis", WebkitLineClamp: "3", WebkitBoxDirection: "vertical", maxHeight: "5rem", display: " -webkit-box" }}>{ve.String}</p>
-                            </div>
-                        </a>{i != 0 ? <br /> : null}</div>)
+                        return (<div key={"value" + i}><Tooltip title={ title??""} arrow>
+                            <a className={"btn p-0 m-0 inv-link-clr " + col.AjaxLink + " no-box-shadow"}    value={col.AjaxID}  href="#/">
+                                <div className="d-block">
+                                    <p className={"m-0 text-center " + dangerColor} style={{ overflow: "hidden", textOverflow: "ellipsis", WebkitLineClamp: "3", WebkitBoxDirection: "vertical", maxHeight: "5rem", display: " -webkit-box" }}>{ve.String}</p>
+                                </div>
+                            </a>
+                        </Tooltip>{i != 0 ? <br /> : null}</div>)
 
                     }
                     else {

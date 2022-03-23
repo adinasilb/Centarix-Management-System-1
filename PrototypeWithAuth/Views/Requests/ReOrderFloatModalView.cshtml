@@ -117,7 +117,7 @@
                                     <span class="text d-block">&ensp;</span>
                                 }
                                 <button type="submit" name="OrderMethod" @*asp-action="ReOrderFloatModalView"*@ value="@AppUtility.OrderMethod.RequestPriceQuote"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit @submitOrderClass @hasWarningClass" productID="@Model.Requests[0].ProductID">
+                                        class="p-0 section-outline-color custom-button create-modal-submit @submitOrderClass @hasWarningClass" productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.RequestPriceQuote.ToString())
                                 </button>
 
@@ -125,7 +125,7 @@
                             <div class="col-4">
                                 <span class="text d-block">&ensp;</span>
                                 <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.OrderNow"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
+                                        class="p-0 section-outline-color custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.OrderNow.ToString())
                                 </button>
@@ -134,7 +134,7 @@
                             <div class="col-4">
                                 <span class="text d-block">&ensp;</span>
                                 <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AddToCart"
-                                        class="p-0 custom-order-inv custom-button  create-modal-submit @submitOrderClass  @hasWarningClass"
+                                        class="p-0 section-outline-color custom-button  create-modal-submit @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AddToCart.ToString())
                                 </button>
@@ -156,7 +156,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <button type="submit" name="OrderMethod" value="@AppUtility.OrderMethod.AlreadyPurchased"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
+                                        class="p-0 section-outline-color custom-button create-modal-submit  @submitOrderClass  @hasWarningClass"
                                         productID="@Model.Requests[0].ProductID">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderMethod.AlreadyPurchased.ToString())
                                 </button>

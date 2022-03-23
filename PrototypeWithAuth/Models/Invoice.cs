@@ -20,5 +20,8 @@ namespace PrototypeWithAuth.Models
         public DateTime InvoiceDate { get; set; }
         public DateTime InvoiceDate_submit { get { return InvoiceDate; } set { InvoiceDate = value; } }
         public List<Request> Requests { get; set; }
+        [Range(0, 100)]
+        //percentage 
+        public decimal InvoiceDiscount { get; set; }
     }
 }

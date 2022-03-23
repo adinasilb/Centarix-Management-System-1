@@ -159,7 +159,8 @@ namespace PrototypeWithAuth.CRUD
         public async Task UpdateRequestInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
         {
             var RequestToSave = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
-            RequestToSave.Cost = request.Cost;
+            var newCost = request.Cost * addInvoiceViewModel.Invoice.InvoiceDiscount / 100;
+            RequestToSave.Cost = newCost;
             foreach (var payment in RequestToSave.Payments)
             {
                 payment.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
@@ -271,7 +272,7 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID)
+        public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
@@ -284,6 +285,10 @@ namespace PrototypeWithAuth.CRUD
                         var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
 
                         request.PaymentStatusID = (int)newStatus;
+                        if(newInstallmentAmt != null)
+                        {
+                            request.Installments = (uint)newInstallmentAmt;
+                        }
                         _context.Update(request);
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
@@ -302,6 +307,17 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
 
+        }
+        public async Task UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
+        {
+            var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
+            request.PaymentStatusID = (int)newStatus;
+            if(newInstallmentAmt != null)
+            {
+                request.Installments = (uint)newInstallmentAmt;
+            }
+            _context.Update(request);
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveFromInventoryAsync(int requestId)

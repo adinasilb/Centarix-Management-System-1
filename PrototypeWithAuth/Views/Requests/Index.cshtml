@@ -24,14 +24,7 @@
         <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
     </div>
 }
-@*@if (Model.Tabs !=null)
-{
-    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTableTabs" })
-}
-else
-{
-    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTableData" })
-}*@
-@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTableData" })
+@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTable" })
+
 @Html.ReactGetScriptPaths()
 @Html.ReactInitJavaScript()

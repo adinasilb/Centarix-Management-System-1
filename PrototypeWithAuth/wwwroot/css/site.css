@@ -27,7 +27,12 @@ html.wf-loading * {
     box-shadow: none !important;
     border-radius: 0 !important;
 }
-
+ .MuiTooltip-tooltip {
+    background-color: var(--black-87) !important
+}
+.MuiTooltip-arrow {
+    color: var(--black-87) !important
+}
 /*#custom-document-indicator {
     border: 0 !important;
     box-shadow: none !important;
@@ -3038,12 +3043,12 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
-.Requests .filter-btn-select {
+.Requests .inventory-filter-col.selected .btn-filter-style {
     background-color: var(--order-inv-color) !important;
     color: white;
 }
 
-.Protocols  .filter-btn-select {
+.Protocols .inventory-filter-col.selected .btn-filter-style {
     background-color: var(--protocol-color) !important;
     color: white;
 }
@@ -3299,4 +3304,8 @@ input[type=text]#search {
     /*text-indent: 20px;*/
     background-position: 95%;
     filter: grayscale(100%)
+}
+
+.css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+    color: var(--opac-87) !important;
 }
