@@ -9,6 +9,7 @@ export const REMOVE_MODAL = 'REMOVE_MODAL'
 export const REMOVE_MODALS = 'REMOVE_MODALS'
 export const SET_TEMP_REQUEST_JSON = 'SET_TEMP_REQUEST_JSON'
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER'
+export const SET_TEMP_REQUEST_LIST = 'SET_TEMP_REQUEST_LIST'
 
 export const setIndexTableViewModel = (viewmodel ) => {
     return ({
@@ -78,10 +79,10 @@ export const removeModals = (modals) => {
     })
 };
 
-export const setTempRequestJson = (json) => {
+export const setTempRequestList = (tempRequestList) => {
     return ({
 
-        type: SET_TEMP_REQUEST_JSON,
-        payload: json
+        type: SET_TEMP_REQUEST_LIST,
+        payload: tempRequestList
     })
 };

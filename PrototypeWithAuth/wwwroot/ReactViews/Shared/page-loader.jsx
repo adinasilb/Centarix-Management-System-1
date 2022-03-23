@@ -5,7 +5,7 @@ import { Route, Switch, MemoryRouter } from 'react-router-dom';
 import _IndexTable from '../Requests/index-table.jsx';
 import _IndexTableDataByVendor from '../Requests/index-table-data-by-vendor.jsx';
 import SettingsInventory from "../Requests/settings-inventory.jsx";
-import OrderTab from "../Shared/order-tab.jsx"
+import OrderTab from "../Requests/order-tab.jsx"
 
 import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
@@ -46,6 +46,7 @@ export default function PageLoader(props) {
                 <Route exact path={props.match.url + Routes.UPLOAD_QUOTE} exact render={(props) => <ModalLoader   {...props} key={"modalloader"} modalKey={ModalKeys.UPLOAD_QUOTE} uid={props.location.key} />} />
                 <Route exact path={props.match.url + Routes.DOCUMENTS} exact render={(props) => <ModalLoader {...props} key={"modalloader"} modalKey={ModalKeys.DOCUMENTS} uid={props.location.key} />} />
                 <Route exact path={props.match.url + Routes.DELETE_DOCUMENTS} exact render={(props) => <ModalLoader {...props} key={"modalloader"} modalKey={ModalKeys.DELETE_DOCUMENTS} uid={props.location.key} />} />
+                <Route exact path={props.match.url + Routes.TERMS} exact render={(props) => <ModalLoader {...props} key={"modalloader"} modalKey={ModalKeys.TERMS} uid={props.location.key} />} />
             </Switch>
             </div>
 

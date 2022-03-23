@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class TempRequestViewModel
     {
+        public Guid GUID { get; set; }
         public Request Request { get; set; }
         public List<Payment> Payments { get; set; }
         public List<CommentBase> Comments { get; set; }

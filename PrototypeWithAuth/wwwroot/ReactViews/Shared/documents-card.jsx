@@ -3,46 +3,55 @@ import { Link, useHistory } from 'react-router-dom';
 import { FileSelectChange } from "../Utility/document-fuctions.jsx"
 import * as Routes from '../Constants/Routes.jsx'
 import 'regenerator-runtime/runtime'
+import { useForm, useFormContext } from 'react-hook-form';
+
 
 export default function DocumentsCard(props) {
     const history = useHistory();
-    const [documentsInfo, setDocumentsInfo] = useState(props.documentsInfo);
-    var id = documentsInfo?.ObjectID == null ? document.querySelector("hidden-guid") : documentsInfo.ObjectID;
+
+    const formMethods = useFormContext();
+
+    const [state, setState] = useState({
+        documentsInfo: props.documentsInfo,
+        fileRequired: props.fileRequired
+    });
+    var id = state.documentsInfo?.ObjectID == null ? document.querySelector("hidden-guid") : state.documentsInfo.ObjectID;
 
     async function uploadFile(e) {
-        var response = await FileSelectChange(e.target, documentsInfo.FolderName, documentsInfo.ParentFolderName, id)
-        setDocumentsInfo(response)
+        var response = await FileSelectChange(e.target, state.documentsInfo.FolderName, state.documentsInfo.ParentFolderName, id)
+        setState({ ...state, documentsInfo:response })
     }
 
     useEffect(() => {
-        console.log("rerender doc info")
-        console.log(documentsInfo)
-    }, [documentsInfo])
+        formMethods.setValue("HasFiles", state.documentsInfo.FileStrings?.length > 0)
+    }, [state.documentsInfo])
 
     function ResetDocInfo(newdocumentInfo) {
         console.log("reset doc info")
         console.log(newdocumentInfo)
-        setDocumentsInfo(newdocumentInfo)
+        setState({ ...state, documentsInfo: newdocumentInfo })
+        
     }
 
-    console.log(history.entries[1])
     var pathname = (history.entries[1] && history.entries[1].pathname != Routes.DOCUMENTS) ? history.entries[1].pathname : ""
-    console.log("pathname " + pathname)
-    
+    var hasFile = state.documentsInfo.FileStrings?.length > 0 ? true : false;
+    var iconFilter = hasFile ? "section-filter" : "disabled-filter"
+        
     return (
         <div>
-            {console.log("in doc card return:" + documentsInfo.FolderName)}
-            <div className={"card document-border " + (documentsInfo.FileStrings?.length > 0 ? "hasFile" :"")}>
+            <input type="hidden" name="HasFiles" defaultValue={hasFile} {...formMethods.register("HasFiles", { required: value => value === true })} />
+            {console.log("in doc card return:" + state.documentsInfo.FolderName)}
+            <div className={"card document-border " + (hasFile ? "hasFile" :"")}>
             <div className="document-card text-center pb-2" >
                 <div className="col-4 pr-0 d-flex align-items-end mb-1">
-                        <label className="control-label">{documentsInfo.FileStrings?.length > 0 ? documentsInfo.FileStrings.length : 0} Files</label>
+                        <label className="control-label">{hasFile ? state.documentsInfo.FileStrings.length : 0} Files</label>
                 </div>
                     <div className="col-4 d-flex align-items-center">
                         <Link className="mark-edditable" to={{
                             pathname: pathname + "/DocumentsModal",
-                            state: { ID: id, IsEditable: props.isEditable, ShowSwitch: props.showSwitch, FolderName: documentsInfo.FolderName, ParentFolderName: documentsInfo.ParentFolderName, resetDocInfo: ResetDocInfo }
+                            state: { ID: id, IsEditable: props.isEditable, ShowSwitch: props.showSwitch, FolderName: state.documentsInfo.FolderName, ParentFolderName: state.documentsInfo.ParentFolderName, resetDocInfo: ResetDocInfo }
                         }} >
-                            <i className={documentsInfo.Icon + " document-icon m-0"} alt="order" style={{ fontSize: "1.5rem" }}></i>
+                            <i className={state.documentsInfo.Icon + " document-icon m-0 mark-readonly " + iconFilter} alt="order" style={{ fontSize: "1.5rem" }}></i>
                         </Link>
                 </div>
                 <div className="col-4 d-flex align-items-end mb-1 ">
@@ -54,7 +63,7 @@ export default function DocumentsCard(props) {
             </div>
 
         </div>
-            <label className="control-label text-center text document-text-margin" style={{ width: "100%" }}>{documentsInfo.FolderName}</label>
+            <label className="control-label text-center text document-text-margin" style={{ width: "100%" }}>{state.documentsInfo.FolderName}</label>
     </div>
         )
 }

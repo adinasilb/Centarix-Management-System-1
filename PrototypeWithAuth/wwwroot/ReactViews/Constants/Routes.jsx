@@ -10,4 +10,5 @@ export const DOCUMENTS = '/DocumentsModal';
 export const ORDER_TAB = '/OrderTab'
 export const DELETE_DOCUMENTS = '/DeleteDocumentModal';
 export const UPLOAD_QUOTE = '/UploadQuoteModal';
+export const TERMS = '/TermsModal';
 export const ORDER_OPERATIONS_MODAL = '/OrderOperationsModal';

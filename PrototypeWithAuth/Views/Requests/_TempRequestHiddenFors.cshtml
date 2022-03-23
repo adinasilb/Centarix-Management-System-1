@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.TempRequestListViewModel
     <div class="temprequesthiddenfors">
         @*@Html.HiddenFor(r => r.GUID)*@
-        <input type="hidden" asp-for="GUID" class="hidden-guid" />
+        <input type="hidden" asp-for="Guids" class="hidden-guid" />
         @Html.HiddenFor(r => r.SequencePosition)
 
         @Html.HiddenFor(model => model.RequestIndexObject.PageType)

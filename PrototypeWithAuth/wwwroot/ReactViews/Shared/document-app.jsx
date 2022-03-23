@@ -5,11 +5,14 @@ import * as Routes from '../Constants/Routes.jsx'
 import DocumentsCard from './documents-card.jsx';
 import ModalLoader from './modal-loader.jsx';
 import { CheckEditable } from '../Utility/document-fuctions.jsx'
+import { useForm, FormProvider } from 'react-hook-form';
 
 export default function App(props) {
     const [docInfoRow1, setDocInfoRow1] = useState(props.documentsInfo);
     const [docInfoRow2, setDocInfoRow2] = useState([]);
     const [isEditable, setIsEditable] = useState();
+    const methods = useForm();
+
     console.log(docInfoRow1)
     var docInforRow2 = [];
     if (props.documentsInfo.Length > 4) {
@@ -22,6 +25,8 @@ export default function App(props) {
 
     return (
         <div>
+            <FormProvider {...methods} >
+
             <div className="row document-margin-bottom">
                 {docInfoRow1.map((docInfo, i) =>
                     <div key={i} className={(i == 3 ? "" : "document-margin") + " doc-card " + docInfo.FolderName} >
@@ -43,7 +48,8 @@ export default function App(props) {
             <Switch>
                 <Route exact path={Routes.DOCUMENTS} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DOCUMENTS} uid={props.location.key} />} />
                 <Route exact path={Routes.DELETE_DOCUMENTS} exact render={(props) => <ModalLoader {...props} modalKey={ModalKeys.DELETE_DOCUMENTS} uid={props.location.key} />} />
-            </Switch>
+                </Switch>
+                </FormProvider>
         </div>
     )
 }
