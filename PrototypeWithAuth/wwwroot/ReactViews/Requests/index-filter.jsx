@@ -7,30 +7,38 @@ export default function IndexFilter(props) {
         <div className="container-fluid ">
             <div className="row">
         <PopupState  variant="popover" popupId="filterPopover">                   
-            {(popupState) => (
-                <div >
-                    <input type="text" placeholder="Search" className="text  custom-button mx-3 search-by-name" />
-                            <button type="button" aria-describedby="filterPopover"
-                                className="text custom-button " value="Filter"   {...bindTrigger(popupState)}>
-                        Filter
-                    </button>
-                    <Popover
-                        id="filterPopover"
-                        {...bindPopover(popupState)}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center',
-                        }}
-                    >
+                    {(popupState) => {
+                        var buttonClass = "custom-button-font section-bg-color";
+                        if (popupState.isOpen == false) {
+                            buttonClass = "section-outline-color";
+                        }
+                        return (
 
-                        
-                         
-                                <IndexFiterResults />
-      
-                   
-                    </Popover>
-                </div>
-            )}
+                            <div >
+
+                                <input type="text" placeholder="Search" className="text  custom-button  section-outline-color mx-3 search-by-name" />
+                                <button type="button" aria-describedby="filterPopover"
+                                    className={"text custom-button " + buttonClass} value="Filter"   {...bindTrigger(popupState)}>
+                                    Filter
+                                </button>
+                                <Popover
+                                    id="filterPopover"
+                                    {...bindPopover(popupState)}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'center',
+                                    }}
+                                >
+
+
+
+                                    <IndexFiterResults popupState={popupState} />
+
+
+                                </Popover>
+                            </div>
+                        )
+                    }}
         </PopupState>
             </div>
         </div>

@@ -452,11 +452,6 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--white) !important;
 }
 
-.order-inv-custom-button-font {
-    font-size: 1.563rem;
-    font-weight: var(--bold-regular);
-    color: var(--order-inv-color);
-}
 
 .custom-button-small-font {
     font-size: .8rem;
@@ -481,7 +476,7 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     width: 17.375rem !important;
 }
 
-.custom-order-inv {
+.Requests .section-outline-color {
     border: .125rem solid var(--order-inv-color) !important;
     background-color: transparent;
     font-weight: var(--bold-light);
@@ -489,7 +484,9 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--order-inv-color) !important;
 }
 
-.custom-oper {
+.custom-radius
+
+.Operations  .section-outline-color{
     border: .125rem solid var(--operations-color) !important;
     background-color: transparent;
     font-weight: var(--bold-light);
@@ -497,7 +494,7 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--operations-color) !important;
 }
 
-.custom-acc {
+.Accounting .section-outline-color {
     border: .125rem solid var(--acc-color) !important;
     background-color: transparent;
     font-weight: var(--bold-light);
@@ -505,7 +502,7 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--acc-color) !important;
 }
 
-.custom-protocols {
+.Protocols .section-outline-color {
     border: .125rem solid var(--protocols-color) !important;
     background-color: transparent;
     font-weight: var(--bold-light);

@@ -2,7 +2,7 @@
     $(".order-type").off("click").on("click", function (e) {
         e.preventDefault()
         var selectedStyles = "custom-button-font oper-background-color"
-        var unselectedStyles = "custom-oper"
+        var unselectedStyles = "section-outline-color"
         if ($(this).attr("id") == "single") {
             $(".recurring-info").addClass("d-none")
             $("#single").addClass(selectedStyles).removeClass(unselectedStyles)

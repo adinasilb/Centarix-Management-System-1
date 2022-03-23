@@ -3043,12 +3043,12 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
-.Requests .filter-btn-select {
+.Requests .inventory-filter-col.selected .btn-filter-style {
     background-color: var(--order-inv-color) !important;
     color: white;
 }
 
-.Protocols  .filter-btn-select {
+.Protocols .inventory-filter-col.selected .btn-filter-style {
     background-color: var(--protocol-color) !important;
     color: white;
 }
