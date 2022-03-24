@@ -29,12 +29,7 @@ export default function IndexFilter(props) {
                                         horizontal: 'center',
                                     }}
                                 >
-
-
-
                                     <IndexFiterResults  popupState={popupState} />
-
-
                                 </Popover>
                             </div>
                         )

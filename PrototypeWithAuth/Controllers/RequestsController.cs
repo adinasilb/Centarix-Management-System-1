@@ -1291,10 +1291,11 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [HttpPost]
-        public async Task<JsonResult> GetIndexTableJson(string indexTableJsonViewModelString)
+        public async Task<JsonResult> GetIndexTableJson(IndexTableJsonViewModel indexTableJsonViewModel)
         {
-            var indexTableJsonViewModel = JsonConvert.DeserializeObject<IndexTableJsonViewModel>(indexTableJsonViewModelString);
+            //var indexTableJsonViewModel = JsonConvert.DeserializeObject<IndexTableJsonViewModel>(indexTableJsonViewModelString);
             string json = "";
             var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabInfo.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, PageNumber = indexTableJsonViewModel.PageNumber };
             var selectedFilters = new SelectedRequestFilters

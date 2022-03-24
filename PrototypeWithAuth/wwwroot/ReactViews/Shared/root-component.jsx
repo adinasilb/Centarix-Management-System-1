@@ -17,7 +17,8 @@ export default function RootComponent(props) {
         tabInfo: {
             tabValue: props.viewModel?.TabValue, tabs: [ ...props.viewModel?.Tabs]},
         inventoryFilterViewModel: { ...props.viewModel?.InventoryFilterViewModel },
-        pageNumber: props.viewModel.PageNumber
+        pageNumber: props.viewModel.PageNumber,
+        reloadIndex: false
     }, composeWithDevTools());
     const Scripts = lazy(() => import('../scripts.jsx'));  
     const App = lazy(() => import('./app.jsx'));
