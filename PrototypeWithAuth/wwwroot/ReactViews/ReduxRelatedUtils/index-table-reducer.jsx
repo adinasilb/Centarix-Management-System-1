@@ -60,4 +60,15 @@ export const setPageNumberReducer = (state = {}, action) => {
     }
 };
 
+export const setReloadIndexReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ActionKeys.SET_RELOAD_INDEX:
+            return action.payload;
+            break;
+        default:
+            return state;
+    }
+};
+
+
 export default indexTableReducer;
