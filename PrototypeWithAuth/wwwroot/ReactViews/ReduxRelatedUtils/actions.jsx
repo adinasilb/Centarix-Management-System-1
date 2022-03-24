@@ -9,8 +9,7 @@ export const REMOVE_MODAL = 'REMOVE_MODAL'
 export const REMOVE_MODALS = 'REMOVE_MODALS'
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER'
 export const SET_TEMP_REQUEST_LIST = 'SET_TEMP_REQUEST_LIST'
-export const SET_RELOAD_INDEX = ' SET_RELOAD_INDEX '
-
+export const SET_RELOAD_INDEX = 'SET_RELOAD_INDEX'
 export const setIndexTableViewModel = (viewmodel ) => {
     return ({
 
@@ -62,6 +61,8 @@ export const setReloadIndex = (viewmodel) => {
         payload: viewmodel
     })
 };
+
+
 
 export const addModal = (modal) => {
     return ({

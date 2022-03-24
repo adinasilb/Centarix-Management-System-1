@@ -5,6 +5,7 @@ import { useDispatch, connect } from 'react-redux';
 import { ajaxPartialIndexTable } from '../Utility/root-function.jsx'
 import Button from '@mui/material/Button';
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
+import { batch } from 'react-redux'
 
 function _IndexTableData(props) {
     var viewModel = props.viewModel;
@@ -35,7 +36,11 @@ function _IndexTableData(props) {
                                         {viewModel.PageNumbersToShow.map((v, i) => (
                                             <li key={v.Value} className={v.Classes}>
                                                 <Button size="sm" className="page-link" variant="text" onClick={() => {
-                                                    dispatch(Actions.setPageNumber(v.Value));
+                                                    batch(() => {
+                                                        dispatch(Actions.setPageNumber(v.Value));
+                                                        dispatch(Actions.setReloadIndex(true));
+                                                    })
+                                            
                                                 }} > {v.Value}</Button>
                                             </li>
                                                 ))

@@ -1353,11 +1353,11 @@ namespace PrototypeWithAuth.Controllers
             var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabInfo.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, PageNumber = indexTableJsonViewModel.PageNumber };
             var selectedFilters = new SelectedRequestFilters
             {
-                SelectedVendorsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedVendors.Select(v => v.VendorID).ToList(),
-                SelectedOwnersIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedOwners.Select(v => v.Id).ToList(),
-                SelectedCategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedCategories.Select(v => v.ID).ToList(),
-                SelectedLocationsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedLocations.Select(v => v.LocationTypeID).ToList(),
-                SelectedSubcategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedSubcategories.Select(v => v.ID).ToList()
+                SelectedVendorsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedVendors?.Select(v => v.VendorID)?.ToList(),
+                SelectedOwnersIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedOwners?.Select(v => v.Id)?.ToList(),
+                SelectedCategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedCategories?.Select(v => v.ID)?.ToList(),
+                SelectedLocationsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedLocations?.Select(v => v.LocationTypeID)?.ToList(),
+                SelectedSubcategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedSubcategories?.Select(v => v.ID)?.ToList()
             };
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {
