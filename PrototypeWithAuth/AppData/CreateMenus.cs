@@ -1150,6 +1150,19 @@ namespace PrototypeWithAuth.AppData
                 Classes = Classes,
                 IconName = "icon-cancel_presentation-24px"
             });
+            if (SidebarTitle == AppUtility.SidebarEnum.MissingPaymentDetails) { Classes += SideBarActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Missing Payment Details",
+                Controller = "Requests",
+                Action = "AccountingNotifications",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingNotificationsEnum", AppUtility.SidebarEnum.MissingPaymentDetails }
+                },
+                Classes = Classes,
+                IconName = ""/*TODO get icon*/
+            });
             if (SidebarTitle == AppUtility.SidebarEnum.DidntArrive) { Classes += SideBarActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {

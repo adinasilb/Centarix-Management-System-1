@@ -23,7 +23,7 @@ function OrderTab(props) {
             }
         )
             .then(response => response.json())
-            .then(result => props.setTempRequestJson(JSON.parse(result)))
+            .then(result => props.setTempRequestList(JSON.parse(result)))
         document.getElementById("loading").style.display = "none";
     }
 
@@ -43,7 +43,7 @@ function OrderTab(props) {
                     <div className="col-5">
                         <Link onClick={()=>submitOrder("OrderNow")} to={{
                                 pathname: history.location.pathname + Routes.UPLOAD_QUOTE,
-                            state: { ID: viewModel.GUID}
+                            state: { ID: viewModel.GUID, moveToTerms: true}
                             }} >Order Now
                             </Link>
                         </div>
@@ -81,13 +81,14 @@ function OrderTab(props) {
 
 const mapDispatchToProps = dispatch => (
     {
-        setTempRequestJson: (tempRequestJson) => dispatch(Actions.setTempRequestJson(tempRequestJson))
+        setTempRequestList: (tempRequest) => dispatch(Actions.setTempRequestList(tempRequest))
     }
 );
 
 const mapStateToProps = state => {
     return {
-        tempRequestJson: state.tempRequestJson.present
+        tempRequestList: state.tempRequestList.present,
+        viewModel: state.viewModel
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OrderTab);

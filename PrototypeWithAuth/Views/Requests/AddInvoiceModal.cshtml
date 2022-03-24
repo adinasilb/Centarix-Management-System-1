@@ -6,9 +6,10 @@
 <script src="~/js/accounting.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/editquotemodal.js"></script>
+<script src="~/js/TermsModal.js"></script>
 
 <div class="modal modal-view fader on-form-modal " id="myModal" data-backdrop="false">
-    <div class="elixir-modal-xl modal-dialog-centered mx-auto">
+    <div class="modal-xl modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-invoice')">
                 <span aria-hidden="true">&times;</span>
@@ -18,184 +19,335 @@
                 {
                     <span class="text-danger-centarix">@Model.Error.String</span>
                 }
-                
+
                 else
                 {
+                    var urlAction = Url.Action("DocumentsModal", "Requests");
+                    var currency = Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString() ? "&#x20aa;" : "&#36;";
 
+                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                    <input type="hidden" asp-for="Requests[0].ExchangeRate" id="exchangeRate" />
+                    <input type="hidden" asp-for="Requests[0].IncludeVAT" class="include-vat" />
+                    <input type="hidden" asp-for="Vendor.VendorID" value="@Model.Vendor.VendorID" />
 
-                var urlAction = Url.Action("DocumentsModal", "Requests");
-                // var currency = Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString() ? "&#x20aa;" : "&#36;";
-
-                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-                <input type="hidden" asp-for="Requests[0].ExchangeRate" id="exchangeRate" />
-                <input type="hidden" asp-for="Requests[0].IncludeVAT" class="include-vat" />
-                <input type="hidden" asp-for="Vendor.VendorID" value="@Model.Vendor.VendorID" />
-
-                <div class="modal-body  m-0 p-0 ">
-                    <div class="row error-message">
-                        @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
-                    </div>
-                    <div class="container-fluid p-0 m-0">
-                        <div class="row">
-                            <div class="col-4 d-inline-flex">
-                                <label class="heading-1 m-0">Add Invoice</label>&nbsp; &nbsp;&nbsp;<label class="mt-1 top-menu">@Model.Vendor.VendorEnName.ToLower()</label>
-                            </div>
-                            <div class="col-2 pr-0">
-                                <span class="float-right">Invoice Number: </span>
-                            </div>
-                            <div class="col-2">
-                                <input asp-for="Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" />
-                                <span asp-validation-for="Invoice.InvoiceNumber" class="text-danger-centarix" id="invoice-number-validation"></span>
-                            </div>
-                            <div class="col-2 pr-0">
-                                <span class="float-right">Invoice Date: </span>
-                            </div>
-                            <div class="col-2">
-                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
-                                <span asp-validation-for="Invoice.InvoiceDate" class="text-danger-centarix"></span>
-                            </div>
+                    <div class="modal-body  m-0 p-0 ">
+                        <div class="row error-message">
+                            @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage); }
                         </div>
-                        <br /><hr />
+                        <div class="container-fluid p-0 m-0">
+                            <div class="row">
+                                <div class=" d-inline-flex">
+                                    <label class="heading-1 m-0">Add Invoice</label>&nbsp; &nbsp;&nbsp;<label class="mt-1 top-menu">@Model.Vendor.VendorEnName.ToLower()</label>
+                                </div>
 
-                        <table class="table table-headerspaced table-borderless table-hover">
-                            <thead>
-                                <tr class="">
-                                    <td style="width:15%;" class="pb-0">
-                                    </td>
-                                    <td style="width:25%;" class="pb-0">
-                                        Name
-                                    </td>
-                                    <td style="width:15%;" class="pb-0">
-                                        Units
-                                    </td>
-                                    <td style="width:15%;" class="pb-0">
-                                        Total Price
-                                    </td>
-                                    <td style="width:30%;" class="pb-0">
-                                    </td>
-                                </tr>
-                            </thead>
+                            </div>
+                           <hr /><br />
 
-                            <tbody>
-                                @{var x = -1; }
-                                @foreach (var Request in Model.Requests)
-                                {
-                                    x++;
-                                    <tr class="invoice-request">
-                                        <td style="width:15%;">
-                                            <input style="display: none;" asp-for="Requests[x].RequestID" />
-                                            @{
-                                                var imageurl = "/images/css/CategoryImages/placeholder.png";
-                                                if (Request.Product.ProductSubcategory.ImageURL != null)
-                                                {
-                                                    imageurl = Request.Product.ProductSubcategory.ImageURL;
-                                                }
-                                            }
-
-                                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                            <table class="table table-headerspaced table-borderless table-hover">
+                                <thead>
+                                    <tr class="">
+                                        <td style="width:15%;" class="pb-0">
                                         </td>
-                                        <td style="width:25%;">
-                                            @Request.Product.ProductName
+                                        <td style="width:40%;" class="pb-0">
+                                            Name
                                         </td>
-                                        <td style="width:15%; text-transform: none">
-                                            @Request.Unit @if (Request.Product.UnitType != null)
-                                            {@Request.Product.UnitType.UnitTypeDescription<br />}
-
-                                            @if (Request.Product.SubUnitType != null)
-                                            {@(Request.Product.SubUnit==0? "" : AppUtility.TrimZeros(Request.Product.SubUnit??0).ToString()+" ")
-                                                @Request.Product.SubUnitType.UnitTypeDescription<br />
-                                            }
-                                            @if (Request.Product.SubSubUnitType != null)
-                                            {
-                                                @(Request.Product.SubSubUnit==0? "" : AppUtility.TrimZeros(Request.Product.SubSubUnit??0).ToString()+" ")@Request.Product.SubSubUnitType.UnitTypeDescription<br />}
+                                        <td style="width:15%;" class="pb-0">
+                                            Units
                                         </td>
-                                        <td style="width:15%;">
-                                            <div class="input-group">
-                                                @{
-                                                    decimal cost = Model.Requests[x].Cost ?? 0;
-                                                    decimal vat = Model.Requests[x].IncludeVAT ? cost * (decimal)0.17 : 0;
-                                                    decimal costWithVAT = cost + vat;
-                                                }
-
-
-                                                @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
-                                                {
-                                                    cost = Math.Round(cost, 2);
-                                                    @*<span class="input-group-text border-bottom pr-2">T: &#x20aa;</span>*@
-
-                                                    <div class="form-group shekel-group">
-                                                        <div class="input-group ">
-                                                            <span class="input-group-text pr-1">P: &#x20aa;</span>
-                                                            <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom cost" index="@x" value="@cost" />
-                                                            <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
-                                                        </div>
-                                                        <div class="input-group ">
-                                                            <span class="input-group-text request-cost-shekel-icon disabled-text pr-1">T: &#x20aa;</span>
-                                                            <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel @x" value="@costWithVAT.ToString("0.00")" disabled />
-                                                        </div>
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    cost = Math.Round(Model.Requests[0].ExchangeRate == 0 ? 0 : cost / Model.Requests[0].ExchangeRate, 2);
-                                                    costWithVAT = Model.Requests[0].ExchangeRate == 0 ? 0 : costWithVAT / Model.Requests[0].ExchangeRate;
-
-                                                    <div class="form-group dollar-group">
-                                                        <div class="input-group ">
-                                                            <span class="input-group-text  pr-1">P: &#36;</span>
-                                                            <input class="form-control-plaintext border-bottom sum-dollars @x" value="@cost" index="@x" />
-                                                            <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
-                                                        </div>
-                                                        <div class="input-group ">
-                                                            <span class="input-group-text request-cost-dollar-icon pr-1 disabled-text">T: &#36;</span>
-                                                            <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar @x" value="@costWithVAT.ToString("0.00")" disabled />
-                                                        </div>
-                                                    </div>
-                                                    <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
-                                                }
-                                            </div>
+                                        <td style="width:15%;" class="pb-0">
+                                            Total Price
                                         </td>
-
-                                        <td style="width:30%;">
-                                            @if (Model.Requests.Count > 1)
-                                            {
-                                                <a class="remove-invoice-item float-right" request="@Request.RequestID">
-                                                    <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
-                                                </a>
-                                            }
+                                        <td style="width:15%;" class="pb-0">
                                         </td>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                        <div class="row mt-5">
-                            <div class="col-5">
-                                <label asp-for="InvoiceImage" class="control-label"></label>
-                                <br />
-                                <input type="hidden" asp-for="Guid" class="hidden-guid" />
-                                <button class="my-2 section-bg-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
-                                        data-id="0" parentfolder="@AppUtility.ParentFolderName.Requests"
-                                        id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@true" show-switch="@false">
-                                    Select File
-                                </button>
-                                <input type="hidden" asp-for="InvoiceImage" id="@AppUtility.FolderNamesEnum.Invoices.ToString()Input" />
-                                <span class="invoice-image-name document-name pl-2"></span>
-                                @*<input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
-                    <span asp-validation-for="InvoiceImage" class="text-danger"></span>*@
-                                @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
-                                *@
+                                </thead>
+
+                                <tbody>
+                                    @{
+                                        var totalCost = 0.0m;
+                                        var totalVAT = 0.0m;
+                                        var totalShipping = 0.0;
+                                        var VATShipping = 0.0;
+                                        var x = -1; 
+                                    }
+                                    @foreach (var Request in Model.Requests)
+                                    {
+                                        x++;
+                                        var request = Model.Requests[x];
+                                        totalCost += request.Currency == AppUtility.CurrencyEnum.NIS.ToString() ? (decimal)request.Cost: (decimal)request.Cost / request.ExchangeRate;
+                                        totalVAT += request.VAT;
+                                        totalShipping += request.ParentRequest.Shipping;
+                                        VATShipping += request.ParentRequest.Shipping * .17;
+                                        <tr class="invoice-request">
+                                            <td style="width:15%;">
+                                                <input style="display: none;" asp-for="Requests[x].RequestID" />
+                                                @{
+                                                    var imageurl = "/images/css/CategoryImages/placeholder.png";
+                                                    if (Request.Product.ProductSubcategory.ImageURL != null)
+                                                    {
+                                                        imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                                    }
+                                                }
+
+                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                            </td>
+                                            <td style="width:25%;">
+                                                @Request.Product.ProductName
+                                            </td>
+                                            <td style="width:15%; text-transform: none">
+                                                @Request.Unit @if (Request.Product.UnitType != null)
+                                                {@Request.Product.UnitType.UnitTypeDescription<br />}
+
+                                                @if (Request.Product.SubUnitType != null)
+                                                {@(Request.Product.SubUnit==0? "" : AppUtility.TrimZeros(Request.Product.SubUnit??0).ToString()+" ")
+                                                    @Request.Product.SubUnitType.UnitTypeDescription<br />
+                                                }
+                                                @if (Request.Product.SubSubUnitType != null)
+                                                {
+                                                    @(Request.Product.SubSubUnit==0? "" : AppUtility.TrimZeros(Request.Product.SubSubUnit??0).ToString()+" ")@Request.Product.SubSubUnitType.UnitTypeDescription<br />}
+                                            </td>
+                                            <td style="width:15%;">
+                                                <div class="input-group">
+                                                    @*{
+                                                        decimal cost = Model.Requests[x].Cost ?? 0;
+                                                        decimal vat = Model.Requests[x].IncludeVAT ? cost * (decimal)0.17 : 0;
+                                                        decimal costWithVAT = cost + vat;
+                                                    }
+
+
+                                                    @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
+        {
+            cost = Math.Round(cost, 2);-->
+            @*<span class="input-group-text border-bottom pr-2">T: &#x20aa;</span>
+
+                                                    <!--<div class="form-group shekel-group">
+                                                                <div class="input-group ">
+                                                                    <span class="input-group-text pr-1">P: &#x20aa;</span>
+                                                                    <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom cost" index="@x" value="@cost" />
+                                                                    <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
+                                                                </div>
+                                                                <div class="input-group ">
+                                                                    <span class="input-group-text request-cost-shekel-icon disabled-text pr-1">T: &#x20aa;</span>
+                                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel @x" value="@costWithVAT.ToString("0.00")" disabled />
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            cost = Math.Round(Model.Requests[0].ExchangeRate == 0 ? 0 : cost / Model.Requests[0].ExchangeRate, 2);
+                                                            costWithVAT = Model.Requests[0].ExchangeRate == 0 ? 0 : costWithVAT / Model.Requests[0].ExchangeRate;
+
+                                                            <div class="form-group dollar-group">
+                                                                <div class="input-group ">
+                                                                    <span class="input-group-text  pr-1">P: &#36;</span>
+                                                                    <input class="form-control-plaintext border-bottom sum-dollars @x" value="@cost" index="@x" />
+                                                                    <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
+                                                                </div>
+                                                                <div class="input-group ">
+                                                                    <span class="input-group-text request-cost-dollar-icon pr-1 disabled-text">T: &#36;</span>
+                                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar @x" value="@costWithVAT.ToString("0.00")" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
+                                                        } *@
+                                                    @{
+                                                        var prices = AppUtility.GetPriceColumn(new List<string>() { AppUtility.PriceSortEnum.Total.ToString(), AppUtility.PriceSortEnum.Vat.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() }, Request, (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), Request.Currency) );
+                                                        for (int val = 0; val < prices.Count; val++)
+                                                        {
+                                                            if (val != 0)
+                                                            {
+                                                                <br/>
+                                                            }
+                                                            <label class="m-0 p-0">@prices[val].String</label>
+                                                        }
+                                                    }
+                                                </div>
+                                                </td>
+
+                                                <td style="width:30%;">
+                                                    @if (Model.Requests.Count > 1)
+                                                    {
+                                                        <a class="remove-invoice-item float-right" request="@Request.RequestID">
+                                                            <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div class="row mt-5">
+                                    <div class="col-6 mt-4">
+                                     <input type="hidden" asp-for="Guid" class="hidden-guid" />
+
+                                    <div class="upload-btn-wrapper between-button-margin">
+                                        <button type="button" class="custom-button custom-button-font section-bg-color upload-file" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()">Select Invoice</button>
+                                        <input type="file" asp-for="InvoiceImage" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" />
+                                        <span class="invoice-image-name document-name pl-2"></span>
+                                        <span asp-validation-for="InvoiceImage" class="text-danger"></span>
+                                    </div>
+                                        
+                                    </div>
+                                    <div class="col-3 pr-0">
+                                        <label class="control-label">Invoice Number </label>
+                                        <input asp-for="Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="Invoice.InvoiceNumber" class="text-danger-centarix" id="invoice-number-validation"></span>
+                                    </div>
+                                    <div class="col-3 pr-0">
+                                        <label class="control-label">Invoice Date </label>
+                                        <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
+                                        <span asp-validation-for="Invoice.InvoiceDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 pr-0">
+                                        <label class="control-label">Sum </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
+                                            <input value="@String.Format("{0:0.00}", totalCost)" class="form-control-plaintext border-bottom" />
+                                            <span  class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 pr-0">
+                                        <label class="control-label">VAT</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
+                                            <input value="@String.Format("{0:0.00}", totalVAT)" class="form-control-plaintext border-bottom" />
+                                            <span class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 pr-0 input-group">
+                                        <label class="control-label">Shipping </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
+                                            <input value="@String.Format("{0:0.00}", totalShipping)" class="form-control-plaintext border-bottom" />
+                                            <span  class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 pr-0">
+                                        <label class="control-label">VAT Shipping</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
+                                            <input value="@String.Format("{0:0.00}", VATShipping)" class="form-control-plaintext border-bottom" />
+                                            <span  class="text-danger-centarix"></span>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 pr-0">
+                                        <label class="control-label">Invoice Discount </label>
+                                        <div class="input-group">
+                                            <input asp-for="Invoice.InvoiceDiscount" class="form-control-plaintext border-bottom" />
+                                            <span class="pt-2">%</span>
+                                            <span asp-validation-for="Invoice.InvoiceDiscount" class="text-danger-centarix" id="invoice-number-validation"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 pr-0">
+                                        <label class="control-label">  </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
+                                            <input value="0" class="form-control-plaintext border-bottom discount-amount"  />
+                                            <span class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    @{
+                                        var grandTotal = totalCost + totalVAT + (decimal)(totalShipping + VATShipping);
+                                    }
+                                    <div class="col-6 pr-0">
+                                        <label class="control-label">Total</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text section-font-color pr-1">@Html.Raw(currency)</span>
+                                            <input value="@String.Format("{0:0.00}", grandTotal)" class="section-font-color form-control-plaintext border-bottom" style="font-weight:700 !important" />
+                                            <span class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row paid-info d-none ">
+                                    @*TODO: make this a partial view*@
+                                <div class="col-3 pl-0">
+                                    <div class=" payment-type form-group">
+                                        <label class="control-label">Bank Name</label>
+                                        @Html.DropDownListFor(vm => vm.Payment.CompanyAccountID,
+                                    new SelectList(
+                                    Model.CompanyAccounts,
+                                    "CompanyAccountID",
+                                    "CompanyBankName"
+                                    ), "Select Bank Name",
+                                    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "bankName" })
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="payment-type form-group d-none">
+                                        <label class="control-label">Payment Type</label>
+                                        @Html.DropDownListFor(vm => vm.Payment.PaymentTypeID,
+                                    new SelectList(
+                                    Model.PaymentTypes,
+                                    "PaymentTypeID",
+                                    "PaymentTypeDescription"
+                                    ), "Select Payment Type",
+                                    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
+                                    </div>
+                                </div>
+                                <div class="col-3 credit-card d-none">
+                                    <div class="form-group ">
+                                        <label class="control-label credit-card d-none">Card #</label>
+                                        <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " disabled asp-for="Payment.CreditCardID"></select>
+                                    </div>
+                                </div>
+                                <div class="col-3 pl-0">
+                                    <div class="form-group payment-date d-none">
+                                        <label class="control-label wire d-none">Transfer Date</label>
+                                        <label class="control-label credit-card">Reference Date</label>
+                                        <label class="control-label bank-check d-none">Cash Out Date</label>
+                                        <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="" />
+                                    </div>
+                                </div>
+                                <div class="col-3 wire d-none">
+                                    <div class="form-group ">
+                                        <label class="control-label">Payment Reference</label>
+                                        <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
+                                    </div>
+                                </div>
+                                <div class="col-3 bank-check d-none">
+                                    <div class="form-group ">
+                                        <label class="control-label">Check Number</label>
+                                        <input class="form-control-plaintext border-bottom" type="text" disabled asp-for="Payment.CheckNumber" />
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-2 offset-3 align-self-center">
-                                <input type="submit" class="section-bg-color custom-button-font custom-button save-invoice" value="Save" />
-                            </div>
-                            <div class="col-2 align-self-center">
-                                <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-invoice')">Cancel</button>
+                            <div class=" row">
+                                <div class="col-3">
+                                    <input type="checkbox" asp-for="Paid" id="alreadyPaid" class="form-check-input filled-in " />
+                                    <label class="form-check-label" asp-for="Paid" id="alreadyPaid">Paid</label>
+                                     <input type="hidden" asp-for="Paid" />
+                                </div>
+                                <div class="col-2 offset-3 align-self-center">
+                                    <input type="submit" class="section-bg-color custom-button-font custom-button save-invoice" value="Save" />
+                                </div>
+                                <div class="col-2 align-self-center">
+                                    <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-invoice')">Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 }
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    <script>
+        $('.payment-type .mdb-select').materialSelect();
+     $( ".addInvoiceForm").on('click', "#alreadyPaid", function (e) {
+        console.log("check paid")
+        if ($("#alreadyPaid:checkbox").is(":checked")) {
+            $(".paid-info").addClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", false)
+        }
+        else {
+            $(".paid-info").removeClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", true)
+            $("#standingOrder:checkbox").prop("checked", false)
+        }
+
+    });
+    </script>

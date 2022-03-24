@@ -10,11 +10,11 @@
 @using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
 
 @{ 
-    var colorClass = "custom-order-inv";
+    var colorClass = "section-outline-color";
     var sectionClass = "orders";
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
-        colorClass = "custom-oper";
+        colorClass = "section-outline-color";
         sectionClass = "operations";
 
     }
@@ -34,10 +34,10 @@
                     await Html.RenderPartialAsync("_InventoryFilterResults", Model);
                 }
             </div>
-
         </ul>
         <div id="inventoryFilterContentDiv" class="container inventoryFilterDiv">
 
         </div>
+
     </div>
 </div>

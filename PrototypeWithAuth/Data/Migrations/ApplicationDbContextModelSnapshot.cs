@@ -2038,6 +2038,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("InvoiceDiscount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("InvoiceNumber")
                         .HasColumnType("nvarchar(max)");
 

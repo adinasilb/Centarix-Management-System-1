@@ -1,10 +1,10 @@
 ﻿import * as ActionKeys from './actions.jsx'
 import undoable from 'redux-undo'
 
-const tempRequestJsonReducer = (state = [], action, ...slices) => {
+const tempRequestReducer = (state = [], action) => {
 
     switch (action.type) {
-        case ActionKeys.SET_TEMP_REQUEST_JSON:
+        case ActionKeys.SET_TEMP_REQUEST_LIST:
             console.log("set temp request Json")
             console.log(action.payload)
             return action.payload;
@@ -14,6 +14,6 @@ const tempRequestJsonReducer = (state = [], action, ...slices) => {
     }
 };
 
-const undoableReducer = undoable(tempRequestJsonReducer)
+const undoableReducer = undoable(tempRequestReducer)
 
 export default undoableReducer;

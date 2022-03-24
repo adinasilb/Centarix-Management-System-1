@@ -72,6 +72,8 @@ namespace PrototypeWithAuth.AppData
             StandingOrders,
             [Display(Name = "No Invoice")]
             NoInvoice,
+            [Display(Name = "Missing Payment Details")]
+            MissingPaymentDetails,
             [Display(Name = "Didn't Arrive")]
             DidntArrive,
             [Display(Name = "Partial Delivery")]
@@ -1099,6 +1101,8 @@ namespace PrototypeWithAuth.AppData
             ReturnVal.String += " Expenses";
             return new List<StringWithBool> { ReturnVal };
         }
+
+        
     }
 
 }

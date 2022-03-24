@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.TempRequestListViewModel
     <div class="temprequesthiddenfors">
         @*@Html.HiddenFor(r => r.GUID)*@
-        <input type="hidden" asp-for="GUID" class="hidden-guid" />
+        <input type="hidden" asp-for="Guids" class="hidden-guid" />
         @Html.HiddenFor(r => r.SequencePosition)
 
         @Html.HiddenFor(model => model.RequestIndexObject.PageType)
@@ -9,11 +9,9 @@
         @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
         @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
         @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-        @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
         @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
         @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
         @Html.HiddenFor(model => model.RequestIndexObject.OrderMethod)
         @Html.HiddenFor(model => model.RequestIndexObject.IsReorder)
         @Html.HiddenFor(model => model.RequestIndexObject.ModalType)
-        @Html.HiddenFor(model => model.RequestIndexObject.ListID)
     </div>

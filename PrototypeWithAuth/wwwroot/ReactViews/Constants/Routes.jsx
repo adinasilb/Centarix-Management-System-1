@@ -1,6 +1,5 @@
 ﻿export const DELETE_ITEM = '/DeleteModal';
-export const INDEX_TABLE_DATA = '/_IndexTableData';
-export const INDEX_TABLE_TABS = '/_IndexTableTabs';
+export const INDEX_TABLE = '/_IndexTable';
 export const INDEX_TABLE_DATA_BY_VENDOR = '/_IndexTableDataByVendor';
 export const SETTINGS_INVENTORY = '/SettingsInventory';
 export const REORDER = '/Reorder';
@@ -11,4 +10,5 @@ export const DOCUMENTS = '/DocumentsModal';
 export const ORDER_TAB = '/OrderTab'
 export const DELETE_DOCUMENTS = '/DeleteDocumentModal';
 export const UPLOAD_QUOTE = '/UploadQuoteModal';
+export const TERMS = '/TermsModal';
 export const ORDER_OPERATIONS_MODAL = '/OrderOperationsModal';

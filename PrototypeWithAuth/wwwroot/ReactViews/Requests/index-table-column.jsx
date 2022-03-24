@@ -23,7 +23,7 @@ export default function IndexTableColumn(props) {
                         if (icon.IconPopovers?.length >= 1) {
                           
                             return (
-                                <PopupState key={"icon" + i}  variant="popover" popupId="demo-popup-popover">
+                                <PopupState key={"icon" + i} variant="popover" popupId={col.AjaxID + "more"}>
                                     {(popupState) => (
                                 <div className="table-icon-div">                             
                                             <i className={icon.IconClass + " hover-bold px-1"} style={{ fontSize: "2rem" }} aria-describedby={col.AjaxID + "more"}  {...bindTrigger(popupState)}></i>

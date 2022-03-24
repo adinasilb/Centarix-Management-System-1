@@ -8,7 +8,20 @@ import reducer from '../ReduxRelatedUtils/reducers.jsx';
 
 
 export default function RootComponent(props) {
-    const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
+    const store = createStore(reducer, {
+        viewModel: props.viewModel,
+        modals: [],
+        navigationInfo: {
+            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType || {}  },
+        pricePopoverViewModel: {
+            ...props.viewModel?.PricePopoverViewModel || {} },
+        categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },
+        tabInfo: {
+            tabValue: props.viewModel?.TabValue, tabs: [ ...props.viewModel?.Tabs ||[]]},
+        inventoryFilterViewModel: { ...props.viewModel?.InventoryFilterViewModel || {}  },
+        pageNumber: props.viewModel.PageNumber,
+        reloadIndex: false
+    }, composeWithDevTools());
     const Scripts = lazy(() => import('../scripts.jsx'));  
     const App = lazy(() => import('./app.jsx'));
   
