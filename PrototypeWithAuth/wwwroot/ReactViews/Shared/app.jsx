@@ -9,6 +9,7 @@ export default function App(props) {
     const history = useHistory();
 
     useEffect(() => {
+        console.log("useeffect: " + props.viewEnum);
         history.push(props.viewEnum);
     }, [props.viewEnum]);
     return (

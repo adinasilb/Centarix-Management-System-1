@@ -16,5 +16,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<bool> Test { get; set; }
         public CustomField CustomFieldData { get; set; }
         public List<UnitParentType> UnitParentTypes { get; set; }
+        public decimal ExchangeRate { get; set; }
     }
 }

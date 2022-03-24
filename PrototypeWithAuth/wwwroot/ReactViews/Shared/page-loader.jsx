@@ -14,7 +14,7 @@ import * as Routes from '../Constants/Routes.jsx'
 export default function PageLoader(props) {
 
     const renderSwitch = () => {
-        console.log(props.viewEnum)
+        console.log("ViewEnum: " + props.viewEnum)
        
         switch (props.viewEnum) {
             case Routes.INDEX_TABLE_DATA_BY_VENDOR:
@@ -29,7 +29,8 @@ export default function PageLoader(props) {
                 return (<_IndexTableTabs key={"indexTableTabs"} pageNumber={props.pageNumber} tabs={props.tabs} selectedTab={props.selectedTab} />);
                 break;
             case Routes.SETTINGS_INVENTORY:
-                return (<SettingsInventory key={"settingsInventory"} viewModel={props.viewModel} showView={true} />);
+                console.log("in settings inventory");
+                return (<SettingsInventory key={"SettingsInventory"} viewModel={props.viewModel} />);
                 break;
             case Routes.ORDER_TAB:
                 return (<OrderTab key={"orderTab"} viewModel={props.viewModel} />);

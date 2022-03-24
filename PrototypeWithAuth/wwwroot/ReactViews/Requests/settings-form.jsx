@@ -1,7 +1,6 @@
 ﻿import React, { useState, setState, useEffect } from 'react';
 import * as Constant from '../Shared/constants.js'
 import CustomFieldButton from './custom-field-button.jsx';
-import { MDBSelect, MDBSelectOptions, MDBSelectOption, MDBSelectInput, MDBInput, MDBContainer } from 'mdbreact';
 import ReactDOM from 'react-dom';
 import { MDBBtn } from 'mdbreact';
 import { useForm, FormProvider, useFormContext, Controller } from "react-hook-form";
@@ -9,6 +8,15 @@ import cloneDeep from 'lodash/cloneDeep';
 import { DevTool } from "@hookform/devtools";
 import { ErrorMessage } from '@hookform/error-message';
 import axios from "axios";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 //import { useTheme } from '@mui/material/styles';
 //import OutlinedInput from '@mui/material/OutlinedInput';
 //import InputLabel from '@mui/material/InputLabel';
@@ -28,6 +36,7 @@ const SettingsForm = (props) => {
     //const [index, setIndex] = useState();
     const [countCF, setCountCF] = useState([]);
     const [customFields, setCustomFields] = useState([]);
+    const currentTabCount = 0;
 
     const [fieldValues, setFieldValues] = useState({});
 
@@ -59,9 +68,12 @@ const SettingsForm = (props) => {
         var formData = new FormData();
         //alert(newFormData);
         //alert(JSON.stringify(props.SettingsForm));
-        alert(JSON.stringify(props.SettingsForm.Category));
-        formData.set("test", true);
-        formData.append("Category", props.SettingsForm.Category);
+        alert(JSON.stringify(data.DetailsCustomFields));
+        formData.set("DetailsCustomFields", JSON.stringify(data.DetailsCustomFields));
+        formData.set("PriceCustomFields", JSON.stringify(data.PriceCustomFields));
+        formData.set("DocumentsCustomFields", JSON.stringify(data.DocumentsCustomFields));
+        formData.set("ReceivedCustomFields", JSON.stringify(data.ReceivedCustomFields));
+        formData.set("Category", JSON.stringify(props.SettingsForm.Category));
         //formData.append("FieldName", refs.fieldName0)
         for (var value of formData.values()) {
             console.log(value);
@@ -84,7 +96,6 @@ const SettingsForm = (props) => {
         ////    }
         ////}
         //console.dir(formData);
-        //alert(JSON.stringify(formData));
         //xhr.send(formData);
     };
 
@@ -212,13 +223,13 @@ const SettingsForm = (props) => {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label className="control-label">Category</label>
-                                                <select className="form-control-plaintext border-bottom mdb-select" disabled>
+                                                <select className="form-control-plaintext border-bottom " disabled>
                                                     <option value="0">{catText}</option>
                                                 </select>
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="control-label">Subcategory</label>
-                                                <select className="form-control-plaintext border-bottom mdb-select" disabled>
+                                                <select className="form-control-plaintext border-bottom " disabled>
                                                     <option value="0">{subCatText}</option>
                                                 </select>
                                             </div>
@@ -226,33 +237,33 @@ const SettingsForm = (props) => {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label className="control-label">Vendor</label>
-                                                <select className="form-control-plaintext border-bottom mdb-select" disabled>
+                                                <select className="form-control-plaintext border-bottom  " disabled>
                                                     <option value="0">Select Vendor</option>
                                                 </select>
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="control-label">Company ID (automatic)</label>
-                                                <input className="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
+                                                <input className="form-control-plaintext border-bottom " value={Constant.IntPlaceholder} disabled />
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label className="control-label">Catalogue No.</label>
-                                                <input className="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
+                                                <input className="form-control-plaintext border-bottom " value={Constant.IntPlaceholder} disabled />
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="control-label">URL</label>
-                                                <input className="form-control-plaintext border-bottom" value={Constant.UrlPlaceholder} disabled />
+                                                <input className="form-control-plaintext border-bottom " value={Constant.UrlPlaceholder} disabled />
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label className="control-label">Expected Supply Days</label>
-                                                <input className="form-control-plaintext border-bottom" value={Constant.IntPlaceholder} disabled />
+                                                <input className="form-control-plaintext border-bottom " value={Constant.IntPlaceholder} disabled />
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="control-label">Expected Supply Date</label>
-                                                <input className="form-control-plaintext border-bottom" value={Constant.DatePlaceholder} disabled />
+                                                <input className="form-control-plaintext border-bottom " value={Constant.DatePlaceholder} disabled />
                                             </div>
                                         </div>
                                         <div className="mb-0" style={detailsCFStyle}>
@@ -260,11 +271,11 @@ const SettingsForm = (props) => {
                                             <CustomFieldsHeader />
                                         </div>
                                         <div className="">
-                                            {customFields.map(cf =>
-                                                cf.dict.tabName == "details" &&
-                                                <>< CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />
-                                                </>
-                                            )}
+                                            {customFields.filter(cField => cField.dict.tabName == "details")
+                                                .map((cf, i) =>
+                                                    <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData}
+                                                        RemoveCustomField={RemoveCustomField} tabName="DetailsCustomFields" tabCount={i} />
+                                                )}
                                             <CustomFieldButton tabName={"details"} clickhandler={OpenNewCustomField} />
                                         </div>
                                         <div className="" style={detailsCFStyle}>
@@ -283,15 +294,23 @@ const SettingsForm = (props) => {
                                                     <div className="col-6">
                                                         <div className="form-group">
                                                             <label className="control-label">Currency</label>
-                                                            <select id="currency" className="mdb-select custom select-dropdown form-control-plaintext disabled">
-                                                                <option value="">&#8362; NIS</option>
-                                                            </select>
+                                                            <Select
+                                                                readOnly={true}
+                                                                disabled={true}
+                                                                variant="standard"
+                                                                defaultValue="NIS"
+                                                                className="form-control-plaintext border-bottom pt-1"
+                                                            >
+                                                                <MenuItem value="NIS">
+                                                                    &#8362; NIS
+                                                                </MenuItem>
+                                                            </Select>
                                                         </div>
                                                     </div>
                                                     <div className="col-6">
                                                         <div className="form-group">
                                                             <label className="control-label">Exchange Rate</label>
-                                                            <input name="Requests[0].ExchangeRate" className="form-control-plaintext border-bottom " id="exchangeRate" />
+                                                            <input name="Requests[0].ExchangeRate" className="form-control-plaintext border-bottom " id="exchangeRate" disabled value={props.SettingsForm.ExchangeRate} />
                                                             <span className="text-danger-centarix"></span>
                                                         </div>
                                                     </div>
@@ -306,15 +325,23 @@ const SettingsForm = (props) => {
                                                         <div className="row">
                                                             <div className="col-md-4 form-group">
                                                                 <label asp-for="Requests[0].Unit" className="control-label"></label>
-                                                                <MDBInput type="number" value={Constant.AmountPlaceholder} className="disabled"
-                                                                    id="unit" />
+                                                                <input type="number" value={Constant.AmountPlaceholder} className="form-control-plaintext border-bottom disabled"
+                                                                    id="unit" readOnly={true} />
                                                                 <span asp-validation-for="Requests[0].Unit" className="text-danger-centarix"></span>
                                                             </div>
                                                             <div className="col-md-8 form-group dropdown-select-div">
                                                                 <label asp-for="Requests[0].Product.UnitType" className="control-label"></label>
-                                                                <MDBSelect asp-for="Request.UnitTypeID" className="form-control-plaintext disabled">
-                                                                    <MDBSelectInput selected={Constant.SelectPlaceholder} />
-                                                                </MDBSelect>
+                                                                <Select
+                                                                    readOnly={true}
+                                                                    disabled={true}
+                                                                    variant="standard"
+                                                                    defaultValue={Constant.SelectPlaceholder}
+                                                                    className="form-control-plaintext border-bottom"
+                                                                >
+                                                                    <MenuItem value={Constant.SelectPlaceholder}>
+                                                                        {Constant.SelectPlaceholder}
+                                                                    </MenuItem>
+                                                                </Select>
                                                                 <span className="text-danger-centarix"></span>
                                                             </div>
                                                         </div>
@@ -343,13 +370,13 @@ const SettingsForm = (props) => {
                                             </div>
                                             <div className="col-4 pl-0 RequestSubunitCard">
                                                 <div className="border h-100 ">
-                                                    <button type="button" className="close sub-close  pr-2 pt-2  disabled " aria-label="Close" >
+                                                    <button type="button" className="close sub-close pr-4 pt-2  disabled " aria-label="Close" >
                                                         <span aria-hidden="true">×</span>
                                                     </button>
                                                     <div className="mx-2rem addSubUnitCard mt-4">
                                                         <div className="row " >
-                                                            <div className="col-8 offset-2 text-center font-weight-light">
-                                                                <input type="button" value="+" className=" addSubUnit btn m-0 p-0 no-box-shadow disabled " />
+                                                            <div className="col-8 offset-2 text-center font-weight-light mt-4">
+                                                                <input type="button" value="+" className=" addSubUnit btn m-0 p-0 no-box-shadow " disabled />
                                                                 <br /><span className="text-capitalize text">add sub unit</span>
                                                             </div>
                                                         </div>
@@ -365,8 +392,8 @@ const SettingsForm = (props) => {
                                                 <div className="form-group">
                                                     <label className="control-label">Total</label>
                                                     <div className="input-group">
-                                                        <span className="input-group-text disabled-text">&#36;</span>
-                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text" id="vatInDollars" disabled
+                                                        <span className="input-group-text">&#36;</span>
+                                                        <input type="text" className="form-control-plaintext border-bottom" id="vatInDollars" disabled
                                                             value={Constant.SmallIntPlaceholder} />
                                                     </div>
                                                 </div>
@@ -375,28 +402,28 @@ const SettingsForm = (props) => {
                                                 <div className="form-group">
                                                     <label className="control-label"></label>
                                                     <div className="input-group">
-                                                        <span className="input-group-text disabled-text">&#x20aa;</span>
+                                                        <span className="input-group-text">&#x20aa;</span>
                                                         <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom disabled-text" id="vat" disabled />
                                                         <span className="text-danger-centarix"></span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <MDBContainer className="mr-0">
-                                                <div className="col-md-2">
-                                                    <div className="form-group">
-                                                        <label className="control-label"></label>
-                                                        <MDBInput checked={true} label={Constant.VAT} type="radio"
-                                                            id="radio1" />
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <div className="form-group">
-                                                        <label className="control-label"></label>
-                                                        <MDBInput checked={false} label={Constant.NoVAT} type="radio"
-                                                            id="radio1" />
-                                                    </div>
-                                                </div>
-                                            </MDBContainer>
+                                            <div className="col-md-4 mt-3">
+                                                <FormControl>
+                                                    <FormLabel id="demo-row-radio-buttons-group-label"></FormLabel>
+                                                    <RadioGroup
+                                                        row
+                                                        defaultValue={Constant.VAT}
+                                                    >
+                                                        <div className="col-md-6">
+                                                            <FormControlLabel value={Constant.VAT} control={<Radio />} label={Constant.VAT} disabled />
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            <FormControlLabel value={Constant.NoVAT} control={<Radio />} label={Constant.NoVAT} disabled />
+                                                        </div>
+                                                    </RadioGroup>
+                                                </FormControl>
+                                            </div>
                                         </div>
                                         <div className="row requestPriceQuote ">
 
@@ -404,8 +431,8 @@ const SettingsForm = (props) => {
                                                 <div className="form-group">
                                                     <label className="control-label">VAT</label>
                                                     <div className="input-group">
-                                                        <span className="input-group-text disabled-text">&#36;</span>
-                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
+                                                        <span className="input-group-text">&#36;</span>
+                                                        <input type="text" className="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
                                                             value={Constant.SmallIntPlaceholder} />
                                                     </div>
                                                 </div>
@@ -414,8 +441,8 @@ const SettingsForm = (props) => {
                                                 <div className="form-group">
                                                     <label className="control-label"></label>
                                                     <div className="input-group">
-                                                        <span className="input-group-text disabled-text">&#x20aa;</span>
-                                                        <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                        <span className="input-group-text">&#x20aa;</span>
+                                                        <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                                     </div>
                                                 </div>
                                             </div>
@@ -423,8 +450,8 @@ const SettingsForm = (props) => {
                                                 <div className="form-group">
                                                     <label className="control-label">Total + VAT</label>
                                                     <div className="input-group">
-                                                        <span className="input-group-text disabled-text">&#36;</span>
-                                                        <input type="text" className="form-control-plaintext border-bottom disabled-text " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
+                                                        <span className="input-group-text">&#36;</span>
+                                                        <input type="text" className="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
                                                             value={Constant.SmallIntPlaceholder} />
                                                     </div>
                                                 </div>
@@ -433,8 +460,8 @@ const SettingsForm = (props) => {
                                                 <div className="form-group">
                                                     <label className="control-label"></label>
                                                     <div className="input-group">
-                                                        <span className="input-group-text disabled-text">&#x20aa;</span>
-                                                        <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                        <span className="input-group-text">&#x20aa;</span>
+                                                        <input type="text" value={Constant.SmallIntPlaceholder} className="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                                     </div>
                                                 </div>
                                             </div>
@@ -445,9 +472,11 @@ const SettingsForm = (props) => {
                                             <CustomFieldsHeader />
                                         </div>
                                         <div className="">
-                                            {customFields.map(cf =>
-                                                cf.dict.tabName == "price" && <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} UpdateFieldValue={UpdateFieldValue} />
-                                            )}
+                                            {customFields.filter(cField => cField.dict.tabName == "price")
+                                                .map((cf, i) =>
+                                                    <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData}
+                                                        RemoveCustomField={RemoveCustomField} tabName="PriceCustomFields" tabCount={i} />
+                                                )}
                                             <CustomFieldButton tabName={"price"} clickhandler={OpenNewCustomField} />
                                         </div>
                                         <div className="" style={priceCFStyle}>
@@ -460,8 +489,10 @@ const SettingsForm = (props) => {
                                             <CustomFieldsHeader />
                                         </div>
                                         <div className="">
-                                            {customFields.map(cf =>
-                                                cf.dict.tabName == "documents" && < CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />
+                                            {customFields.filter(cField => cField.dict.tabName == "documents")
+                                                .map((cf, i) =>
+                                                <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData}
+                                                    RemoveCustomField={RemoveCustomField} tabName="DocumentsCustomFields" tabCount={i} />
                                             )}
                                             <CustomFieldButton tabName={"documents"} clickhandler={OpenNewCustomField} />
                                         </div>
@@ -483,12 +514,12 @@ const SettingsForm = (props) => {
                                         <div className="row">
                                             <div className="col-2 d-flex h-100">
                                                 <div className="form-check d-flex align-items-end pb-2 mt-3">
-                                                    <MDBInput label="Clarify" type="checkbox" className="" readOnly={true} />
+                                                    <input label="Clarify" type="checkbox" className="" readOnly={true} />
                                                 </div>
                                             </div>
                                             <div className="col-2 d-flex h-100">
                                                 <div className="form-check d-flex align-items-end pb-2 mt-3">
-                                                    <MDBInput label="Partial" type="checkbox" className="" readOnly={true} />
+                                                    <input label="Partial" type="checkbox" className="" readOnly={true} />
                                                 </div>
                                             </div>
                                         </div>
@@ -505,7 +536,7 @@ const SettingsForm = (props) => {
                                         <div className="row">
                                             <div className="col-3 d-flex h-100">
                                                 <div className="form-check d-flex align-items-end pb-2 mt-3">
-                                                    <MDBInput label="Temporary Location" type="checkbox" className="" readOnly={true} />
+                                                    <input label="Temporary Location" type="checkbox" className="" readOnly={true} />
                                                 </div>
                                             </div>
                                         </div>
@@ -540,9 +571,11 @@ const SettingsForm = (props) => {
                                             <CustomFieldsHeader />
                                         </div>
                                         <div className="">
-                                            {customFields.map(cf =>
-                                                cf.dict.tabName == "received" && < CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData} RemoveCustomField={RemoveCustomField} />
-                                            )}
+                                            {customFields.filter(cField => cField.dict.tabName == "received")
+                                                .map((cf, i) =>
+                                                    <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData}
+                                                        RemoveCustomField={RemoveCustomField} tabName="ReceivedCustomFields" tabCount={i} />
+                                                )}
                                             <CustomFieldButton tabName={"received"} clickhandler={OpenNewCustomField} />
                                         </div>
                                         <div className="" style={receivedCFStyle}>
@@ -569,18 +602,20 @@ export default SettingsForm;
 
 
 function CustomField(props) {
-
-    console.log("RENDERING CUSTOM FIELD");
     const { register, formState: { errors }, control } = useFormContext({
 
     });
+
     //const Controller = useController({ control });
 
     const onChangeFieldName = (e) => {
         //setInput(e.currentTarget.value);
     };
 
-    var num = props.number;
+    switch (props.tabName) {
+        case "Details":
+            break;
+    }
 
     return (
         <>
@@ -590,69 +625,109 @@ function CustomField(props) {
                 <div className="col-4">
                     <div className="form-group">
                         <label className="control-label" >{"Field Name"}</label>
-                        {/*<MDBInput*/}
+                        {/*<input*/}
                         {/*    ref={register("fieldName." + props.number, { required: Constant.Required })}*/}
                         {/*    name="multipleErrorInput"*/}
 
                         {/*/>*/}
                         <Controller
                             control={control}
-                            name={"fieldName" + props.number}
+                            name={props.tabName + "[" + props.tabCount + "].FieldName"}
                             render={
-                                ({ field }) => <MDBInput {...field}
-                                    onChange={props.UpdateFieldValue}
+                                ({ field }) => <input {...field}
+                                    id={props.tabName + "[" + props.tabCount + "]__FieldName"}
                                     className="form-control-plaintext border-bottom" />
                             }
                             rules={{
                                 required: Constant.Required,
-                                /*maxLength: { value: 10, message: Constant.MaxLength + "10" }*/
+                                maxLength: { value: 10, message: Constant.MaxLength + "10" }
                             }}
                         />
                         <span className="text-danger-centarix"><ErrorMessage
                             errors={errors}
-                            name={"fieldName" + props.number}
+                            name={props.tabName + "[" + props.tabCount + "].FieldName"}
                         /></span>
                     </div>
                 </div>
                 <div className="col-4">
                     <div className="form-group">
                         <label className="control-label">Data Type</label>
+
+                        <Controller
+                            control={control}
+                            name={props.tabName + "[" + props.tabCount + "].CustomDataTypeID"}
+                            render={
+                                ({ field }) =>
+                                    <Select {...field}
+                                        variant="standard"
+                                        defaultValue=""
+                                        className="form-control-plaintext border-bottom pt-1"
+                                        id={props.tabName + "[" + props.tabCount + "]__CustomDataTypeID"}
+                                    >
+                                        <MenuItem key="0" value="">
+                                            {Constant.SelectPlaceholder}
+                                        </MenuItem>
+                                        {props.CustomFieldData.CustomDataTypes.map((dataType, i) =>
+                                            <MenuItem key={i + 1} value={dataType.CustomDataTypeID}>
+                                                {dataType.Name}
+                                            </MenuItem>
+                                        )}
+                                    </Select>
+                            }
+                            rules={{
+                                required: Constant.Required
+                            }}
+                        />
+                        <span className="text-danger-centarix"><ErrorMessage
+                            errors={errors}
+                            name={props.tabName + "[" + props.tabCount + "].CustomDataTypeID"}
+                        /></span>
+                    </div>
+                </div>
+                <div className="col-2 d-flex ml-5 h-100 mt-4"> {/*style="height:auto;">*/}
+                    <div className="form-check d-flex align-items-end pb-2">{/* style="height:auto;">*/}
+                        <FormControlLabel
+                            control={
+                                <Controller
+                                    name={props.tabName + "[" + props.tabCount + "].Required"}
+                                    control={control}
+                                    defaultValue={false}
+                                    render={({ field: { value, ref, ...field } }) => (
+                                        <Checkbox
+                                            {...field}
+                                            inputRef={ref}
+                                            checked={!!value}
+                                            disableRipple
+                                            id={props.tabName + "[" + props.tabCount + "]_Required"}
+                                            className="section-filter"
+                                        />
+                                    )}
+                                />
+                            }
+                            label="Checkbox"
+                            labelPlacement="end"
+                        />
                         {/*<Controller*/}
                         {/*    control={control}*/}
-                        {/*    name={"dataType." + props.number}*/}
+                        {/*    name={props.tabName + "[" + props.number + "].Required"}*/}
                         {/*    render={*/}
-                        {/*        ({ field }) =>*/}
-                        {/*            //<FormControl>*/}
-                        {/*            //    <InputLabel id="demo-multiple-name-label">Name</InputLabel>*/}
-                        {/*            //    <Select {...field}*/}
-                        {/*            //        labelId="demo-multiple-name-label"*/}
-                        {/*            //        id="demo-multiple-name"*/}
-                        {/*            //        multiple*/}
-                        {/*            //        value={personName}*/}
-                        {/*            //        onChange={handleChange}*/}
-                        {/*            //        input={<OutlinedInput label="Name" />}*/}
-                        {/*            //        MenuProps={MenuProps}*/}
-                        {/*            //    >*/}
-                        {/*            //    </Select>*/}
-                        {/*            //</FormControl>*/}
+                        {/*        ({ field }) => <FormControlLabel {...field} control={<Checkbox />} label="Required" value={Required} onChange={SetRequiredID}*/}
+                        {/*            id={props.tabName + "[" + props.number + "]__Required"} className="section-filter" />*/}
                         {/*    }*/}
                         {/*    rules={{*/}
                         {/*        required: Constant.Required*/}
                         {/*    }}*/}
                         {/*/>*/}
-                        {/*<span className="text-danger-centarix"><ErrorMessage*/}
-                        {/*    errors={errors}*/}
-                        {/*    name={"dataType." + props.number}*/}
-                        {/*/></span>*/}
-                    </div>
-                </div>
-                <div className="col-2 d-flex ml-5 h-100 mt-4"> {/*style="height:auto;">*/}
-                    <div className="form-check d-flex align-items-end pb-2 mt-3">{/* style="height:auto;">*/}
-                        <MDBInput label="Required" type="checkbox" id={"checkbox" + props.number} className="" />
+                        <span className="text-danger-centarix"><ErrorMessage
+                            errors={errors}
+                            name={props.tabName + "[" + props.tabCount + "].Required"}
+                        /></span>
+
+                        {/*<input label="Required" type="checkbox" className="" />*/}
                         {/*<label className="form-check-label align-items-end"  >Required</label>*/}
                     </div>
                 </div>
-                <div className="col-1 mt-4 h-auto"> {/*style="height:auto;">*/}
+                <div className="col-1 mt-3 h-auto"> {/*style="height:auto;">*/}
                     <a href="" onClick={props.RemoveCustomField} className="remove-custom-field danger-filter align-items-end pb-2 d-flex mt-3 h-auto icon-font-size" number={props.number} > {/*style="height:auto; font-size:1.75rem;">*/}
                         <i className="icon-delete-24px align-items-end"></i>
                     </a>

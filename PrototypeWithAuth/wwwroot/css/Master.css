@@ -72,7 +72,7 @@
     --height: 2.375rem;
 }
 .black-87{
-    color: var(--black-87);
+    color: var(--black-87) !important;
 }
 
 .warning-color {

@@ -2,7 +2,8 @@
 import CategoryListSettings from './category-list-settings.jsx';
 import TopTabsCount from '../Shared/top-tabs-counts.jsx';
 import SettingsForm from './settings-form.jsx';
-export default class SettingsInventory extends Component {
+import { connect } from 'react-redux';
+class SettingsInventory extends Component {
     constructor(props) {
         super(props);
 
@@ -15,10 +16,10 @@ export default class SettingsInventory extends Component {
                     <TopTabsCount list={this.props.viewModel.TopTabsList} />
                     <div className="row mb-5">
                         <div className="col-2 form-element-border-xsmall p-2 category-list-1 cat-col category-height ">
-                            <CategoryListSettings categories={this.props.viewModel.Categories} />
+                            <CategoryListSettings categories={this.props.viewModel.Categories} columnNum="1" />
                         </div>
-                        <div className="col-2 form-element-border-xsmall p-2 category-list-1 cat-col category-height ">
-                            <CategoryListSettings categories={this.props.viewModel.Subcategories} />
+                        <div className="col-2 form-element-border-xsmall p-2 category-list-2 cat-col category-height ">
+                            <CategoryListSettings categories={this.props.viewModel.Subcategories} columnNum="2" />
                         </div>
                         <div className="col-8 form-element-border-xsmall settings-form">
                             <SettingsForm SettingsForm={this.props.viewModel.SettingsForm} />
@@ -34,3 +35,13 @@ export default class SettingsInventory extends Component {
         }
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        viewModel: state.viewModel
+    };
+};
+
+export default connect(
+    mapStateToProps
+)(SettingsInventory)

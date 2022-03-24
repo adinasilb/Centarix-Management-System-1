@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class CategoryBasesProc : ApplicationDbContextProc<CategoryBase>
+    public class CategoryBasesProc<T1> : ApplicationDbContextProc<T1> where T1:CategoryBase
     {
         public CategoryBasesProc(ApplicationDbContext context, bool FromBase = false): base(context)
         {

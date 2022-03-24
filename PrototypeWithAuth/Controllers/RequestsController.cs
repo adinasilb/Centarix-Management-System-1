@@ -187,7 +187,7 @@ namespace PrototypeWithAuth.Controllers
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
 
-            if (notificationFilterViewModel == null)
+                    if (notificationFilterViewModel == null)
                     {
                         notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
                     }
@@ -402,11 +402,11 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(viewModel);
         }
 
- 
 
 
 
-      
+
+
 
         [Authorize(Roles = "Requests,Operations")]
         public async Task<TempRequestListViewModel> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderMethod OrderMethod, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
@@ -497,7 +497,7 @@ namespace PrototypeWithAuth.Controllers
                 //Response.WriteAsync(ex.Message?.ToString());
                 if (requestItemViewModel.RequestStatusID == 7)
                 {
-                   // return RedirectToAction("Index", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                    // return RedirectToAction("Index", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
                 /* return new RedirectToActionResult(actionName: "_OrderTab", controllerName: "Requests", routeValues: requestItemViewModel );*/
 
@@ -1530,7 +1530,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests[0].IncludeVAT = true;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
-            
+
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = Guid.NewGuid(),
@@ -3342,7 +3342,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             //base.DocumentsModal(documentsModalViewModel);
-            return RedirectToAction("_DocumentsCard", new { requestFolderNameEnum = documentsModalViewModel.FolderName, id= documentsModalViewModel.ObjectID, parentFolderName = documentsModalViewModel.ParentFolderName});
+            return RedirectToAction("_DocumentsCard", new { requestFolderNameEnum = documentsModalViewModel.FolderName, id = documentsModalViewModel.ObjectID, parentFolderName = documentsModalViewModel.ParentFolderName });
         }
 
 
@@ -3386,7 +3386,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                 }
             }
-            return RedirectToAction("DocumentsModal", new { id=deleteDocumentsViewModel.ObjectID, Guid=new Guid(), RequestFolderNameEnum= deleteDocumentsViewModel.FolderName, parentFolderName = deleteDocumentsViewModel.ParentFolderName });
+            return RedirectToAction("DocumentsModal", new { id = deleteDocumentsViewModel.ObjectID, Guid = new Guid(), RequestFolderNameEnum = deleteDocumentsViewModel.FolderName, parentFolderName = deleteDocumentsViewModel.ParentFolderName });
         }
 
         [HttpGet] //send a json to that the subcategory list is filered
@@ -4289,15 +4289,15 @@ namespace PrototypeWithAuth.Controllers
             //{
             //    return PartialView("InvalidLinkPage");
             //}
-            
+
 
             var uploadQuoteViewModel = new UploadQuoteViewModel() { ParentQuote = new ParentQuote() { ExpirationDate = DateTime.Now } };
             uploadQuoteViewModel.DocumentsInfo = new DocumentFolder()
-                {
-                    ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
-                    FolderName = AppUtility.FolderNamesEnum.Quotes,
-                    Icon = "icon-centarix-icons-03",
-                    ObjectID = id
+            {
+                ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
+                FolderName = AppUtility.FolderNamesEnum.Quotes,
+                Icon = "icon-centarix-icons-03",
+                ObjectID = id
             };
 
             if (requests != null)
@@ -4379,11 +4379,11 @@ namespace PrototypeWithAuth.Controllers
             //    }
             //}
             uploadQuoteViewModel.DocumentsInfo = new DocumentFolder()
-                {
-                    ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
-                    FolderName = AppUtility.FolderNamesEnum.Quotes,
-                    Icon = "icon-centarix-icons-03",
-                    ObjectID = guid.ToString()
+            {
+                ParentFolderName = AppUtility.ParentFolderName.ParentQuote,
+                FolderName = AppUtility.FolderNamesEnum.Quotes,
+                Icon = "icon-centarix-icons-03",
+                ObjectID = guid.ToString()
             };
 
 
@@ -4401,7 +4401,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
 
-            
+
             var tempRequestJson = await _tempRequestJsonsProc.GetTempRequest(tempRequestListViewModel.GUID, _userManager.GetUserId(User)).FirstOrDefaultAsync();
             try
             {
@@ -4918,7 +4918,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return Json( "");
+                return Json("");
             }
 
         }
@@ -5325,25 +5325,29 @@ namespace PrototypeWithAuth.Controllers
                 Categories = GetCategoryList(new ParentCategory().GetType().Name, 1),
             };
             settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, settings.Categories.CategoryBases.FirstOrDefault().ID);
-            settings.SettingsForm = GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
+            settings.SettingsForm = await GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
             return View(settings);
         }
 
         [HttpPost]
         public ActionResult SettingsInventory(SaveSettingsCategory settingsForm)
         {
+            List<CustomField> DetailsCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.DetailsCustomFields, new JsonSerializerSettings());
+            List<CustomField> PriceCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.PriceCustomFields, new JsonSerializerSettings());
+            List<CustomField> DocumentsCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.DocumentsCustomFields, new JsonSerializerSettings());
+            List<CustomField> ReceivedCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.ReceivedCustomFields, new JsonSerializerSettings());
             ProductSubcategory category = JsonConvert.DeserializeObject<ProductSubcategory>(settingsForm.Category, new JsonSerializerSettings());
             return View();
         }
 
-        [HttpGet]
+        [HttpGet] 
         public IActionResult _CategoryList(String modelType, int ColumnNumber, int? ParentCategoryID)
         {
             var categoryBases = GetCategoryList(modelType, ColumnNumber, ParentCategoryID);
             return PartialView(categoryBases);
         }
 
-        public CategoryListViewModel GetCategoryList(String modelType, int ColumnNumber, int? ParentCategoryID = null)
+        public CategoryListViewModel GetCategoryList(String modelType, int ColumnNumber, int? ParentCategoryID = null, int? SelectedID = 0)
         {
             IEnumerable<CategoryBase> categoryBases = new List<CategoryBase>();
             switch (modelType)
@@ -5370,12 +5374,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public IActionResult _SettingsForm(string ModelType, int CategoryID)
+        public async Task<IActionResult> _SettingsForm(string ModelType, int CategoryID)
         {
-            return PartialView(GetSettingsFormViewModel(ModelType, CategoryID));
+            return PartialView(await GetSettingsFormViewModel(ModelType, CategoryID));
         }
 
-        private SettingsForm GetSettingsFormViewModel(string ModelType, int CategoryID)
+        private async Task<SettingsForm> GetSettingsFormViewModel(string ModelType, int CategoryID)
         {
             SettingsForm settingsForm = new SettingsForm();
             if (ModelType == new ParentCategory().GetType().Name)
@@ -5389,6 +5393,8 @@ namespace PrototypeWithAuth.Controllers
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.CustomFieldData = this._CustomField();
+            var rate = await _globalInfosProc.ReadOneAsync(new List<Expression<Func<GlobalInfo, bool>>> { gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString() });
+            settingsForm.ExchangeRate = Convert.ToDecimal(rate.Description);
             //settingsForm.UnitParentTypes = _uni.Read().ToList();
 
             return settingsForm;

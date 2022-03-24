@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PrototypeWithAuth.CRUD
 {
-    public class ProductSubcategoriesProc : ApplicationDbContextProc<ProductSubcategory>
+    public class ProductSubcategoriesProc : CategoryBasesProc<ProductSubcategory>
     {
         public ProductSubcategoriesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
         {
