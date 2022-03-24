@@ -992,20 +992,20 @@ body.modal-open, body.popover-open {
     overflow: hidden !important;
 }
 
-.filter-and-search.orders ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+.Requests .filter-and-search::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
     color: var(--order-inv-color) !important;
     opacity: 1;
 }
-.filter-and-search.operations ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+.Operations .filter-and-search::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
     color: var(--operations-color) !important;
     opacity: 1;
 }
 
-.filter-and-search.orders ::-ms-input-placeholder { /*works for Edge*/
+.Requests .filter-and-search::-ms-input-placeholder { /*works for Edge*/
     color: var(--order-inv-color) !important;
 }
 
-.filter-and-search.operations ::-ms-input-placeholder { /*works for Edge*/
+.Operations .filter-and-search::-ms-input-placeholder { /*works for Edge*/
     color: var(--operations-color) !important;
 }
 .filter-and-search :focus {

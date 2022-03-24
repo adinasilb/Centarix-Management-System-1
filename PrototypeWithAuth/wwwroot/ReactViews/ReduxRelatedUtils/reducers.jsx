@@ -1,5 +1,5 @@
 ﻿import { combineReducers } from 'redux'
-import indexTableReducer, { categoryPopoverReducer, pricePopoverReducer, tabInfoReducer, inventoryFilterReducer } from './index-table-reducer.jsx'
+import indexTableReducer, { categoryPopoverReducer, pricePopoverReducer, tabInfoReducer, inventoryFilterReducer, setPageNumberReducer } from './index-table-reducer.jsx'
 import modalsReducer from './modals-reducer.jsx'
 import tempRequestReducer from './temp-request-reducer.jsx'
 
@@ -13,5 +13,6 @@ export default combineReducers({
     pricePopoverViewModel: pricePopoverReducer,
     tabInfo: tabInfoReducer,
     inventoryFilterViewModel: inventoryFilterReducer,
-    tempRequestList: tempRequestReducer
+    tempRequestList: tempRequestReducer,
+    pageNumber: setPageNumberReducer
 })

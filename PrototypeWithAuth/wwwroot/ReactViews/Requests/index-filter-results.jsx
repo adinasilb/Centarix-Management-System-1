@@ -170,7 +170,7 @@ function IndexFilterResults(props) {
         viewModel.SelectedCategories = [];
         viewModel.Subcategories = subCategories;
         viewModel.SelectedSubcategories = [];
-        viewModel.numFilters = 0;
+        viewModel.NumFilters = 0;
         viewModel.Archive = false;
         viewModel.CatalogNumber = "";
         viewModel.SearchName = "";
@@ -189,7 +189,7 @@ function IndexFilterResults(props) {
         viewModel.SelectedCategories = categories.selected;
         viewModel.Subcategories = subcategories.notSelectedShown;
         viewModel.SelectedSubcategories = subcategories.selected;
-        viewModel.numFilters = numFilters;
+        viewModel.NumFilters = numFilters;
         viewModel.Archive = isArchived;
         viewModel.CatalogNumber = catalogNumber;
         viewModel.SearchName = searchByName;
@@ -197,7 +197,7 @@ function IndexFilterResults(props) {
     }
     return (<span>
         {console.log(vendors)}
-        <div style={{ width: "1200px", height: "35.75rem", margin: "0" }} className={"container-fluid overflow-hidden " + props.navigationInfo.sectionType}>
+        <div style={{ width: "1200px", height: "37rem", margin: "0" }} className={"container-fluid overflow-hidden p-4 " + props.navigationInfo.sectionType}>
                 <div className="row">
                 <div className=" col-1 offset-11">
                     <button type="button" className="close popover-close" data-dismiss="popover" style={{ fontSize: "2rem" }} onClick={()=>props.popupState.setOpen(false)} >&times;</button>
@@ -267,7 +267,7 @@ function IndexFilterResults(props) {
                         <div className="border-right col filter-col location-col">
                         <input placeholder="Location" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterLocations} value={locations.filterText ?? ''} />
                         <div className="inventory-filter-col not-selected">
-                            {locations.notSelected?.map(v =>
+                            {locations.notSelectedShown?.map(v =>
                                 <button key={v.LocationTypeID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left" value={v.LocationTypeID} onClick={moveLocationsToSelected}><span className="filter-button-description" >{v.LocationTypeName}</span></button>
                                 )}
                             </div>

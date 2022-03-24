@@ -7,6 +7,8 @@ export const SET_INVENTORY_FILTER_VIEWMODEL = 'SET_INVENTORY_FILTER_VIEWMODEL'
 export const ADD_MODAL = 'ADD_MODAL'
 export const REMOVE_MODAL = 'REMOVE_MODAL'
 export const REMOVE_MODALS = 'REMOVE_MODALS'
+export const SET_TEMP_REQUEST_JSON = 'SET_TEMP_REQUEST_JSON'
+export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER'
 export const SET_TEMP_REQUEST_LIST = 'SET_TEMP_REQUEST_LIST'
 
 export const setIndexTableViewModel = (viewmodel ) => {
@@ -44,10 +46,11 @@ export const setInventoryFilterViewModel = (viewmodel) => {
         payload: viewmodel
     })
 };
-export const setHeaderInfo = (viewmodel) => {
+
+export const setPageNumber = (viewmodel) => {
     return ({
 
-        type: SET_HEADER_INFO,
+        type: SET_PAGE_NUMBER,
         payload: viewmodel
     })
 };
