@@ -42,6 +42,7 @@ namespace PrototypeWithAuth.AppData
         public enum TimePeriods { Days, Weeks, Months }
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum RoleEnum { ApproveOrders }
+        public enum CategorySettingType { Details, Price, Documents, Received }
         public enum PageTypeEnum
         {
             None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
@@ -619,8 +620,9 @@ namespace PrototypeWithAuth.AppData
             catch (Exception ex)
             {
                 if (recurringExpensesTab)
-                { 
-                    return new List<StringWithBool>() { new StringWithBool { String = "N/A"} }; }
+                {
+                    return new List<StringWithBool>() { new StringWithBool { String = "N/A" } };
+                }
                 return new List<StringWithBool>() { new StringWithBool { String = "price has an error", Bool = true } };
             }
         }
@@ -631,7 +633,7 @@ namespace PrototypeWithAuth.AppData
             {
 
                 List<StringWithBool> categoryColumn = new List<StringWithBool>();
-                                
+
                 if (sourceSelected)
                 {
                     var source = p.ProductSubcategory.ParentCategory.CategoryType.CategoryTypeDescription;
