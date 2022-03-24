@@ -11,12 +11,13 @@ export default function RootComponent(props) {
         viewModel: props.viewModel,
         modals: [],
         navigationInfo: {
-            pageType: props.viewModel?.PageType , sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType  },
-        pricePopoverViewModel: { ...props.viewModel?.PricePopoverViewModel },
-        categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel },
+            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType || {}  },
+        pricePopoverViewModel: {
+            ...props.viewModel?.PricePopoverViewModel || {} },
+        categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },
         tabInfo: {
-            tabValue: props.viewModel?.TabValue, tabs: [ ...props.viewModel?.Tabs]},
-        inventoryFilterViewModel: { ...props.viewModel?.InventoryFilterViewModel },
+            tabValue: props.viewModel?.TabValue, tabs: [ ...props.viewModel?.Tabs ||[]]},
+        inventoryFilterViewModel: { ...props.viewModel?.InventoryFilterViewModel || {}  },
         pageNumber: props.viewModel.PageNumber,
         reloadIndex: false
     }, composeWithDevTools());

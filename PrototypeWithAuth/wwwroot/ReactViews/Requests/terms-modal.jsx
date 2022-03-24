@@ -92,7 +92,6 @@ function TermsModal(props) {
     var onSubmit = (data, e) => {
         var url = "/Requests/TermsModal";
         var formData = new FormData()
-
         formData.append(state.viewModel)
         formData.append(props.tempRequestList)
         console.log(formData)
@@ -161,7 +160,9 @@ function TermsModal(props) {
                                 <div className="input-group">
                                     <label className="control-label">Shipping</label>
                                     <span className="input-group-text pr-2">{currency}</span>
-                                    <input defaultValue={state.viewModel.ParentRequest?.Shipping} name="ParentRequest.Shipping" className="form-control-plaintext border-bottom" {...register("ParentRequest.Shipping")} />
+                                    <input defaultValue={state.viewModel.ParentRequest?.Shipping} name="ParentRequest.Shipping" className="form-control-plaintext border-bottom"
+                                        onChange={(e) => setState({ ...state, viewModel: { ...state.viewModel, ParentRequest: {...state.view.ParentRequest, Shipping: e.target.value} } })}
+                                        {...register("ParentRequest.Shipping")} />
                                 </div>
                             </div>
                             {state.viewModel.SelectedTerm == 5 &&
@@ -225,7 +226,8 @@ function TermsModal(props) {
                         <div className="row">
                             <div className="col-12">
                                 <label className="control-label">Notes to the supplier</label>
-                                <input defaultValue={state.viewModel.ParentRequest?.NoteToSupplier} name="ParentRequest.NoteToSupplier" className="form-control-plaintext border-bottom" {...register("ParentRequest.NoteToSupplier")} />
+                                <input defaultValue={state.viewModel.ParentRequest?.NoteToSupplier} name="ParentRequest.NoteToSupplier" className="form-control-plaintext border-bottom"
+                                onChange={(e) => setState({ ...state, viewModel: { ...state.viewModel, ParentRequest: { ...state.view.ParentRequest, NoteToSupplier: e.target.value } } })}/>                                />
                             </div>
                         </div>
                         <div className="row">

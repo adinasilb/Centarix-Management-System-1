@@ -1397,7 +1397,7 @@ namespace PrototypeWithAuth.Controllers
 
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
-                Guids = new List<Guid> { new Guid() },
+                Guids = new List<Guid> { Guid.NewGuid() },
                 TempRequestViewModels = new List<TempRequestViewModel>()
             };
             //await _tempRequestJsonsProc.UpdateAsync(tempRequestListViewModel.Guids, new RequestIndexObject { }, tempRequestListViewModel, _userManager.GetUserId(User), true);
