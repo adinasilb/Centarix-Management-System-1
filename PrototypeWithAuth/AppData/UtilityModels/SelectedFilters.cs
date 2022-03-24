@@ -4,7 +4,8 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public class SelectedFilters
     {
-     
+        public int NumFilters { get; set; }
+
         private List<string> _selectedOwnersIDs;
         public List<string> SelectedOwnersIDs {
             get

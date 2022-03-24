@@ -3,7 +3,7 @@ export const SET_CATEGORY_POPOVER_VIEWMODEL = 'SET_CATEGORY_POPOVER_VIEWMODEL'
 export const SET_PRICE_POPOVER_VIEWMODEL = 'SET_PRICE_POPOVER_VIEWMODEL'
 export const SET_TAB_INFO = 'SET_TAB_INFO'
 export const SET_HEADER_INFO = 'SET_HEADER_INFO'
-export const SET_INVENTORY_FILTER_VIEWMODEL = 'SET_INVENTORY_FILTER_VIEWMODEL'
+export const SET_SELECTED_FILTERS_VIEWMODEL = 'SET_SELECTED_FILTERS_VIEWMODEL'
 export const ADD_MODAL = 'ADD_MODAL'
 export const REMOVE_MODAL = 'REMOVE_MODAL'
 export const REMOVE_MODALS = 'REMOVE_MODALS'
@@ -38,10 +38,10 @@ export const setTabInfo = (tabValue) => {
         payload: tabValue
     })
 };
-export const setInventoryFilterViewModel = (viewmodel) => {
+export const setSelectedFiltersViewModel = (viewmodel) => {
     return ({
 
-        type: SET_INVENTORY_FILTER_VIEWMODEL,
+        type: SET_SELECTED_FILTERS_VIEWMODEL,
         payload: viewmodel
     })
 };

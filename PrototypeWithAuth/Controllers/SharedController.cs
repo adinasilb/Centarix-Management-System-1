@@ -949,7 +949,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
         protected async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
-                                                                                SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel requestsSearchViewModel = null, AppUtility.IndexTabs tabName = AppUtility.IndexTabs.None)
+                                                                                SelectedRequestFilters selectedFilters = null, RequestsSearchViewModel requestsSearchViewModel = null, AppUtility.IndexTabs tabName = AppUtility.IndexTabs.None)
         {
             int categoryID = 1;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
@@ -1122,7 +1122,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PricePopoverViewModel.PopoverSource = 1;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             bool isProprietary = requestIndexObject.TabValue == AppUtility.IndexTabs.Samples.ToString();
-            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType, isProprietary);
+            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, requestIndexObject.SectionType, isProprietary);
             requestIndexViewModel.TabValue = requestIndexObject.TabValue.ToString();
             return requestIndexViewModel;
         }
@@ -1584,7 +1584,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
+        protected InventoryFilterViewModel GetInventoryFilterViewModel(SelectedRequestFilters selectedFilters = null, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
         {
             int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
             if (selectedFilters != null)
@@ -1601,7 +1601,7 @@ namespace PrototypeWithAuth.Controllers
                     SelectedLocations = _locationTypesProc.Read(new List<Expression<Func<LocationType, bool>>> { l => l.Depth == 0, l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID) }).ToList(),
                     SelectedCategories = _parentCategoriesProc.Read(new List<Expression<Func<ParentCategory, bool>>> { c => selectedFilters.SelectedCategoriesIDs.Contains(c.ID) }).ToList(),
                     SelectedSubcategories = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ID) }).Distinct().ToList(),
-                    NumFilters = numFilters,
+                    NumFilters = selectedFilters.NumFilters,
                     SectionType = sectionType,
                     Archive = selectedFilters.Archived,
                     IsProprietary = isProprietary,
@@ -1615,7 +1615,7 @@ namespace PrototypeWithAuth.Controllers
                 return inventoryFilterViewModel;
             }
             else
-            {
+            {                
                 return new InventoryFilterViewModel()
                 {
                     Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType) }).ToList(),
@@ -1628,7 +1628,7 @@ namespace PrototypeWithAuth.Controllers
                     SelectedLocations = new List<LocationType>(),
                     SelectedCategories = new List<ParentCategory>(),
                     SelectedSubcategories = new List<ProductSubcategory>(),
-                    NumFilters = numFilters,
+                    NumFilters = 0,
                     SectionType = sectionType,
                     IsProprietary = isProprietary
                 };

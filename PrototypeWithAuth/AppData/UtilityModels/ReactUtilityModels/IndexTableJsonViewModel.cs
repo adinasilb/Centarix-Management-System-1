@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels
 {
     public class IndexTableJsonViewModel
     {
-        public InventoryFilterViewModel InventoryFilterViewModel { get; set; }
+        public SelectedRequestFilters SelectedFilters { get; set; }
         public CategoryPopoverViewModel CategoryPopoverViewModel { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public NavigationInfo NavigationInfo { get; set; }

@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
 import { Select, MenuItem, ListItemText, Checkbox, FormControl, InputLabel , OutlinedInput} from '@mui/material';
@@ -14,7 +13,7 @@ export default function ShareModal(props) {
     const [state, setState] = useState({ viewModel: null, requestID: location.state.ID, modelsEnum : location.state.modelsEnum, users:[]});
     console.log(location.state)
     useEffect(() => {
-        var url = "/Requests/ShareModalJson?id=" + state.requestID + "& modelsEnum=" + state.modelsEnum+"&" + getRequestIndexString();
+        var url = "/Requests/ShareModalJson?id=" + state.requestID + "& modelsEnum=" + state.modelsEnum;
         fetch(url, {
             method: "GET"
         })

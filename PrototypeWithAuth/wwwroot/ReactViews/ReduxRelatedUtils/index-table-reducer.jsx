@@ -38,11 +38,10 @@ export const tabInfoReducer = (state = {}, action) => {
             return state;
     }
 };
-export const inventoryFilterReducer = (state = {}, action) => {
-    console.log("inventoryFilterReducer")
+export const selectedFiltersReducer = (state = {}, action) => {
     console.log(action.type)
     switch (action.type) {
-        case ActionKeys.SET_INVENTORY_FILTER_VIEWMODEL:
+        case ActionKeys.SET_SELECTED_FILTERS_VIEWMODEL:
             return action.payload;
             break;
         default:
