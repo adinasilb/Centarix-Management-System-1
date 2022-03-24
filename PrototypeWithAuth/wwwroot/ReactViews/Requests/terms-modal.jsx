@@ -14,6 +14,8 @@ import { useDispatch, connect } from 'react-redux';
 import { useForm, FormProvider } from 'react-hook-form';
 import { DevTool } from "@hookform/devtools";
 import * as AppUtility from '../Constants/AppUtility.jsx'
+import * as ModalKeys from '../Constants/ModalKeys.jsx'
+
 
 
 function TermsModal(props) {
@@ -88,10 +90,11 @@ function TermsModal(props) {
     };
 
     var onSubmit = (data, e) => {
-        var url = "/Requests/UploadQuoteModal";
+        var url = "/Requests/TermsModal";
         var formData = new FormData()
-        
-        formData.append(data.ParentQuote)
+
+        formData.append(state.viewModel)
+        formData.append(props.tempRequestList)
         console.log(formData)
         fetch(url, {
             method: "POST",
@@ -99,8 +102,24 @@ function TermsModal(props) {
         })
             .then((response) => { return response.json(); })
             .then(result => {
+                if (result == null) {
+                    props.setTempRequestList([]);
+                    props.removeModals(props.modals);
+                    //props.reloadindex
+                }
+                else {
+                    props.setTempRequestList(JSON.parse(result));
+                    props.addModal(ModalKeys.CONFIRM_EMAIL)
+                }
 
-                //dispatch(Actions.removeModal(ModalKeys.terms modal));
+            }).catch(jqxhr => {
+                setState({
+                    ...state,
+                    viewModel: {
+                        ...state.viewModel,
+                        Error:jqxhr
+                    }
+                })
             });
 
     }
@@ -112,7 +131,7 @@ function TermsModal(props) {
     return (
 
         <GlobalModal backdrop={props.backdrop} value={state.ID} modalKey={props.modalKey} key={state.ID} size="lg" header="Place Order">
-            {state.viewModel.Error && state.viewModel.Error.Bool == false}
+            {state.viewModel.Error && <span className="danger-color">state.viewModel.Error</span>}
             <FormProvider {...methods} >
                 <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                     <DevTool control={control} />
@@ -235,13 +254,16 @@ function TermsModal(props) {
 }
 const mapDispatchToProps = dispatch => (
     {
-        setTempRequestList: (tempRequest) => dispatch(Actions.setTempRequestList(tempRequest))
+        setTempRequestList: (tempRequest) => dispatch(Actions.setTempRequestList(tempRequest)),
+        addModal: (modalKey) => dispatch(Actions.addModal(modalKey)),
+        removeModals: (modals) => dispatch(Actions.removeModals(modals)),
     }
 );
 
 const mapStateToProps = state => {
     return {
-        tempRequestList: state.tempRequestList.present
+        tempRequestList: state.tempRequestList.present,
+        modals: state.modals
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(TermsModal);

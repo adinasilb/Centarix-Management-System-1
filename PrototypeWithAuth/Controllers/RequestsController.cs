@@ -943,10 +943,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public async Task<RedirectAndModel> SaveTermsModalAsync(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel)
+        public async Task<TermsViewModel> SaveTermsModalAsync(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel, bool needsApproval, bool SaveUsingTempRequest)
         {
-            var controller = "Requests";
-            var needsToBeApproved = false;
             var userID = _userManager.GetUserId(User);
             var guid = tempRequestListViewModel.Guids.LastOrDefault();
             try
@@ -967,7 +965,6 @@ namespace PrototypeWithAuth.Controllers
 
                 termsViewModel.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                 termsViewModel.ParentRequest.OrderDate = DateTime.Now;
-                var SaveUsingTempRequest = true;
                 bool hasShippingOnPayment;
                 if (termsViewModel.ParentRequest.Shipping == 0)
                 {
@@ -990,17 +987,7 @@ namespace PrototypeWithAuth.Controllers
                             //throw new Exception();
                             tempRequest.Request.PaymentStatusID = termsViewModel.SelectedTerm;
                             tempRequest.Request.Installments = (uint)termsViewModel.Installments != 0 ? (uint)termsViewModel.Installments : 1;
-                            if (tempRequestListViewModel.TempRequestViewModels.Count() == 1 && tempRequest.Request.RequestStatusID == 1) //item is ordernow and needs to be approved
-                            {
-                                needsToBeApproved = true;
-                            }
-                            //check if we still need this
-                            if (tempRequest.Request.Product == null)
-                            {
-                                tempRequest.Request.Product = await _productsProc.ReadOneAsync(new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include = p => p.ProductSubcategory } });
-                            }
-
-                            if (tempRequest.Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AlreadyPurchased.ToString() || needsToBeApproved)
+                            if (tempRequest.Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AlreadyPurchased.ToString() || needsApproval)
                             {
                                 SaveUsingTempRequest = false;
                             }
@@ -1008,8 +995,6 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 tempRequest.Request.ParentRequest = termsViewModel.ParentRequest;
                             }
-                            //test if we need to add the shipping
-                            tempRequest.Request.ParentRequest.Shipping = termsViewModel.ParentRequest.Shipping;
 
                             if (!SaveUsingTempRequest)
                             {
@@ -1020,7 +1005,7 @@ namespace PrototypeWithAuth.Controllers
                                 var additionalRequests = counter + 1 < tempRequestListViewModel.TempRequestViewModels.Count ? true : false;
                                 MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.Guids.LastOrDefault());
                                 tempRequest.Request.Product.Vendor = await _vendorsProc.ReadOneAsync(new List<Expression<Func<Vendor, bool>>> { v => v.VendorID == tempRequest.Request.Product.VendorID });
-                                if (!needsToBeApproved)
+                                if (!needsApproval)
                                 {
                                     RequestNotification requestNotification = new RequestNotification();
                                     requestNotification.RequestID = tempRequest.Request.RequestID;
@@ -1061,12 +1046,6 @@ namespace PrototypeWithAuth.Controllers
                             counter++;
                         }
                         await _requestsProc.SaveDbChangesAsync();
-                        if (SaveUsingTempRequest)
-                        {
-                            //this should be false, setting to true for testing purposes
-                            //await _tempRequestJsonsProc.UpdateWithoutTransactionAsync(tempRequestListViewModel.Guids, tempRequestListViewModel.RequestIndexObject, newTRLVM, userID, false);
-                            await transaction.CommitAsync();
-                        }
                         if (!SaveUsingTempRequest)
                         {
                             MoveDocumentsOutOfTempFolder((int)tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequestID, AppUtility.ParentFolderName.ParentRequest, false, tempRequestListViewModel.Guids.LastOrDefault()); //either they all have same parentrequests are already outof the temp folder
@@ -1075,53 +1054,21 @@ namespace PrototypeWithAuth.Controllers
                                 MoveDocumentsOutOfTempFolder((int)tempRequestListViewModel.TempRequestViewModels[0].Request.ParentQuoteID, AppUtility.ParentFolderName.ParentQuote, false, tempRequestListViewModel.Guids.LastOrDefault()); //either they all have same parentrequests are already outof the temp folder
 
                             }
-
-                            //await _tempRequestJsonsProc.RemoveAllAsync(newTRLVM.Guids, _userManager.GetUserId(User));
-                            //tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.Guids;
-                            //await transaction.CommitAsync();
-                            if (!needsToBeApproved)
-                            {
-                                return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, tempRequestListViewModel.RequestIndexObject) };
-                            }
                         }
-
                     }
                     catch (Exception ex)
                     {
-                        //await _tempRequestJsonsProc.RollbackAsync(tempRequestListViewModel.Guids, tempRequestListViewModel.SequencePosition);
                         transaction.Rollback();
                         throw ex;
                     }
-
-                }
-
-                //if (termsViewModel.ParentRequest.Requests.FirstOrDefault().RequestStatusID == 6 && request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
-                //{
-                //
-                if (!needsToBeApproved)
-                {
-                    //await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
-                    //get rid of old trlvm?
-
-                    return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, tempRequestListViewModel.RequestIndexObject) };
-                }
-                else
-                {
-                    //get rid of old trlvm?
-                    return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("NeedsToBeApproved", "", "") };
                 }
             }
             catch (Exception ex)
             {
-                //await _tempRequestJsonsProc.RollbackAsync(tempRequestListViewModel.Guids, tempRequestJson.SequencePosition);
                 termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                //var termsList = new List<SelectListItem>() { };
-                //await _proc.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-                //termsViewModel.TermsList = termsList;
-                //termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
-                return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("", "", ""), TermsViewModel = termsViewModel };
             }
+            return termsViewModel;
         }
 
         private static Payment UpdatePaymentFields(TermsViewModel termsViewModel, ref bool hasShippingOnPayment, TempRequestViewModel tempRequest, int i)
@@ -4612,28 +4559,35 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
+            bool needsApproval = false;
+            bool saveUsingTempRequest = true;
+            if (tempRequestListViewModel.TempRequestViewModels[0].Request.RequestStatusID == 1) //item is ordernow and needs to be approved
+            {
+                needsApproval = true;
+            }
+            if(tempRequestListViewModel.TempRequestViewModels[0].Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AlreadyPurchased.ToString() || needsApproval)
+            {
+                saveUsingTempRequest = true;
+            }
+            termsViewModel = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel, needsApproval, saveUsingTempRequest);
+            if (termsViewModel.ErrorMessage != "")
+            {
+                Response.StatusCode = 500;
+                return Json(JsonConvert.SerializeObject(termsViewModel.ErrorMessage));
+            }
+            else if (needsApproval || !saveUsingTempRequest)
+            {
+                return null;
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(termsViewModel.TempRequestListViewModel, Formatting.Indented, new JsonSerializerSettings
+                {
 
-            if (isCancel)
-            {
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, tempRequestListViewModel.Guids.LastOrDefault());
-                return new EmptyResult();
+                    Converters = new List<JsonConverter> { new StringEnumConverter() },
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                }));
             }
-
-            var r = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel);
-            if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
-            {
-                return PartialView("_ErrorMessage", r.TermsViewModel.ErrorMessage);
-            }
-            else if (r.RedirectToActionResult.ActionName == "NeedsToBeApproved")
-            {
-                //return PartialView("_IndexTableWithCounts", new { requestIndexObject = tempRequestListViewModel.RequestIndexObject });
-                return new EmptyResult();
-            }
-            else if (r.RedirectToActionResult.ActionName == "Index")
-            {
-                return new EmptyResult();
-            }
-            return RedirectToAction(r.RedirectToActionResult.ActionName, r.RedirectToActionResult.ControllerName, r.RedirectToActionResult.RouteValues);
         }
 
         [Authorize(Roles = "Reports")]
