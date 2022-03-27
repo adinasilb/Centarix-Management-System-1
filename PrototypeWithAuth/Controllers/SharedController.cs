@@ -92,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ApplicationDbContextEntries _applicationDbContextEntries;
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
-        protected readonly CRUD.CategoryBasesProc _categoryBasesProc;
+        //protected readonly CRUD.CategoryBasesProc<CategoryBase> _categoryBasesProc;
         protected readonly CRUD.CustomDataTypesProc _customDataTypesProc;
         protected readonly CRUD.OrderMethodsProc _orderMethodsProc;
         protected readonly CRUD.TimePeriodsProc _timePeriodProc;
@@ -167,7 +167,7 @@ namespace PrototypeWithAuth.Controllers
             _applicationDbContextEntries = new CRUD.ApplicationDbContextEntries(context);
             _parentQuotesProc = new CRUD.ParentQuotesProc(context);
             _invoicesProc = new CRUD.InvoicesProc(context);
-            _categoryBasesProc = new CRUD.CategoryBasesProc(context);
+            //_categoryBasesProc = new CRUD.CategoryBasesProc<CategoryBase>(context);
             _customDataTypesProc = new CRUD.CustomDataTypesProc(context);
             _testHeadersProc = new CRUD.TestHeadersProc(context);
             _orderMethodsProc = new CRUD.OrderMethodsProc(context);

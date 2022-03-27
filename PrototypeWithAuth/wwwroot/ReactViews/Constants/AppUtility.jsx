@@ -28,6 +28,13 @@ export const RoleEnum = {
 ApproveOrders : 'ApproveOrders',
 }
 
+export const CategorySettingType = {
+Details : 'Details',
+Price : 'Price',
+Documents : 'Documents',
+Received : 'Received',
+}
+
 export const PageTypeEnum = {
 None : 'None',
 RequestRequest : 'RequestRequest',

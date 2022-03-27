@@ -10,7 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public string FieldName { get; set; }
         public int CustomDataTypeID { get; set; }
-        public IEnumerable<CustomDataType> CustomDataTypes { get; set; }
         public bool Required { get; set; }
         //public int CustomFieldCounter { get; set; }
         //public string DivClass { get; set; }

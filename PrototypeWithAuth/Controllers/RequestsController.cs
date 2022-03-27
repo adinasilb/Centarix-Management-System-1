@@ -5228,7 +5228,8 @@ namespace PrototypeWithAuth.Controllers
             List<CustomField> DocumentsCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.DocumentsCustomFields, new JsonSerializerSettings());
             List<CustomField> ReceivedCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.ReceivedCustomFields, new JsonSerializerSettings());
             ProductSubcategory category = JsonConvert.DeserializeObject<ProductSubcategory>(settingsForm.Category, new JsonSerializerSettings());
-            return View();
+            _productSubcategoriesProc.UpdateWithoutTransaction(category, DetailsCustomFields, PriceCustomFields, DocumentsCustomFields, ReceivedCustomFields);
+            return RedirectToAction("SettingsInventory");
         }
 
         [HttpGet] 
@@ -5270,7 +5271,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(await GetSettingsFormViewModel(ModelType, CategoryID));
         }
 
-        private async Task<SettingsForm> GetSettingsFormViewModel(string ModelType, int CategoryID)
+        public async Task<SettingsForm> GetSettingsFormViewModel(string ModelType, int CategoryID)
         {
             SettingsForm settingsForm = new SettingsForm();
             if (ModelType == new ParentCategory().GetType().Name)
@@ -5279,7 +5280,8 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (ModelType == new ProductSubcategory().GetType().Name)
             {
-                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID }).FirstOrDefault();
+                settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID },
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory} }).FirstOrDefault();
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
@@ -5303,13 +5305,10 @@ namespace PrototypeWithAuth.Controllers
             return _requestsProc.UpdateExchangeRateByHistory().Result.Bool;
         }
 
-        public CustomField _CustomField()
+        public IEnumerable<CustomDataType> _CustomField()
         {
-            var CustomField = new CustomField()
-            {
-                CustomDataTypes = _customDataTypesProc.Read()
-            };
-            return CustomField;
+            var CustomDataTypes = _customDataTypesProc.Read();
+            return CustomDataTypes;
         }
     }
 }

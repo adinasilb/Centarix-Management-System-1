@@ -612,6 +612,10 @@
     <Compile Remove="Data\Migrations\20220130114626_addedImageUrlToCategoryBase.Designer.cs" />
     <Compile Remove="Data\Migrations\20220130115403_addedImageUrlToCategoryBase.cs" />
     <Compile Remove="Data\Migrations\20220130115403_addedImageUrlToCategoryBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220324121426_updatedCategoryJSON.cs" />
+    <Compile Remove="Data\Migrations\20220324121426_updatedCategoryJSON.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220324121744_updatedCategoryJSON.cs" />
+    <Compile Remove="Data\Migrations\20220324121744_updatedCategoryJSON.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

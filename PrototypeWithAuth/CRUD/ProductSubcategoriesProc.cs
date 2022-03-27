@@ -12,12 +12,8 @@ namespace PrototypeWithAuth.CRUD
 {
     public class ProductSubcategoriesProc : CategoryBasesProc<ProductSubcategory>
     {
-        public ProductSubcategoriesProc(ApplicationDbContext context, bool FromBase = false) : base(context)
+        public ProductSubcategoriesProc(ApplicationDbContext context, bool FromBase = false) : base(context, FromBase)
         {
-            if (!FromBase)
-            {
-                base.InstantiateProcs();
-            }
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -28,8 +29,11 @@ namespace PrototypeWithAuth.CRUD
             try
             {
                 ListDictionary json = new ListDictionary();
-                json.Add("Details", Details);
-                json.Add("Price", Price);
+                json.Add(AppUtility.CategorySettingType.Details.ToString(), Details);
+                json.Add(AppUtility.CategorySettingType.Price.ToString(), Price);
+                json.Add(AppUtility.CategorySettingType.Documents.ToString(), Documents);
+                json.Add(AppUtility.CategorySettingType.Received.ToString(), Received);
+                Category.CategoryJson = JsonConvert.SerializeObject(json);
                 _context.Entry(Category).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }

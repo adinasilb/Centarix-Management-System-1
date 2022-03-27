@@ -31,7 +31,8 @@ import Checkbox from '@mui/material/Checkbox';
 
 const SettingsForm = (props) => {
 
-
+    alert(JSON.stringify(props));
+    alert("in settings form");
     const [remove, setRemove] = useState({ key: false });
     //const [index, setIndex] = useState();
     const [countCF, setCountCF] = useState([]);
@@ -165,10 +166,19 @@ const SettingsForm = (props) => {
         fontSize: 2 + 'rem'
     }
     var showItem = " active show ";
-    var categoryNameRows = props.SettingsForm.Category.Description != null ?
-        Math.ceil(parseFloat(props.SettingsForm.Category.Description.length) / 30) : 1;
-    var catText = props.SettingsForm.CategoryDescription ?? "Select A Category";
-    var subCatText = props.SettingsForm.SubcategoryDescription ?? "Select A Subcategory";
+    var category = props.SettingsForm.Category.Description;
+    var categoryNameRows = category != null ?
+        Math.ceil(parseFloat(category.length) / 30) : 1;
+    var catName = category ?? "(categoryName)";
+    var catText = "Select A Category";
+    var subCatText = "Select A Subcategory";
+    if (props.SettingsForm.Category.ParentCategoryEnum == null) {
+        catText = props.SettingsForm.Category.ParentCategory.Description ?? catText;
+        subCatText = category ?? subCatText;
+    }
+    else {
+        catText = category ?? catText;
+    }
     console.log("categoryNameRows: " + categoryNameRows);
     return (
         <>
@@ -190,7 +200,7 @@ const SettingsForm = (props) => {
                             </div>
                             <div className="col-8">
                                 <div className="modal-product-title ml-2" >
-                                    <textarea asp-for="Category.Description" {...methods.register("categoryName", { required: true, maxLength: 10 })} className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
+                                    <textarea value={catName} {...methods.register("categoryName", { required: true, maxLength: 10 })} className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
                                 </div>
                                 <span className="text-danger-centarix">
                                     {methods.formState.errors.categoryName && methods.formState.errors.categoryName.type === "required" && <span>{Constant.Required}</span>}
@@ -223,23 +233,39 @@ const SettingsForm = (props) => {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label className="control-label">Category</label>
-                                                <select className="form-control-plaintext border-bottom " disabled>
-                                                    <option value="0">{catText}</option>
-                                                </select>
+                                                <Select className="form-control-plaintext border-bottom pt-1"
+                                                    readOnly={true}
+                                                    disabled={true}
+                                                    variant="standard"
+                                                    defaultValue="0">
+                                                    <MenuItem value="0">{catText}</MenuItem>
+                                                </Select>
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="control-label">Subcategory</label>
-                                                <select className="form-control-plaintext border-bottom " disabled>
-                                                    <option value="0">{subCatText}</option>
-                                                </select>
+                                                <Select className="form-control-plaintext border-bottom pt-1"
+                                                    readOnly={true}
+                                                    disabled={true}
+                                                    variant="standard"
+                                                    defaultValue="0">
+                                                    <MenuItem value="0">{subCatText}</MenuItem>
+                                                </Select>
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label className="control-label">Vendor</label>
-                                                <select className="form-control-plaintext border-bottom  " disabled>
-                                                    <option value="0">Select Vendor</option>
-                                                </select>
+                                                <Select
+                                                    readOnly={true}
+                                                    disabled={true}
+                                                    variant="standard"
+                                                    defaultValue="0"
+                                                    className="form-control-plaintext border-bottom pt-1"
+                                                >
+                                                    <MenuItem value="0">
+                                                        Select Vendor
+                                                                </MenuItem>
+                                                </Select>
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="control-label">Company ID (automatic)</label>
@@ -491,9 +517,9 @@ const SettingsForm = (props) => {
                                         <div className="">
                                             {customFields.filter(cField => cField.dict.tabName == "documents")
                                                 .map((cf, i) =>
-                                                <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData}
-                                                    RemoveCustomField={RemoveCustomField} tabName="DocumentsCustomFields" tabCount={i} />
-                                            )}
+                                                    <CustomField key={cf.dict.key} number={cf.dict.number} CustomFieldData={props.SettingsForm.CustomFieldData}
+                                                        RemoveCustomField={RemoveCustomField} tabName="DocumentsCustomFields" tabCount={i} />
+                                                )}
                                             <CustomFieldButton tabName={"documents"} clickhandler={OpenNewCustomField} />
                                         </div>
                                         <div className="" style={documentsCFStyle}>
@@ -667,7 +693,7 @@ function CustomField(props) {
                                         <MenuItem key="0" value="">
                                             {Constant.SelectPlaceholder}
                                         </MenuItem>
-                                        {props.CustomFieldData.CustomDataTypes.map((dataType, i) =>
+                                        {props.CustomFieldData.map((dataType, i) =>
                                             <MenuItem key={i + 1} value={dataType.CustomDataTypeID}>
                                                 {dataType.Name}
                                             </MenuItem>
