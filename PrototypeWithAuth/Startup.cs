@@ -30,15 +30,19 @@ using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
 using Newtonsoft.Json.Converters;
+using System.Reflection;
+using System.IO;
 
 namespace PrototypeWithAuth
 {
     public class Startup
     {
         private const String ConfirmEmailProvider = "CustomEmailConfirmation";
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             Configuration = configuration;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
@@ -204,6 +208,12 @@ namespace PrototypeWithAuth
 
             CreateRoles(serviceProvider).Wait();
 
+            if (_hostEnvironment.IsDevelopment())
+            {
+                WriteAppUtilityJsx();
+                WriteElixirStringsJsx();
+            }
+
 
             //AddRoles(serviceProvider).Wait();
 
@@ -335,8 +345,50 @@ namespace PrototypeWithAuth
             {
                 await UserManager.AddToRoleAsync(adminuser, "Users");
             }
+        } 
+
+        private void WriteAppUtilityJsx()
+        {
+            var type = Type.GetType("PrototypeWithAuth.AppData.AppUtility");
+            var enums = Assembly.Load("PrototypeWithAuth").GetTypes().Where(t => t.IsEnum && t.DeclaringType == type);
+            string uploadFolder = Path.Combine(_hostEnvironment.WebRootPath, "ReactViews\\Constants");
+
+            string fileName = Path.Combine(uploadFolder, "AppUtility.jsx");
+
+            using (StreamWriter writer = new StreamWriter(fileName, false))
+            {
+                foreach (var e in enums)
+                {
+                    writer.WriteLine("export const " + e.Name + " = {");
+                    foreach (var value in e.GetEnumValues())
+                    {
+                        writer.WriteLine(Enum.GetName(e, value) + " : '" + Enum.GetName(e, value) + "',");
+                    }
+                    writer.WriteLine("}");
+                    writer.WriteLine();
+                }
+            }
+
         }
 
+        private void WriteElixirStringsJsx()
+        {
+            var type = Type.GetType("PrototypeWithAuth.AppData.UtilityModels.ElixirStrings");
+            var elixirStrings = Assembly.Load("PrototypeWithAuth").GetTypes().Where(t => t.FullName == type.FullName).FirstOrDefault().GetMembers().Where(e => e.MemberType == MemberTypes.Field);
+
+            string uploadFolder = Path.Combine(_hostEnvironment.WebRootPath, "ReactViews\\Constants");
+
+            string fileName = Path.Combine(uploadFolder, "ElixirStrings.jsx");
+
+            using (StreamWriter writer = new StreamWriter(fileName, false))
+            {
+                foreach (var es in elixirStrings)
+                {
+                    writer.WriteLine("export const " + es.Name + " = '" + ((FieldInfo)es).GetValue(typeof(String)) + "';");
+                }
+            }
+
+        }
         //
 
         // var poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");

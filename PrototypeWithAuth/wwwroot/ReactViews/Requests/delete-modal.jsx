@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ajaxPartialIndexTable } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
 
@@ -27,7 +26,7 @@ export default function DeleteModal(props) {
         document.getElementById("loading").style.display = "block";
         var formdata = new FormData(e.target);
         var url = '/Requests/DeleteModal'
-        ajaxPartialIndexTable(dispatch, url, "POST", formdata, [ModalKeys.DELETE_ITEM])
+       // ajaxPartialIndexTable(dispatch, url, "POST", formdata, [ModalKeys.DELETE_ITEM])
         return false;
     }
 

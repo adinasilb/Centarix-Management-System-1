@@ -3,18 +3,6 @@
     $('.filter-col').focus();
 });
 
-$('#invFilterPopover').on('shown.bs.popover', function () {
-    $('body').addClass('popover-open');
-})
-
-       $('body').off('click').on('click', '.btn-filter', function () {
-            $.fn.ButtonFilterClick($(this).val(), $(this).parent().parent(), $(this).parent())
-        });
-
-    $('body').on('click', "#applyFilter", function (e) {
-            e.stopImmediatePropagation();
-            $.fn.ApplyFilterClick();
-        });
 
 
 $('.filter-and-search.search-by-name').on('change', function (e) {
@@ -103,7 +91,7 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
 	$('#invFilterPopover').removeClass('section-bg-color custom-button-font');
-	//$('#invFilterPopover').addClass('custom-order-inv');
+	//$('#invFilterPopover').addClass('section-outline-color');
 }); 
 
 $('body').on('click', '.clear-filters', function () {

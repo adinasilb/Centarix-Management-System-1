@@ -93,7 +93,7 @@ namespace PrototypeWithAuth.CRUD
 
         private async Task SetTempRequestAsync(TempRequestJson tempRequestJson, TempRequestListViewModel tempRequestListViewModel, RequestIndexObject requestIndexObject)
         {
-            tempRequestListViewModel.SequencePosition = tempRequestJson.SequencePosition;
+            //tempRequestListViewModel.SequencePosition = tempRequestJson.SequencePosition;
             var fullRequestJson = new FullRequestJson()
             {
                 TempRequestViewModels = tempRequestListViewModel.TempRequestViewModels,

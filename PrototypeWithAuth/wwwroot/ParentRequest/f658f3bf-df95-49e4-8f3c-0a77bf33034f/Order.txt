@@ -1727,9 +1727,9 @@
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
                     $('#invFilterPopover').removeClass('section-bg-color custom-button-font');
-                    $('#invFilterPopover').addClass('custom-order-inv');
+                    $('#invFilterPopover').addClass('section-outline-color');
                     $('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
-                    $('#protocolFilterPopover').addClass('custom-protocols');
+                    $('#protocolFilterPopover').addClass('section-outline-color');
                 }
             });
         }

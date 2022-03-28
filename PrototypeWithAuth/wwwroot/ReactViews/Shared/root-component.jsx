@@ -7,7 +7,19 @@ import reducer from '../ReduxRelatedUtils/reducers.jsx';
 
 
 export default function RootComponent(props) {
-    const store = createStore(reducer, { viewModel: props.viewModel, modals: [] }, composeWithDevTools());
+    const store = createStore(reducer, {
+        viewModel: props.viewModel,
+        modals: [],
+        navigationInfo: {
+            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType || {}  },
+        pricePopoverViewModel: {
+            ...props.viewModel?.PricePopoverViewModel || {} },
+        categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },        
+        tabValue: props.viewModel?.TabValue,
+        selectedFilters: {},
+        pageNumber: props.viewModel.PageNumber,
+        reloadIndex: false
+    }, composeWithDevTools());
     const Scripts = lazy(() => import('../scripts.jsx'));  
     const App = lazy(() => import('./app.jsx'));
   
@@ -16,7 +28,7 @@ export default function RootComponent(props) {
            
             <Suspense fallback={<div></div>}><Scripts key="scripts" /></Suspense>
             <MemoryRouter >
-                <Suspense fallback={<div></div>}><App viewEnum={props.viewEnum} /></Suspense>
+                <Suspense fallback={<div></div>}><App viewModel={props.viewModel} viewEnum={props.viewEnum} /></Suspense>
                 </MemoryRouter>
 
         </Provider>

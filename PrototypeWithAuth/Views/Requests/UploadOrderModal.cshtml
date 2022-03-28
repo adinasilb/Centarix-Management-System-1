@@ -6,10 +6,10 @@
 
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-    {
-        sectionType = AppUtility.MenuItems.Operations.ToString();
-    }
+    //if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    //{
+    //    sectionType = AppUtility.MenuItems.Operations.ToString();
+    //}
 
 }
 
@@ -64,7 +64,7 @@
                                 }
                             }
                             <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Orders.ToString()Input" name="@AppUtility.FolderNamesEnum.Orders.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Orders.ToString()" data-id="@Model.TempRequestListViewModel.GUID" id="@AppUtility.FolderNamesEnum.Orders.ToString()" data-val="@true" showSwitch="@false" parentFolder="@AppUtility.ParentFolderName.ParentRequest.ToString()">
+                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Orders.ToString()" data-id="@Model.TempRequestListViewModel.Guids" id="@AppUtility.FolderNamesEnum.Orders.ToString()" data-val="@true" showSwitch="@false" parentFolder="@AppUtility.ParentFolderName.ParentRequest.ToString()">
                                 <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
                                         <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
 
-                            @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
+                            @*@if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                             {
                                 <div class="row">
                                     <div class="col-md-6">
@@ -108,7 +108,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            }
+                            }*@
 
 
                         </div>
