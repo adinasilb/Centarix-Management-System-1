@@ -17,7 +17,7 @@ export default function RootComponent(props) {
         categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },
         tabInfo: {
             tabValue: props.viewModel?.TabValue, tabs: [ ...props.viewModel?.Tabs ||[]]},
-        inventoryFilterViewModel: { ...props.viewModel?.InventoryFilterViewModel || {}  },
+        selectedFilters: {},
         pageNumber: props.viewModel.PageNumber,
         reloadIndex: false
     }, composeWithDevTools());
@@ -29,7 +29,7 @@ export default function RootComponent(props) {
            
             <Suspense fallback={<div></div>}><Scripts key="scripts" /></Suspense>
             <MemoryRouter >
-                <Suspense fallback={<div></div>}><App viewEnum={props.viewEnum} /></Suspense>
+                <Suspense fallback={<div></div>}><App viewModel={props.viewModel} viewEnum={props.viewEnum} /></Suspense>
                 </MemoryRouter>
 
         </Provider>

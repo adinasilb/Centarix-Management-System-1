@@ -2,29 +2,38 @@
 import { useEffect, useRef, } from 'react';
 import { useDispatch, connect } from 'react-redux';
 import { jsonToFormData } from '../Utility/root-function.jsx'
+import { batch } from 'react-redux'
 
 function IndexTableReduxStore(props) {
     const dispatch = useDispatch();
     const didMount = useRef(false);
 
     useEffect(() => {
-        if (props.reloadIndex) { useEffectFunc(didMount, props, dispatch, true); }
-    }, [props.reloadIndex])
+        if (didMount.current) {
+            if (props.reloadIndex) {
+                useEffectFunc(props, dispatch, false);
+            }
+        }
+        else {
+            didMount.current = true;
+        }
+    }, [props.pageNumber, props.reloadIndex])
 
     useEffect(() => {
-        useEffectFunc(didMount, props, dispatch, false);
-    }, [props.pageNumber])
-
-    useEffect(() => {
-        useEffectFunc(didMount, props, dispatch, true);
-    }, [props.inventoryFilterViewModel, props.navigationInfo, props.categoryPopoverViewModel, props.pricePopoverViewModel, props.tabInfo])
-    return <div attr={props.inventoryFilterViewModel.numFilters}></div>;
+        if (didMount.current) {
+            useEffectFunc(props, dispatch, true);
+        }
+        else {
+            didMount.current = true;
+        }
+    }, [props.selectedFilters, props.navigationInfo, props.categoryPopoverViewModel, props.pricePopoverViewModel, props.tabInfo])
+    return <div attr={props.pageNumber}></div>;
 }
 
 const mapStateToProps = state => {
     console.log("mstp global")
     return {
-        inventoryFilterViewModel: state.inventoryFilterViewModel,
+        selectedFilters: state.selectedFilters,
         tabInfo: state.tabInfo,
         categoryPopoverViewModel: state.categoryPopoverViewModel,
         pricePopoverViewModel: state.pricePopoverViewModel,
@@ -39,13 +48,17 @@ export default connect(
 )(IndexTableReduxStore)
 
 
-function useEffectFunc(didMount, props, dispatch, resetPageNumber) {
-    if (didMount.current) {
-        var testJSON = {};
+function useEffectFunc(props, dispatch, resetPageNumber) {
+    var testJSON = {};
+
+    if (resetPageNumber) {
+        batch(() => {
+            dispatch(Actions.setPageNumber(1));
+            dispatch(Actions.setReloadIndex(true));
+        })
+    }
+    else {
         var formdata = jsonToFormData(props, testJSON);
-        if (resetPageNumber) {
-            formdata.set("pageNumber", 1);
-        }       
         fetch("/Requests/GetIndexTableJson", {
             method: "POST",
             body: formdata
@@ -56,10 +69,13 @@ function useEffectFunc(didMount, props, dispatch, resetPageNumber) {
             .then(result => {
                 console.dir(result);
                 if (result != undefined) {
-                    dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+                    batch(() => {
+                        dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));
+                    })
                 }
                 // if (modals != undefined) { dispatch(Actions.removeModals(modals)); }
                 document.getElementById("loading").style.display = "none";
+                dispatch(Actions.setReloadIndex(false));
 
             }).catch(jqxhr => {
                 document.querySelectorAll('.error-message').forEach(e => e.classList.add("d-none"));
@@ -70,10 +86,11 @@ function useEffectFunc(didMount, props, dispatch, resetPageNumber) {
                     document.querySelector('.error-message').classList.remove("d-none");
                 }
                 document.getElementById("loading").style.display = "none";
+                dispatch(Actions.setReloadIndex(false));
                 //dispatch(Actions.removeModals(modals));
             });
-    } else {
-        didMount.current = true;
+
+
     }
 }
 

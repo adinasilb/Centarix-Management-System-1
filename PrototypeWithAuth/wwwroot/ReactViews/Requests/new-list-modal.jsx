@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import { ErrorMessage } from '@hookform/error-message';
 import GlobalModal from '../Utility/global-modal.jsx';
@@ -38,7 +37,7 @@ export default function NewListModal(props) {
             console.log(errors);
             var url = "/Requests/NewListModal";
             var formData = new FormData(e.target);
-            ajaxPartialIndexTable(dispatch, url, "POST", formData, [ModalKeys.NEW_LIST, ModalKeys.MOVE_TO_LIST]);
+           // ajaxPartialIndexTable(dispatch, url, "POST", formData, [ModalKeys.NEW_LIST, ModalKeys.MOVE_TO_LIST]);
        
         };
 

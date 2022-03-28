@@ -338,33 +338,7 @@ namespace PrototypeWithAuth.Controllers
             return viewModelByVendor;
         }
 
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests, Operations")] //redo this later
-        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel);
-            return PartialView(viewModel);
-        }
-
-
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, List<int> months, List<int> years, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters = null, int numFilters = 0)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, numFilters, requestsSearchViewModel);
-            return PartialView(viewModel);
-        }
-
+        
 
         [HttpGet]
         [HttpPost]
@@ -375,24 +349,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("InvalidLinkPage");
             }
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, numFilters, requestsSearchViewModel: requestsSearchViewModel);
-            return PartialView(viewModel);
-        }
-
-
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters = null)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, requestsSearchViewModel: requestsSearchViewModel);
-
             return PartialView(viewModel);
         }
+
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -1302,7 +1262,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters, numFilters, requestsSearchViewModel: requestsSearchViewModel);
+                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters, requestsSearchViewModel: requestsSearchViewModel);
                 json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
                    new JsonSerializerSettings
                    {
@@ -1323,14 +1283,7 @@ namespace PrototypeWithAuth.Controllers
             //var indexTableJsonViewModel = JsonConvert.DeserializeObject<IndexTableJsonViewModel>(indexTableJsonViewModelString);
             string json = "";
             var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabInfo.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, PageNumber = indexTableJsonViewModel.PageNumber };
-            var selectedFilters = new SelectedRequestFilters
-            {
-                SelectedVendorsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedVendors.Select(v => v.VendorID).ToList(),
-                SelectedOwnersIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedOwners.Select(v => v.Id).ToList(),
-                SelectedCategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedCategories.Select(v => v.ID).ToList(),
-                SelectedLocationsIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedLocations.Select(v => v.LocationTypeID).ToList(),
-                SelectedSubcategoriesIDs = indexTableJsonViewModel.InventoryFilterViewModel.SelectedSubcategories.Select(v => v.ID).ToList()
-            };
+         
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {
                 var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
@@ -1343,7 +1296,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                var viewModel = await GetIndexViewModel(requestIndexObject, new List<int>(), new List<int>(), selectedFilters: selectedFilters, indexTableJsonViewModel.InventoryFilterViewModel.NumFilters, requestsSearchViewModel: null);
+                var viewModel = await GetIndexViewModel(requestIndexObject, new List<int>(), new List<int>(), selectedFilters: indexTableJsonViewModel.SelectedFilters, requestsSearchViewModel: null);
                 json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
                    new JsonSerializerSettings
                    {
@@ -3085,7 +3038,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
 
-            return PartialView("_IndexTableData", await GetIndexViewModel(receivedLocationViewModel.RequestIndexObject, selectedFilters: selectedFilters, numFilters: numFilters, requestsSearchViewModel: requestsSearchViewModel));
+            return PartialView("_IndexTableData", await GetIndexViewModel(receivedLocationViewModel.RequestIndexObject, selectedFilters: selectedFilters, requestsSearchViewModel: requestsSearchViewModel));
 
 
         }
@@ -4594,7 +4547,7 @@ namespace PrototypeWithAuth.Controllers
             }
             try
             {
-                InventoryFilterViewModel inventoryFilterViewModel = base.GetInventoryFilterViewModel(selectedFilters, numFilters, sectionType, isProprietary);
+                InventoryFilterViewModel inventoryFilterViewModel = base.GetInventoryFilterViewModel(selectedFilters, sectionType, isProprietary);
                 //throw new Exception();
                 return PartialView(inventoryFilterViewModel);
             }

@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { useLocation, Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
+//import { ajaxPartialIndexTable, getRequestIndexString } from '../Utility/root-function.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
 import { NEW_LIST } from '../Constants/Routes.jsx'
 import GlobalModal from '../Utility/global-modal.jsx';
@@ -24,7 +24,7 @@ export default function MoveToListModal(props) {
         if (prevListID != null) {
             url = url + "&prevListID=" + prevListID
         }
-        url = url + "&" + getRequestIndexString();
+
 
         fetch(url, {
             method: "GET"
@@ -52,7 +52,7 @@ export default function MoveToListModal(props) {
         document.getElementById("NewListID").value = e.target.getAttribute("listid");
         var formData = new FormData(document.getElementsByClassName("moveListItemForm")[0]);
         document.getElementById("loading").style.display = "block";
-        ajaxPartialIndexTable(dispatch, url, "POST", formData, [ModalKeys.MOVE_TO_LIST])
+        //ajaxPartialIndexTable(dispatch, url, "POST", formData, [ModalKeys.MOVE_TO_LIST])
     }
 
 

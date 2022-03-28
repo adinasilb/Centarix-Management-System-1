@@ -5,7 +5,7 @@ import IndexTableReduxStore from "./index-table-redux-store.jsx"
 
 export default function _IndexTable(props) {
     return (<div>
-        <_IndexTableTabs key={"indexTableTabs"}/>
+        <_IndexTableTabs viewModel={props.viewModel} key={"indexTableTabs"}/>
         <_IndexTableHeaders key={"indexTableHeader"} />
         <_IndexTableData key={"indexTableData"} />
         <IndexTableReduxStore/>

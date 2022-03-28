@@ -21,7 +21,7 @@ export default function PageLoader(props) {
                 return (<_IndexTableDataByVendor key={"indexTableDataByVendor"}  showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);
                 break;
             case Routes.INDEX_TABLE:
-                return (<_IndexTable key={"indexTable"} />);
+                return (<_IndexTable viewModel={props.viewModel} key={"indexTable"} />);
                 break;
             case Routes.SETTINGS_INVENTORY:
                 return (<SettingsInventory key={"settingsInventory"} viewModel={props.viewModel} showView={true} />);
