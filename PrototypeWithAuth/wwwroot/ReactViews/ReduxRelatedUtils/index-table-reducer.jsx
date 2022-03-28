@@ -29,10 +29,10 @@ export const pricePopoverReducer = (state = {}, action) => {
             return state;
     }
 };
-export const tabInfoReducer = (state = {}, action) => {
+export const tabValueReducer = (state = {}, action) => {
     switch (action.type) {
-        case ActionKeys.SET_TAB_INFO:
-            return { ...state, tabValue: action.payload };
+        case ActionKeys.SET_TAB_VALUE:
+            return action.payload;
             break;
         default:
             return state;

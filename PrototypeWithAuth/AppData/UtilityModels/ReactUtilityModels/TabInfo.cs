@@ -7,6 +7,6 @@ namespace PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels
 {
     public class TabInfo
     { 
-        public string TabValue { get; set; }
+ 
     }
 }

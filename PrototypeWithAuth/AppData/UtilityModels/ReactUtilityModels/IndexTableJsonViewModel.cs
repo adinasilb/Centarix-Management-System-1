@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels
         public CategoryPopoverViewModel CategoryPopoverViewModel { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public NavigationInfo NavigationInfo { get; set; }
-        public TabInfo TabInfo { get; set; }
+        public string TabValue { get; set; }
         public int PageNumber { get; set; }
     }
 }

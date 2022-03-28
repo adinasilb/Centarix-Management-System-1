@@ -1,6 +1,6 @@
 ﻿import { combineReducers } from 'redux'
 import { SET_RELOAD_INDEX } from './actions.jsx'
-import indexTableReducer, { categoryPopoverReducer, pricePopoverReducer, tabInfoReducer, selectedFiltersReducer, setPageNumberReducer, setReloadIndexReducer } from './index-table-reducer.jsx'
+import indexTableReducer, { categoryPopoverReducer, pricePopoverReducer, tabValueReducer, selectedFiltersReducer, setPageNumberReducer, setReloadIndexReducer } from './index-table-reducer.jsx'
 import modalsReducer from './modals-reducer.jsx'
 import tempRequestReducer from './temp-request-reducer.jsx'
 
@@ -12,7 +12,7 @@ export default combineReducers({
     },
     categoryPopoverViewModel: categoryPopoverReducer,
     pricePopoverViewModel: pricePopoverReducer,
-    tabInfo: tabInfoReducer,
+    tabValue: tabValueReducer,
     selectedFilters: selectedFiltersReducer,
     tempRequestList: tempRequestReducer,
     pageNumber: setPageNumberReducer,

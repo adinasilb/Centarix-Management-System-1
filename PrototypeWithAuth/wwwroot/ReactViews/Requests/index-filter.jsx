@@ -1,8 +1,27 @@
 ﻿import { Popover, Typography } from '@mui/material';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
-import IndexFiterResults from './index-filter-results.jsx'
+import IndexFilterResults from './index-filter-results.jsx'
+import {
+    useState, useEffect
+} from 'react'
 export default function IndexFilter(props) {
+    console.log("index filter")
+    const [state, setState] = useState(initialState())
 
+
+    function initialState() {
+        return {
+            numFilters: props.viewModel.NumFilters,
+            searchByName: props.viewModel.SearchName,
+            catalogNumber: props.viewModel.CatalogNumber,
+            isArchived: props.viewModel.Archive,
+            vendors: { filterText: "", notSelectedShown: props.viewModel.Vendors, selected: props.viewModel.SelectedVendors || [], notSelectedHidden: [] },
+            owners: { filterText: "", notSelectedShown: props.viewModel.Owners, selected: props.viewModel.SelectedOwners || [], notSelectedHidden: [] },
+            locations: { filterText: "", notSelectedShown: props.viewModel.Locations, selected: props.viewModel.SelectedLocations || [], notSelectedHidden: [] },
+            categories: { filterText: "", notSelectedShown: props.viewModel.Categories, selected: props.viewModel.SelectedCategories || [], notSelectedHidden: [] },
+            subcategories: { filterText: "", notSelectedShown: props.viewModel.Subcategories, selected: props.viewModel.SelectedSubcategories || [], notSelectedHidden: [] }
+        };
+    }
     return (
         <div className="container-fluid ">
             <div className="row">
@@ -29,7 +48,7 @@ export default function IndexFilter(props) {
                                         horizontal: 'center',
                                     }}
                                 >
-                                    <IndexFiterResults viewModel={props.viewModel.InventoryFilterViewModel}  popupState={popupState} />
+                                    <IndexFilterResults key="InventoryFilterResults" viewModel={props.viewModel} popupState={popupState} state={state} setState={setState} />
                                 </Popover>
                             </div>
                         )

@@ -14,9 +14,8 @@ export default function RootComponent(props) {
             pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType || {}  },
         pricePopoverViewModel: {
             ...props.viewModel?.PricePopoverViewModel || {} },
-        categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },
-        tabInfo: {
-            tabValue: props.viewModel?.TabValue, tabs: [ ...props.viewModel?.Tabs ||[]]},
+        categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },        
+        tabValue: props.viewModel?.TabValue,
         selectedFilters: {},
         pageNumber: props.viewModel.PageNumber,
         reloadIndex: false
