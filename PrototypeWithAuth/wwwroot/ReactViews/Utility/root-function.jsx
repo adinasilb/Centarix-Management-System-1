@@ -4,14 +4,10 @@ export var combineTwoFormDatas = function (formdata1, formdata2) {
         var formdata1 = new FormData();
     }
     if (formdata2 != undefined) {
-        formdata2.entries().forEach(pair => {
+        for (var pair of formdata2.entries()) {
             formdata1.append(pair[0], pair[1]);
-            console.log('key ' + pair[0]);
-            console.log('value ' + pair[1])
-
-        });
+        }
     }
-    console.dir(formdata1);
     return formdata1;
 }
 

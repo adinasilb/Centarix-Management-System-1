@@ -15,7 +15,8 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { DevTool } from "@hookform/devtools";
 import * as AppUtility from '../Constants/AppUtility.jsx'
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
-
+import axios from 'axios'
+import { jsonToFormData, combineTwoFormDatas } from '../Utility/root-function.jsx'
 
 
 function TermsModal(props) {
@@ -28,10 +29,11 @@ function TermsModal(props) {
         viewModel: {}
     })
     const request = props.tempRequestList.TempRequestViewModels[0].Request;
-
+    var vendorID = (request.SingleOrder && request.SingleOrder.VendorID) || (request.RecurringOrder && request.RecurringOrder.VendorID) || (request.StandingOrder && request.RecurringOrder.VendorID)
+    console.log(vendorID)
     useEffect(() => {
 
-        var url = "/Requests/TermsModal?vendorID=" + request.Product.VendorID;
+        var url = "/Requests/TermsModal?vendorID=" + vendorID;
         fetch(url, {
             method: "GET"
         })
@@ -65,58 +67,74 @@ function TermsModal(props) {
     };
 
     const emailsKeyPress = (e, emails) => {
-        console.log(emails)
-        console.log(e.target.value)
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
+        if (state.viewModel.EmailAddresses.length < 5) {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)) {
+                setState(prevstate => ({
+                    ...prevstate,
+                    viewModel: {
+                        ...prevstate.viewModel,
+                        EmailAddresses: emails
+                    }
+                }));
+            }
+        }
+    };
+
+    const handleDeleteChip = (email) => {
+        if (state.viewModel.EmailAddresses.length > 1) {
             setState(prevstate => ({
                 ...prevstate,
                 viewModel: {
                     ...prevstate.viewModel,
-                    EmailAddresses: emails
+                    EmailAddresses: prevstate.viewModel.EmailAddresses.filter(e => e != email)
                 }
             }));
         }
     };
 
-    const handleDeleteChip = (email) => {
-        console.log(email)
-        setState(prevstate => ({
-            ...prevstate,
-            viewModel: {
-                ...prevstate.viewModel,
-                EmailAddresses: prevstate.viewModel.EmailAddresses.filter(e => e != email)
-            }
-        }));
-    };
-
     var onSubmit = (data, e) => {
-        var url = "/Requests/TermsModal";
-        var formData = new FormData()
-        formData.append(state.viewModel)
-        formData.append(props.tempRequestList)
-        console.log(formData)
-        fetch(url, {
+        setState({
+            ...state, viewModel: { ...state.viewModel, ParentRequest: { ...state.viewModel.ParentRequest, Shipping: data.shipping } }
+        })
+
+        var viewModelFormData = jsonToFormData(state.viewModel)
+        var tempRequestFormData = jsonToFormData({ "TempRequestListViewModel": props.tempRequestList })
+        var formData = combineTwoFormDatas(viewModelFormData, tempRequestFormData)
+
+        fetch("/Requests/TermsModal", {
             method: "POST",
             body: formData
         })
-            .then((response) => { return response.json(); })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.log(text)
+                        throw new Error(text)
+                    })
+                }
+                else {
+                    return response.json();
+                }
+            })
             .then(result => {
                 if (result == null) {
+                    console.log("redirect to index")
                     props.setTempRequestList([]);
                     props.removeModals(props.modals);
-                    //props.reloadindex
+                    props.setReloadIndex(true);
                 }
                 else {
                     props.setTempRequestList(JSON.parse(result));
                     props.addModal(ModalKeys.CONFIRM_EMAIL)
                 }
 
-            }).catch(jqxhr => {
+            }).catch(err => {
+                console.dir(err)
                 setState({
                     ...state,
                     viewModel: {
                         ...state.viewModel,
-                        Error:jqxhr
+                        ErrorMessage : err
                     }
                 })
             });
@@ -130,9 +148,9 @@ function TermsModal(props) {
     return (
 
         <GlobalModal backdrop={props.backdrop} value={state.ID} modalKey={props.modalKey} key={state.ID} size="lg" header="Place Order">
-            {state.viewModel.Error && <span className="danger-color">state.viewModel.Error</span>}
+            {state.viewModel.ErrorMessage && <span className="danger-color">{state.viewModel.Error.String}</span>}
             <FormProvider {...methods} >
-                <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
+                <form action="" data-string="" method="post" encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                     <DevTool control={control} />
                     <div className="container-fluid">
                         <div className="row">
@@ -141,7 +159,7 @@ function TermsModal(props) {
                                 <FormControl fullWidth variant="standard">
                                     <Select
                                         id="Terms"
-                                        
+
                                         className="form-control-plaintext border-bottom"
                                         value={state.viewModel.SelectedTerm ?? ""}
                                         onChange={handleTermsChange}
@@ -157,37 +175,36 @@ function TermsModal(props) {
                             </div>
 
                             <div className="col-3">
+                                <label className="control-label">Shipping</label>
                                 <div className="input-group">
-                                    <label className="control-label">Shipping</label>
                                     <span className="input-group-text pr-2">{currency}</span>
-                                    <input defaultValue={state.viewModel.ParentRequest?.Shipping} name="ParentRequest.Shipping" className="form-control-plaintext border-bottom"
-                                        onChange={(e) => setState({ ...state, viewModel: { ...state.viewModel, ParentRequest: {...state.view.ParentRequest, Shipping: e.target.value} } })}
-                                        {...register("ParentRequest.Shipping")} />
+                                    <input name="ParentRequest.Shipping" className="form-control-plaintext border-bottom"
+                                        {...register("shipping", { min: 0 })} />
                                 </div>
                             </div>
                             {state.viewModel.SelectedTerm == 5 &&
                                 <div className="col-5">
-                                <div className = "row">
-                                    <div className="col-4 installments-amount-block">
-                                        <label className="control-label">Installments</label>
-                                        <input defaultValue={state.viewModel.Installments} name="Installments" className="form-control-plaintext border-bottom" {...register("Installments", { min:1 })} />
-                                        {errors["Installments"] && <span>This field is required</span>}
+                                    <div className="row">
+                                        <div className="col-4 installments-amount-block">
+                                            <label className="control-label">Installments</label>
+                                            <input defaultValue={state.viewModel.Installments} name="Installments" className="form-control-plaintext border-bottom" {...register("Installments", { min: 1 })} />
+                                            {errors["Installments"] && <span>This field is required</span>}
+                                        </div>
+                                        <div className="col-6 installments-amount-block">
+                                            <LocalizationProvider dateAdapter={DateAdapter}>
+                                                <MobileDatePicker
+                                                    label="Installment Date"
+                                                    variant="standard"
+                                                    inputFormat="dd MMM yyyy"
+                                                    value={state.viewModel.InstallmentDate}
+                                                    onChange={handleDateChange}
+                                                    renderInput={(params) =>
+                                                        <TextField  {...params} {...register("InstallmentDate")} />
+                                                    }
+                                                />
+                                            </LocalizationProvider>
+                                        </div>
                                     </div>
-                                    <div className="col-6 installments-amount-block">
-                                        <LocalizationProvider dateAdapter={DateAdapter}>
-                                            <MobileDatePicker
-                                                label="Installment Date"
-                                                variant="standard"
-                                                inputFormat="dd MMM yyyy"
-                                                value={state.viewModel.InstallmentDate}
-                                                onChange={handleDateChange}
-                                                renderInput={(params) =>
-                                                    <TextField  {...params} {...register("InstallmentDate")} />
-                                                }
-                                            />
-                                        </LocalizationProvider>
-                                    </div>
-                                </div>
                                 </div>
                             }
 
@@ -227,27 +244,33 @@ function TermsModal(props) {
                             <div className="col-12">
                                 <label className="control-label">Notes to the supplier</label>
                                 <input defaultValue={state.viewModel.ParentRequest?.NoteToSupplier} name="ParentRequest.NoteToSupplier" className="form-control-plaintext border-bottom"
-                                onChange={(e) => setState({ ...state, viewModel: { ...state.viewModel, ParentRequest: { ...state.view.ParentRequest, NoteToSupplier: e.target.value } } })}/>                                />
+                                    onChange={(e) => setState({ ...state, viewModel: { ...state.viewModel, ParentRequest: { ...state.viewModel.ParentRequest, NoteToSupplier: e.target.value } } })} />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-4">
                                 <label className="control-label">Sum</label>
-                                <span className="input-group-text pr-2">{currency}</span>
-                                <input defaultValue={sum.toFixed(2)} className="form-control-plaintext border-bottom" />
+                                <div className="input-group">
+                                    <span className="input-group-text pr-2">{currency}</span>
+                                    <input defaultValue={sum.toFixed(2)} disabled={true} className="form-control-plaintext border-bottom" />
+                                </div>
                             </div>
                             <div className="col-4">
                                 <label className="control-label">VAT</label>
-                                <span className="input-group-text pr-2">{currency}</span>
-                                <input defaultValue={vat.toFixed(2)} className="form-control-plaintext border-bottom" />
+                                <div className="input-group">
+                                    <span className="input-group-text pr-2">{currency}</span>
+                                    <input defaultValue={vat.toFixed(2)} disabled={true} className="form-control-plaintext border-bottom" />
+                                </div>
                             </div>
                             <div className="col-4">
                                 <label className="control-label">Total+VAT</label>
-                                <span className="input-group-text pr-2">{currency}</span>
-                                <input defaultValue={(sum + vat).toFixed(2)} className="form-control-plaintext border-bottom" />
+                                <div className="input-group">
+                                    <span className="input-group-text pr-2">{currency}</span>
+                                    <input defaultValue={(sum + vat).toFixed(2)} disabled={true} className="form-control-plaintext border-bottom" />
+                                </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </form>
             </FormProvider >
@@ -259,6 +282,7 @@ const mapDispatchToProps = dispatch => (
         setTempRequestList: (tempRequest) => dispatch(Actions.setTempRequestList(tempRequest)),
         addModal: (modalKey) => dispatch(Actions.addModal(modalKey)),
         removeModals: (modals) => dispatch(Actions.removeModals(modals)),
+        setReloadIndex: (reload) => dispatch(Actions.setReloadIndex(reload))
     }
 );
 

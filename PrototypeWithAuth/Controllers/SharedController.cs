@@ -1691,7 +1691,6 @@ namespace PrototypeWithAuth.Controllers
             MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, guid.ToString());
         }
 
-
         protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, int oldID, bool additionalRequests = false)
         {
             MoveDocumentsOutOfTempFolder(id, parentFolderName, additionalRequests, oldID.ToString());

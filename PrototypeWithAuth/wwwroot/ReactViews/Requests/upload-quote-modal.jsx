@@ -129,7 +129,7 @@ function UploadQuoteModal(props) {
 
         <GlobalModal backdrop={props.backdrop} value={state.ID} modalKey={props.modalKey} key={state.ID} size="lg" header="Upload Quote">
             <FormProvider {...methods} >
-            <form action="" data-string="" method="post" encType="multipart/form-data" className="m-5 modal-padding" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
+            <form action="" data-string="" method="post" encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                 <DevTool control={control} />
                 <input type="hidden" id="ParentQuote_ParentQuoteID" defaultValue={state.viewModel.ParentQuote?.ParentQuoteID ?? 0} {...register("ParentQuote.ParentQuoteID")} />
                 <div className="container">
@@ -147,7 +147,8 @@ function UploadQuoteModal(props) {
                                     <div className="form-group ">
                                         <label className=" control-label m-0 mt-2" style={{ width: "100%" }}>Quote Number</label>
                                             <input id="ParentQuote_QuoteNumber" name="ParentQuote.QuoteNumber" defaultValue={state.viewModel.ParentQuote?.QuoteNumber} className="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" {...register("ParentQuote.QuoteNumber", { required: true })} />
-                                            {errors["ParentQuote.QuoteNumber"] && <span>This field is required</span>}
+                                            {errors["ParentQuote"] && <span>This field is required</span>}
+                                            {console.log(errors)}
 
                                     </div>
                                 </div>
