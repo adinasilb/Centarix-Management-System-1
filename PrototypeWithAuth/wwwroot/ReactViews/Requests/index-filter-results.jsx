@@ -10,13 +10,13 @@ function IndexFilterResults(props) {
 
 
     const markAsArchived = (e) => {
-        props.setState({ ...props.state, isArchived: e.currentTarget.checked });
+        props.setState({ ...props.state, isArchived: e.target.checked });
     }
     const updateSearchName = (e) => {
-        props.setState({ ...props.state, searchByName: e.currentTarget.value });
+        props.setState({ ...props.state, searchByName: e.target.value });
     }
     const updateCatalogNumber = (e) => {
-        props.setState({ ...props.state, catalogNumber: e.currentTarget.value });
+        props.setState({ ...props.state, catalogNumber: e.target.value });
     }
     const moveVendorToSelected = (e) => {
         var newNotSelectedList = props.state.vendors.notSelectedShown.filter(v => v.VendorID != e.currentTarget.value);

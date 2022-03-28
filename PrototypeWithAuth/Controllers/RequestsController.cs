@@ -1255,7 +1255,6 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<JsonResult> GetIndexTableJson(IndexTableJsonViewModel indexTableJsonViewModel)
         {
-            //var indexTableJsonViewModel = JsonConvert.DeserializeObject<IndexTableJsonViewModel>(indexTableJsonViewModelString);
             string json = "";
             var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, PageNumber = indexTableJsonViewModel.PageNumber };
          

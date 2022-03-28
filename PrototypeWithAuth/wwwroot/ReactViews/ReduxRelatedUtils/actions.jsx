@@ -10,6 +10,7 @@ export const REMOVE_MODALS = 'REMOVE_MODALS'
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER'
 export const SET_TEMP_REQUEST_LIST = 'SET_TEMP_REQUEST_LIST'
 export const SET_RELOAD_INDEX = 'SET_RELOAD_INDEX'
+export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT'
 export const setIndexTableViewModel = (viewmodel ) => {
     return ({
 
@@ -54,6 +55,15 @@ export const setPageNumber = (viewmodel) => {
     })
 };
 
+export const setSearchText = (searchText) => {
+    return ({
+
+        type: SET_SEARCH_TEXT,
+        payload: searchText
+    })
+};
+
+
 export const setReloadIndex = (viewmodel) => {
     return ({
 
@@ -81,7 +91,6 @@ export const removeModal = (modal) => {
 };
 
 export const removeModals = (modals) => {
-    console.log("in remove modals");
     return ({
 
         type: REMOVE_MODALS,

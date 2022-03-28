@@ -44,6 +44,8 @@ export const selectedFiltersReducer = (state = {}, action) => {
         case ActionKeys.SET_SELECTED_FILTERS_VIEWMODEL:
             return action.payload;
             break;
+        case ActionKeys.SET_SEARCH_TEXT:
+            return { ...state, SearchText: action.payload }
         default:
             return state;
     }

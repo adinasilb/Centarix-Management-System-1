@@ -4,10 +4,23 @@ import IndexFilterResults from './index-filter-results.jsx'
 import {
     useState, useEffect
 } from 'react'
+import { connect, useDispatch } from 'react-redux';
+
+import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 export default function IndexFilter(props) {
     console.log("index filter")
     const [state, setState] = useState(initialState())
+    const dispatch = useDispatch();
 
+    const updateSearchName = (e) => {
+        setState({ ...state, searchByName: e.target.value });
+    }
+    const globalUpdateSearchName = (e) => {
+        console.log(e.target.value)
+        if (e.target.value?.length >= 3 || e.keyCode == 13 || e.keyCode==8) {
+            dispatch(Actions.setSearchText(e.target.value));
+        }       
+    }
 
     function initialState() {
         return {
@@ -35,7 +48,7 @@ export default function IndexFilter(props) {
 
                             <div >
 
-                                <input type="text" placeholder="Search" className="text filter-and-search  custom-button  section-outline-color mx-3 search-by-name" />
+                                <input type="text" placeholder="Search" onChange={updateSearchName} onKeyUp={globalUpdateSearchName} value={state.searchByName ?? ""} className="text filter-and-search  custom-button  section-outline-color mx-3 search-by-name" />
                                 <button type="button" aria-describedby="filterPopover"
                                     className={"text custom-button " + buttonClass} value="Filter"   {...bindTrigger(popupState)}>
                                     Filter
