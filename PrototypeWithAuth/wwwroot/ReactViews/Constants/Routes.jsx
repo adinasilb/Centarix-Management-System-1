@@ -12,3 +12,4 @@ export const DELETE_DOCUMENTS = '/DeleteDocumentModal';
 export const UPLOAD_QUOTE = '/UploadQuoteModal';
 export const TERMS = '/TermsModal';
 export const ORDER_OPERATIONS_MODAL = '/OrderOperationsModal';
+export const CONFIRM_EMAIL_MODAL = '/ConfirmEmailModal';

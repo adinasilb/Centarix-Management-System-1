@@ -9,14 +9,10 @@ export var combineTwoFormDatas = function (formdata1, formdata2) {
         var formdata1 = new FormData();
     }
     if (formdata2 != undefined) {
-        formdata2.entries().forEach(pair => {
+        for (var pair of formdata2.entries()) {
             formdata1.append(pair[0], pair[1]);
-            console.log('key ' + pair[0]);
-            console.log('value ' + pair[1])
-
-        });
+        }
     }
-    console.dir(formdata1);
     return formdata1;
 }
 
@@ -63,7 +59,6 @@ export var getRequestIndexString = () => {
 export function jsonToFormData(inJSON, inTestJSON, inFormData, parentKey) {
     // http://stackoverflow.com/a/22783314/260665
     // Raj: Converts any nested JSON to formData.
-    console.log(inJSON)
     var form_data = inFormData || new FormData();
     var testJSON = inTestJSON || {};
     for (var key in inJSON) {
