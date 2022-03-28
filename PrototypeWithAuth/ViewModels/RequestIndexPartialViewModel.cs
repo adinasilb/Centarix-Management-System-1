@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<IndexTab> Tabs { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
-        public AppUtility.SidebarEnum SideBarType  { get; set; }
+        public AppUtility.SidebarEnum SidebarType  { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public CategoryPopoverViewModel CategoryPopoverViewModel{ get; set;}
         public int? PageNumber { get; set; }

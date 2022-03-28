@@ -333,6 +333,7 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PricePopoverViewModel.PopoverSource = 1;
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
+            viewModelByVendor.SectionType = requestIndexObject.SectionType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
             viewModelByVendor.InventoryFilterViewModel = GetInventoryFilterViewModel();
             return viewModelByVendor;

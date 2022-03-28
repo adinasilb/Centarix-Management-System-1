@@ -11,7 +11,7 @@ export default function RootComponent(props) {
         viewModel: props.viewModel,
         modals: [],
         navigationInfo: {
-            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType || {}  },
+            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SidebarType || {}  },
         pricePopoverViewModel: {
             ...props.viewModel?.PricePopoverViewModel || {} },
         categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },        

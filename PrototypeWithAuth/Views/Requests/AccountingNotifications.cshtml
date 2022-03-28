@@ -3,38 +3,17 @@
 @using System.Linq;
 @using System.Reflection;
 @using PrototypeWithAuth.AppData;
+@using React.AspNet
+<script src="~/js/IndexTablePartial.js"></script>
+<script src="~/js/accounting.js"></script>
+
 @model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @{
     ViewData["Title"] = "AccountingNotifications";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
+@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTableByVendor" })
 
-
-@if (Model.ErrorMessage != null)
-{
-    <div class="row p-4">
-        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-    </div>
-}
-@if (Model.RequestsByVendor.Count() == 0)
-{
-    <div>
-        @{
-            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
-        }
-    </div>
-}
-else
-{
-     <div class="_AccountingSearchAndFilter">
-         @{
-                await Html.RenderPartialAsync("_AccountingSearchAndFilter", Model);
-         }
-     </div>
-    <div class="_IndexTableByVendor">
-        @{
-            await Html.RenderPartialAsync("_IndexTableByVendor", Model);
-        }
-    </div>
-}
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
