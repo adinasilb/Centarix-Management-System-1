@@ -7,6 +7,7 @@
 <script src="~/js/site.js"></script>
 <script src="~/js/editquotemodal.js"></script>
 <script src="~/js/TermsModal.js"></script>
+<script src="~/js/DocumentModalJS.js"></script>
 
 <div class="modal modal-view fader on-form-modal " id="myModal" data-backdrop="false">
     <div class="modal-xl modal-dialog-centered mx-auto">
@@ -65,6 +66,7 @@
                                 <tbody>
                                     @{
                                         var totalCost = 0.0m;
+                                        //var totalCostShekel = 0.0m;
                                         var totalVAT = 0.0m;
                                         var totalShipping = 0.0;
                                         var VATShipping = 0.0;
@@ -75,7 +77,8 @@
                                         x++;
                                         var request = Model.Requests[x];
                                         totalCost += request.Currency == AppUtility.CurrencyEnum.NIS.ToString() ? (decimal)request.Cost: (decimal)request.Cost / request.ExchangeRate;
-                                        totalVAT += request.VAT;
+                                        //totalCostShekel += (decimal)request.Cost;
+                                        totalVAT += request.Currency == AppUtility.CurrencyEnum.NIS.ToString() ? (decimal)request.VAT: (decimal)request.VAT / request.ExchangeRate;
                                         totalShipping += request.ParentRequest.Shipping;
                                         VATShipping += request.ParentRequest.Shipping * .17;
                                         <tr class="invoice-request">
@@ -108,48 +111,6 @@
                                             </td>
                                             <td style="width:15%;">
                                                 <div class="input-group">
-                                                    @*{
-                                                        decimal cost = Model.Requests[x].Cost ?? 0;
-                                                        decimal vat = Model.Requests[x].IncludeVAT ? cost * (decimal)0.17 : 0;
-                                                        decimal costWithVAT = cost + vat;
-                                                    }
-
-
-                                                    @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
-        {
-            cost = Math.Round(cost, 2);-->
-            @*<span class="input-group-text border-bottom pr-2">T: &#x20aa;</span>
-
-                                                    <!--<div class="form-group shekel-group">
-                                                                <div class="input-group ">
-                                                                    <span class="input-group-text pr-1">P: &#x20aa;</span>
-                                                                    <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom cost" index="@x" value="@cost" />
-                                                                    <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
-                                                                </div>
-                                                                <div class="input-group ">
-                                                                    <span class="input-group-text request-cost-shekel-icon disabled-text pr-1">T: &#x20aa;</span>
-                                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel @x" value="@costWithVAT.ToString("0.00")" disabled />
-                                                                </div>
-                                                            </div>
-                                                        }
-                                                        else
-                                                        {
-                                                            cost = Math.Round(Model.Requests[0].ExchangeRate == 0 ? 0 : cost / Model.Requests[0].ExchangeRate, 2);
-                                                            costWithVAT = Model.Requests[0].ExchangeRate == 0 ? 0 : costWithVAT / Model.Requests[0].ExchangeRate;
-
-                                                            <div class="form-group dollar-group">
-                                                                <div class="input-group ">
-                                                                    <span class="input-group-text  pr-1">P: &#36;</span>
-                                                                    <input class="form-control-plaintext border-bottom sum-dollars @x" value="@cost" index="@x" />
-                                                                    <span class="text-danger-centarix" asp-validation-for="Requests[x].Cost"></span>
-                                                                </div>
-                                                                <div class="input-group ">
-                                                                    <span class="input-group-text request-cost-dollar-icon pr-1 disabled-text">T: &#36;</span>
-                                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar @x" value="@costWithVAT.ToString("0.00")" disabled />
-                                                                </div>
-                                                            </div>
-                                                            <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
-                                                        } *@
                                                     @{
                                                         var prices = AppUtility.GetPriceColumn(new List<string>() { AppUtility.PriceSortEnum.Total.ToString(), AppUtility.PriceSortEnum.Vat.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() }, Request, (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), Request.Currency) );
                                                         for (int val = 0; val < prices.Count; val++)
@@ -163,7 +124,6 @@
                                                     }
                                                 </div>
                                                 </td>
-
                                                 <td style="width:30%;">
                                                     @if (Model.Requests.Count > 1)
                                                     {
@@ -179,11 +139,13 @@
                                 <div class="row mt-5">
                                     <div class="col-6 mt-4">
                                      <input type="hidden" asp-for="Guid" class="hidden-guid" />
+@*                                     <input type="hidden" value="@totalCostShekel" class="total-shekel-cost" />
+*@                                     <input type="hidden" value="@totalCost" class="original-cost" />
 
                                     <div class="upload-btn-wrapper between-button-margin">
-                                        <button type="button" class="custom-button custom-button-font section-bg-color upload-file" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()">Select Invoice</button>
-                                        <input type="file" asp-for="InvoiceImage" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt, .docx, .doc, .xlsx, .xls" />
-                                        <span class="invoice-image-name document-name pl-2"></span>
+                                        <button type="button" class="custom-button custom-button-font section-bg-color" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()">Select Invoice</button>
+                                        <input type="file" asp-for="InvoiceImage" class="/*file-select*/ h-100" />
+                                        <span class="invoice-image-name document-name pl-2" id="invoice-image"></span>
                                         <span asp-validation-for="InvoiceImage" class="text-danger"></span>
                                     </div>
                                         
@@ -204,7 +166,7 @@
                                         <label class="control-label">Sum </label>
                                         <div class="input-group">
                                             <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
-                                            <input value="@String.Format("{0:0.00}", totalCost)" class="form-control-plaintext border-bottom" />
+                                            <input value="@String.Format("{0:0.00}", totalCost)" class="form-control-plaintext border-bottom total-cost" name="Sum"/>
                                             <span  class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -212,7 +174,7 @@
                                         <label class="control-label">VAT</label>
                                         <div class="input-group">
                                             <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
-                                            <input value="@String.Format("{0:0.00}", totalVAT)" class="form-control-plaintext border-bottom" />
+                                            <input value="@String.Format("{0:0.00}", totalVAT)" class="form-control-plaintext border-bottom total-vat" name="VAT" />
                                             <span class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -220,7 +182,7 @@
                                         <label class="control-label">Shipping </label>
                                         <div class="input-group">
                                             <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
-                                            <input value="@String.Format("{0:0.00}", totalShipping)" class="form-control-plaintext border-bottom" />
+                                            <input value="@String.Format("{0:0.00}", totalShipping)" class="form-control-plaintext border-bottom total-shipping" name="Shipping" />
                                             <span  class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -228,7 +190,7 @@
                                         <label class="control-label">VAT Shipping</label>
                                         <div class="input-group">
                                             <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
-                                            <input value="@String.Format("{0:0.00}", VATShipping)" class="form-control-plaintext border-bottom" />
+                                            <input value="@String.Format("{0:0.00}", VATShipping)" class="form-control-plaintext border-bottom shipping-vat" name="VATShipping" />
                                             <span  class="text-danger-centarix"></span>
                                             </div>
                                     </div>
@@ -257,7 +219,7 @@
                                         <label class="control-label">Total</label>
                                         <div class="input-group">
                                             <span class="input-group-text section-font-color pr-1">@Html.Raw(currency)</span>
-                                            <input value="@String.Format("{0:0.00}", grandTotal)" class="section-font-color form-control-plaintext border-bottom" style="font-weight:700 !important" />
+                                            <input value="@String.Format("{0:0.00}", grandTotal)" class="section-font-color form-control-plaintext border-bottom grand-total" style="font-weight:700 !important" disabled />
                                             <span class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -336,7 +298,7 @@
         </div>
     </div>
     <script>
-        $('.payment-type .mdb-select').materialSelect();
+     $('.payment-type .mdb-select').materialSelect();
      $( ".addInvoiceForm").on('click', "#alreadyPaid", function (e) {
         console.log("check paid")
         if ($("#alreadyPaid:checkbox").is(":checked")) {
@@ -348,6 +310,46 @@
             $("#alreadyPaid:checkbox").prop("checked", true)
             $("#standingOrder:checkbox").prop("checked", false)
         }
-
     });
+    $('#Invoice_InvoiceDiscount').off('change').on('change', function(e) {
+        //var costWithVat =$('.total-cost').val() + $('.total-vat').val()
+        //var discountAmount =$(this).val() * costWithVat;
+        var discountAmount = $(this).val() * $('.original-cost').val() / 100;
+        $('.discount-amount').val(discountAmount.toFixed(2))
+        $('.total-cost').val(($('.original-cost').val() - discountAmount).toFixed(2))
+        $.fn.UpdateVATAndTotal();
+    })
+    $('.discount-amount').off('change').on('change', function(e) {
+        console.log($(this).val());
+        console.log('discount change')
+        var discountPercent =($(this).val() * 100) / $('.original-cost').val()
+        console.log(discountPercent);
+        $('#Invoice_InvoiceDiscount').val(discountPercent.toFixed(2))
+        $('.total-cost').val(($('.original-cost').val() - $(this).val()).toFixed(2))
+        $.fn.UpdateVATAndTotal();
+    })
+    $('.total-cost').off('change').on('change', function(e) {
+        $('.original-cost').val($(this).val())
+        //what happens to invoice discount now?
+        $.fn.UpdateVATAndTotal();
+    })
+    $('.total-shipping').off('change').on('change', function(e) {
+        if($('.include-vat').val() === 'True') {
+            console.log('In if')
+            var shippingVAT = $('.total-shipping').val() * .17;
+            $('.shipping-vat').val(shippingVAT.toFixed(2))
+        } //else stays 0
+        $.fn.UpdateVATAndTotal();
+    })
+    $.fn.UpdateVATAndTotal = function() {
+        if($('.include-vat').val() === 'True') {
+            console.log('In if')
+            var vat = $('.total-cost').val() * .17
+            $('.total-vat').val(vat.toFixed(2))
+        } //else stays 0
+        var grandTotal = parseFloat($('.total-cost').val()) + parseFloat($('.total-vat').val()) + parseFloat($('.total-shipping').val()) + parseFloat($('.shipping-vat').val())
+        console.log('total: ' + grandTotal)
+        $('.grand-total').val(grandTotal.toFixed(2))
+
+    }
     </script>

@@ -653,10 +653,10 @@ $(function () {
         console.log("imgPath: " + imgPath);
         var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
         console.log("extn: " + extn);
-        var imageHolder = $("#invoice-image");
-        imageHolder.empty();
+        //var imageHolder = $("#invoice-image");
+        //imageHolder.empty();
 
-        if (extn == "pdf" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+        /*if (extn == "pdf" || extn == "png" || extn == "jpg" || extn == "jpeg") {
             console.log("inside the if statement");
             if (typeof (FileReader) != "undefined") {
                 console.log("file reader does not equal undefined");
@@ -672,7 +672,24 @@ $(function () {
                 imageHolder.show();
                 reader.readAsDataURL($(this)[0].files[0]);
             }
-        }
+        }*/
+        var fileName = imgPath.split("\\")[2]
+        $(".invoice-image-name").text(fileName)
+        var guid = $("#Guid").val()
+
+        var targetFile = new FormData($(".addInvoiceForm")[0]).getAll("InvoiceImage").filter(f => f.size > 0)
+        console.log(targetFile)
+
+        var uploadFileFormData = new FormData();
+        $.fn.AddObjectToFormdata(uploadFileFormData, {
+            ObjectID: 0,
+            ParentFolderName: 'Requests',
+            FolderName: 'Invoices',
+            Guid: guid
+        })
+        $('#InvoiceImage').addClass("contains-file");
+        UploadFile(targetFile[0], uploadFileFormData);
+        
 
     });
 
