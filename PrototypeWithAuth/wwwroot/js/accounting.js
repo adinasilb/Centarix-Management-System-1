@@ -145,7 +145,7 @@
 		$.fn.CallModal(itemUrl, "payments-invoice");
 	});
 
-	$(".pay-one").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-one").on("click", ".pay-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var typeEnum = $("#masterSidebarType").val();
@@ -160,16 +160,17 @@
 		//var itemUrl = "/Requests/PaymentsInvoiceModal/?accountingPaymentsEnum=" + typeEnum;
 		//$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-invoice");
 	//});
-	$(".pay-selected").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-selected").on("click", ".pay-selected", function (e) {
 		var typeEnum = $(this).attr("type");
 		var itemUrl = "/Requests/PaymentsPayModal/?accountingPaymentsEnum=" + typeEnum;
 		var parameterName = 'paymentIds';
 		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay", parameterName);
 	});
 
-	$(".invoice-add-all").off("click").on("click", function (e) {
+	$("body").off("click", "invoice-add-all").on("click", "invoice-add-all", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log('invoice add all')
 		var vendorid = $(this).attr("value");
 		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
 		$("#loading").show();
@@ -177,15 +178,17 @@
 	});
 
 	$(".add-to-selected").off("click").on("click", function (e) {
+		console.log('add to selected')
 		var itemUrl = "/Requests/AddInvoiceModal/";
 		var parameterName = 'requestIds';
 		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice", parameterName);
 
 	});
 
-	$(".invoice-add-one").off("click").on("click", function (e) {
+	$("body").off("click", ".invoice-add-one").on("click", ".invoice-add-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log('invoice add one')
 		var requestid = $(this).attr("value");
 		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
 		$("#loading").show();
@@ -240,6 +243,7 @@
 		});
 	});
 	$(".save-invoice").click(function (e) {
+		console.log('save invoice')
 		e.preventDefault();
 		$("#myForm").data("validator").settings.ignore = "";
 		var valid = $("#myForm").valid();

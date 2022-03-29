@@ -123,6 +123,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "/DeleteModal", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color)", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+            var missingPaymentIcon = new IconColumnViewModel("icon-inventory_black_24dp", "green-overlay", "pay-one", "Update Payment Details");
             var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
             var resendIcon = new IconColumnViewModel("Resend");
             string checkboxString = "Checkbox";
@@ -228,7 +229,7 @@ namespace PrototypeWithAuth.Controllers
                             (p.PaymentReferenceDate.Equals(new DateTime()) || p.PaymentTypeID == null || p.CompanyAccountID == null
                             || (p.CreditCardID == null && p.Reference == null && p.CheckNumber == null))).Count() > 0);
                             checkboxString = "";
-                            iconList.Add(payNowIcon);
+                            iconList.Add(missingPaymentIcon);
                             break;
                     }
                     orderby = r => r.ParentRequest.OrderDate;
@@ -333,6 +334,7 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PricePopoverViewModel.PopoverSource = 1;
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
+            viewModelByVendor.SectionType = requestIndexObject.SectionType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
             viewModelByVendor.InventoryFilterViewModel = GetInventoryFilterViewModel();
             return viewModelByVendor;

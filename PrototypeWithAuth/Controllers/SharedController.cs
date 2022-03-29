@@ -1074,7 +1074,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
             requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;
-            requestIndexViewModel.SideBarType = requestIndexObject.SidebarType;
+            requestIndexViewModel.SidebarType = requestIndexObject.SidebarType;
             requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToList();
 

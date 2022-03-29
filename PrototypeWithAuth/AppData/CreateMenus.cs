@@ -1161,7 +1161,7 @@ namespace PrototypeWithAuth.AppData
                     {"accountingNotificationsEnum", AppUtility.SidebarEnum.MissingPaymentDetails }
                 },
                 Classes = Classes,
-                IconName = ""/*TODO get icon*/
+                IconName = "icon-plagiarism_black_24dp"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.DidntArrive) { Classes += SideBarActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
