@@ -148,6 +148,7 @@
 	$("body").off("click", ".pay-one").on("click", ".pay-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log('clicked')
 		var typeEnum = $("#masterSidebarType").val();
 		var paymentId = $(this).attr("value");
 		var itemUrl = "/Requests/PaymentsPayModal/?paymentIds=" + paymentId + "&accountingPaymentsEnum=" + typeEnum;

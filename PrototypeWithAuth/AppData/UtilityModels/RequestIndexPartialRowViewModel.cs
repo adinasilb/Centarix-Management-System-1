@@ -434,21 +434,21 @@ namespace PrototypeWithAuth.ViewModels
                 return new List<StringWithBool>() { new StringWithBool { String = "installment number has an error", Bool = true } };
             }
         }*/
-        private List<StringWithBool> GetInstallmentAmount()
+        private List<StringWithBool> GetInstallmentAmount(AppUtility.CurrencyEnum currency)
         {
             try
             {
                 decimal amount;
                 string currencyFormat;
-                if (r.Currency.Equals(AppUtility.CurrencyEnum.NIS.ToString()))
-                {
-                    amount = payments.FirstOrDefault().Sum;
-                    currencyFormat = "he-il";
-                } 
-                else
+                if (currency.Equals(AppUtility.CurrencyEnum.USD.ToString()))
                 {
                     amount = payments.FirstOrDefault().Sum / r.ExchangeRate;
                     currencyFormat = "en-US";
+                } 
+                else
+                {
+                    amount = payments.FirstOrDefault().Sum;
+                    currencyFormat = "he-il";                    
                 }
                 return new List<StringWithBool>() { new StringWithBool { String = string.Format(new CultureInfo(currencyFormat), "{0:c}", Math.Round(amount, 2)), Bool = false } };
             }
@@ -507,7 +507,7 @@ namespace PrototypeWithAuth.ViewModels
             }
             return orderDetails;
         }
-        private List<StringWithBool> GetOrderTypeColumn()
+        private List<StringWithBool> GetOrderTypeColumn(bool IncludeInstallmentNumber = true)
         {
             var orderTypeColumn =  new List<StringWithBool>();
             try
@@ -525,7 +525,10 @@ namespace PrototypeWithAuth.ViewModels
                     orderTypeColumn.Add(new StringWithBool { String = "installments" });
                     try
                     {
-                        orderTypeColumn.Add(new StringWithBool { String = payments.FirstOrDefault().InstallmentNumber + " / " + r.Installments });
+                        if(IncludeInstallmentNumber)
+                        {
+                            orderTypeColumn.Add(new StringWithBool { String = payments.FirstOrDefault().InstallmentNumber + " / " + r.Installments });
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -701,7 +704,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 6, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product, requestIndexObject.SourceSelected), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn(false) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Invoice Details", Width = 9, ValueWithError = GetInvoiceColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
@@ -838,7 +841,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product, requestIndexObject.SourceSelected), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Units", Width = 8, ValueWithError = AppUtility.GetAmountColumn(r) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn(false) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 9, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
@@ -898,7 +901,7 @@ namespace PrototypeWithAuth.ViewModels
                                                                     requestIndexObject.SelectedCurrency),
                 FilterEnum = AppUtility.FilterEnum.Price
             };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Current Payment", Width = 12, ValueWithError = GetInstallmentAmount() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Current Payment", Width = 12, ValueWithError = GetInstallmentAmount(requestIndexObject.SelectedCurrency) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Payment Date", Width = 12, ValueWithError = GetPaymentDate() };
             yield return new RequestIndexPartialColumnViewModel()
             {
