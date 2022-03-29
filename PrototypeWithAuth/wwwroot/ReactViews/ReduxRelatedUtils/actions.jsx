@@ -1,6 +1,7 @@
 ﻿export const SET_INDEX_TABLE_VIEWMODEL = 'SET_INDEX_TABLE_VIEWMODEL'
 export const SET_CATEGORY_POPOVER_VIEWMODEL = 'SET_CATEGORY_POPOVER_VIEWMODEL'
-export const SET_PRICE_POPOVER_VIEWMODEL = 'SET_PRICE_POPOVER_VIEWMODEL'
+export const SET_CURRENCY_ENUM = 'SET_CURRENCY_ENUM'
+export const SET_PRICE_SORT_ENUM = 'SET_PRICE_SORT_ENUM'
 export const SET_TAB_VALUE = 'SET_TAB_VALUE'
 export const SET_HEADER_INFO = 'SET_HEADER_INFO'
 export const SET_SELECTED_FILTERS_VIEWMODEL = 'SET_SELECTED_FILTERS_VIEWMODEL'
@@ -25,10 +26,17 @@ export const setCategoryPopoverViewModel = (viewmodel) => {
         payload: viewmodel
     })
 }; 
-export const setPricePopoverViewModel = (viewmodel) => {
+export const setPriceSortEnums = (viewmodel) => {
     return ({
 
-        type: SET_PRICE_POPOVER_VIEWMODEL,
+        type: SET_PRICE_SORT_ENUM,
+        payload: viewmodel
+    })
+};
+export const setSelectedCurrency = (viewmodel) => {
+    return ({
+
+        type: SET_CURRENCY_ENUM,
         payload: viewmodel
     })
 };

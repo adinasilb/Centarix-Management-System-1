@@ -1116,7 +1116,7 @@ namespace PrototypeWithAuth.Controllers
             //if pagenumber greater than = to    7 then 5 before page number and 4 after until page amount ends 
             //if pagenumber is greater than amount pages -5 then show three dots only on right and show last 10 pages
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p) }));
             requestIndexViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
             requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.PricePopoverViewModel.PopoverSource = 1;

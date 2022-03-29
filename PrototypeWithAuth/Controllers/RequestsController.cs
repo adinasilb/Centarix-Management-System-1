@@ -325,7 +325,7 @@ namespace PrototypeWithAuth.Controllers
                 viewModelByVendor.RequestsByVendor = _requestsProc.Read(wheres, includes).OrderByDescending(orderby).Select(select).ToLookup(c => c.Vendor);
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p) }));
             viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
@@ -1281,7 +1281,14 @@ namespace PrototypeWithAuth.Controllers
         public async Task<JsonResult> GetIndexTableJson(IndexTableJsonViewModel indexTableJsonViewModel)
         {
             string json = "";
-            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, PageNumber = indexTableJsonViewModel.PageNumber };
+            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabValue, 
+                PageType = indexTableJsonViewModel.NavigationInfo.PageType, 
+                SectionType = indexTableJsonViewModel.NavigationInfo.SectionType,
+                SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, 
+                PageNumber = indexTableJsonViewModel.PageNumber,
+                SelectedCurrency = indexTableJsonViewModel.SelectedCurrency,
+                SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums
+          };
          
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {

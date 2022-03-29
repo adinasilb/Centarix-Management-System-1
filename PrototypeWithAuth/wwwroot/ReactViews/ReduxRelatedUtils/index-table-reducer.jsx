@@ -20,9 +20,18 @@ export const categoryPopoverReducer = (state = {}, action) => {
     }
 };
 
-export const pricePopoverReducer = (state = {}, action) => {
+export const setPriceSortEnum = (state = {}, action) => {
     switch (action.type) {
-        case ActionKeys.SET_PRICE_POPOVER_VIEWMODEL:
+        case ActionKeys.SET_PRICE_SORT_ENUM:
+            return action.payload;
+            break;
+        default:
+            return state;
+    }
+};
+export const setSelectedCurrency = (state = {}, action) => {
+    switch (action.type) {
+        case ActionKeys.SET_CURRENCY_ENUM:
             return action.payload;
             break;
         default:

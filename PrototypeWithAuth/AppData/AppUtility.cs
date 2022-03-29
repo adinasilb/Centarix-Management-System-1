@@ -576,7 +576,7 @@ namespace PrototypeWithAuth.AppData
             return list;
         }
 
-        public static List<StringWithBool> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency, bool recurringExpensesTab = false)
+        public static List<StringWithBool> GetPriceColumn(List<AppUtility.PriceSortEnum> priceFilterEnums, Request request, CurrencyEnum currency, bool recurringExpensesTab = false)
         {
             try
             {
@@ -599,7 +599,7 @@ namespace PrototypeWithAuth.AppData
                 }
                 foreach (var p in priceFilterEnums)
                 {
-                    switch (Enum.Parse(typeof(PriceSortEnum), p))
+                    switch (p)
                     {
                         case PriceSortEnum.Unit:
                             priceColumn.Add(new StringWithBool { String = "U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit), Bool = false });

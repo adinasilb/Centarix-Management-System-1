@@ -1008,6 +1008,10 @@ body.modal-open, body.popover-open {
 .Operations .filter-and-search::-ms-input-placeholder { /*works for Edge*/
     color: var(--operations-color) !important;
 }
+
+.Accounting .filter-and-search::-ms-input-placeholder { /*works for Edge*/
+    color: var(--acc-color) !important;
+}
 .filter-and-search :focus {
     outline: none;
 }

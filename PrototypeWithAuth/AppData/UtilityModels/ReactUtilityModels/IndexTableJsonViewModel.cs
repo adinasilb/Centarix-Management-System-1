@@ -10,9 +10,10 @@ namespace PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels
     {
         public SelectedRequestFilters SelectedFilters { get; set; }
         public CategoryPopoverViewModel CategoryPopoverViewModel { get; set; }
-        public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public NavigationInfo NavigationInfo { get; set; }
         public string TabValue { get; set; }
         public int PageNumber { get; set; }
+        public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
+        public List<AppUtility.PriceSortEnum> PriceSortEnums { get; set; }
     }
 }

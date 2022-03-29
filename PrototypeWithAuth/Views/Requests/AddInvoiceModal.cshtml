@@ -151,7 +151,7 @@
                                                             <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
                                                         } *@
                                                     @{
-                                                        var prices = AppUtility.GetPriceColumn(new List<string>() { AppUtility.PriceSortEnum.Total.ToString(), AppUtility.PriceSortEnum.Vat.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() }, Request, (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), Request.Currency) );
+                                                        var prices = AppUtility.GetPriceColumn(new List<AppUtility.PriceSortEnum>() { AppUtility.PriceSortEnum.Total, AppUtility.PriceSortEnum.Vat, AppUtility.PriceSortEnum.TotalVat}, Request, (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), Request.Currency) );
                                                         for (int val = 0; val < prices.Count; val++)
                                                         {
                                                             if (val != 0)
