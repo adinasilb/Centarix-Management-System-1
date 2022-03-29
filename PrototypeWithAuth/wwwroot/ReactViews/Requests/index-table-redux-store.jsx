@@ -63,11 +63,9 @@ function useEffectFunc(props, dispatch, resetPageNumber) {
             method: "POST",
             body: formdata
         }).then(response => {
-            console.log(response);
             return response.json();
         })
             .then(result => {
-                console.dir(result);
                 if (result != undefined) {
                     batch(() => {
                         dispatch(Actions.setIndexTableViewModel(JSON.parse(result)));

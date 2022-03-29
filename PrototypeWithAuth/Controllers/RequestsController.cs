@@ -46,6 +46,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json.Converters;
 using System.Reflection;
 using PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels;
+//using IronPdf;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -2000,20 +2001,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             //render the purchase order view into a string using a the co.nfirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
-
-            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-            string path2 = Path.Combine(path1, guid.ToString());
-            if (!Directory.Exists(path2))
-            {
-                Directory.CreateDirectory(path2);
-            }
-            string fileName = Path.Combine(path2, "Order.txt");
-
-            using (StreamWriter writer = new StreamWriter(fileName))
-            {
-                await writer.WriteAsync(renderedView);
-            }
+            
             return Json(JsonConvert.SerializeObject(confirm, Formatting.Indented, new JsonSerializerSettings
             {
 
@@ -2028,6 +2016,26 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
         {
+
+            //var Renderer = new IronPdf.ChromePdfRenderer();
+            string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+            string folder2 = Path.Combine(uploadFolder, "TEST");
+            string orderFile = Path.Combine(folder2, "Order.pdf");
+            HtmlToPdf converter = new HtmlToPdf();
+
+            PdfDocument doc = new PdfDocument();
+            // create a new pdf document converting an url
+            doc = converter.ConvertHtmlString(confirmEmailViewModel.OrderPDF);
+            doc.Save(orderFile);
+            doc.Close();
+            //Renderer.RenderHtmlAsPdf(confirmEmailViewModel.OrderPDF).SaveAs(orderFile);
+            var fileBytes = Convert.FromBase64String(confirmEmailViewModel.OrderPDF);
+            
+            if (!Directory.Exists(folder2))
+            {
+                Directory.CreateDirectory(folder2);
+            }
+            System.IO.File.WriteAllBytes(Path.Combine(folder2, "Order.pdf"), fileBytes);
             bool rolledBackTempRequest = false;
             var tempRequestListViewModel = confirmEmailViewModel.TempRequestListViewModel;
             try
@@ -2035,15 +2043,10 @@ namespace PrototypeWithAuth.Controllers
 
                 List<ModelAndID> ModelsCreated = new List<ModelAndID>(); //for rollback
                 List<ModelAndID> ModelsModified = new List<ModelAndID>(); //for rollback
-                //var isRequests = true;
-                //var RequestNum = 1;
-                //var PaymentNum = 1;
-                //var requests = new List<Request>();
-                //var payments = new List<Payment>();
 
                 try
                 {
-                    
+
 
                     var userId = tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
 
@@ -2230,20 +2233,19 @@ namespace PrototypeWithAuth.Controllers
                     }
                     try
                     {
-                        string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-                        string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.Guids.ToString());
-                        string fileName = Path.Combine(folder2, "Order.txt");
-                        //read the text file to convert to pdf
-                        string renderedView = System.IO.File.ReadAllText(fileName);
-                        //delete file
-                        System.IO.File.Delete(fileName);
+                        string renderedView = await RenderPartialViewToString("OrderEmailView", confirmEmailViewModel);
+
+
+                        //string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+                        //string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.Guids.ToString());
+
                         //base url needs to be declared - perhaps should be getting from js?
                         //once deployed need to take base url and put in the parameter for converter.convertHtmlString
                         var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
                         //instantiate a html to pdf converter object
-                        HtmlToPdf converter = new HtmlToPdf();
+                        //HtmlToPdf converter = new HtmlToPdf();
 
-                        PdfDocument doc = new PdfDocument();
+                        //PdfDocument doc = new PdfDocument();
                         // create a new pdf document converting an url
                         doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
@@ -4506,7 +4508,7 @@ namespace PrototypeWithAuth.Controllers
                 saveUsingTempRequest = true;
             }
             termsViewModel = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel, needsApproval, saveUsingTempRequest);
-            if (termsViewModel.ErrorMessage != "")
+            if (termsViewModel.ErrorMessage != null)
             {
                 throw new Exception(termsViewModel.ErrorMessage);
                 //Response.StatusCode = 500;
