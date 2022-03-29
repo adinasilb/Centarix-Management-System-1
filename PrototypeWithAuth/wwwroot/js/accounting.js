@@ -145,7 +145,7 @@
 		$.fn.CallModal(itemUrl, "payments-invoice");
 	});
 
-	$(".pay-one").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-one").on("click", ".pay-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var typeEnum = $("#masterSidebarType").val();
@@ -160,7 +160,7 @@
 		//var itemUrl = "/Requests/PaymentsInvoiceModal/?accountingPaymentsEnum=" + typeEnum;
 		//$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-invoice");
 	//});
-	$(".pay-selected").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-selected").on("click", ".pay-selected", function (e) {
 		var typeEnum = $(this).attr("type");
 		var itemUrl = "/Requests/PaymentsPayModal/?accountingPaymentsEnum=" + typeEnum;
 		var parameterName = 'paymentIds';
