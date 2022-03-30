@@ -115,11 +115,11 @@ export default function IndexTableColumn(props) {
         else {
             return (
                 col.ValueWithError.map((ve, i) => {
-
+                    var key = "value" + i + ve;
                     var dangerColor = ve.Bool ? " text-danger-centarix " : "";
 
                     if (ve.String == "Checkbox") {
-                        return (<div key={"value" + i}><div className={"form-check accounting-select " + dangerColor}>
+                        return (<div key={key}><div className={"form-check accounting-select " + dangerColor}>
                             <input type="checkbox" className={"form-check-input fci-acc filled-in " + col.AjaxLink} id={col.AjaxID} vendorid={state.vendorID} />
                             <label className="form-check-label" htmlFor={col.AjaxID}></label>
                         </div>{i != 0 ? <br /> : null}</div>
@@ -128,7 +128,7 @@ export default function IndexTableColumn(props) {
                     else if ((col.AjaxLink != null && col.AjaxLink != "") || col.ShowTooltip == true) {
                         var title = col.ShowTooltip ? ve.String : "";
 
-                        return (<div key={"value" + i}><Tooltip title={ title??""} arrow>
+                        return (<div key={key}><Tooltip title={ title??""} arrow>
                             <a className={"btn p-0 m-0 inv-link-clr " + col.AjaxLink + " no-box-shadow"}    value={col.AjaxID}  href="#/">
                                 <div className="d-block">
                                     <p className={"m-0 text-center " + dangerColor} style={{ overflow: "hidden", textOverflow: "ellipsis", WebkitLineClamp: "3", WebkitBoxDirection: "vertical", maxHeight: "5rem", display: " -webkit-box" }}>{ve.String}</p>
@@ -142,7 +142,7 @@ export default function IndexTableColumn(props) {
                         if (col.Title == "Amount") {
                             textCase = { textTransform: "none" };
                         }
-                        return (<div key={"value" + i}><label className={"m-0 p-0 " + dangerColor} style={textCase}>{ve.String}</label>{i != 0 ? <br /> : null}</div>)
+                        return (<div key={key}><label className={"m-0 p-0 " + dangerColor} style={textCase}>{ve.String}</label>{i != 0 ? <br /> : null}</div>)
                     }
                 })
             )

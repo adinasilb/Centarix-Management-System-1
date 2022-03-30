@@ -100,7 +100,7 @@
                         }*@
 
                     @{
-                        var prices = AppUtility.GetPriceColumn(Model.PricePopoverViewModel.PriceSortEnums.Where(pse => pse.Selected == true).Select(pse => pse.PriceSortEnum.ToString()).ToList(), item, Model.PricePopoverViewModel.SelectedCurrency);
+                        var prices = AppUtility.GetPriceColumn(Model.PricePopoverViewModel.PriceSortEnums.Where(pse => pse.Selected == true).Select(pse => pse.PriceSortEnum).ToList(), item, Model.PricePopoverViewModel.SelectedCurrency);
                         for (int val = 0; val < prices.Count; val++)
                         {
                             if (val != 0)

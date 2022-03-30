@@ -118,7 +118,7 @@ $(function () {
         return false;
     });
 
-    $(".load-product-details").off('click').on("click", function (e) {
+    $("body, .modal").off("click", ".load-product-details").on('click', ".load-product-details", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(".tooltip").hide();
@@ -128,7 +128,7 @@ $(function () {
         return false;
     });
 
-    $(".load-product-details-summary").off('click').on("click", function (e) {
+    $("body, .modal").off("click", ".load-product-details-summary").on("click", ".load-product-details-summary", function(e) {
 
         e.preventDefault();
         e.stopPropagation();

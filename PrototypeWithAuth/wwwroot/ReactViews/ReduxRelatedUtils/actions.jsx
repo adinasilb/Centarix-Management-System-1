@@ -1,7 +1,8 @@
 ﻿export const SET_INDEX_TABLE_VIEWMODEL = 'SET_INDEX_TABLE_VIEWMODEL'
 export const SET_CATEGORY_POPOVER_VIEWMODEL = 'SET_CATEGORY_POPOVER_VIEWMODEL'
-export const SET_PRICE_POPOVER_VIEWMODEL = 'SET_PRICE_POPOVER_VIEWMODEL'
-export const SET_TAB_INFO = 'SET_TAB_INFO'
+export const SET_CURRENCY_ENUM = 'SET_CURRENCY_ENUM'
+export const SET_PRICE_SORT_ENUM = 'SET_PRICE_SORT_ENUM'
+export const SET_TAB_VALUE = 'SET_TAB_VALUE'
 export const SET_HEADER_INFO = 'SET_HEADER_INFO'
 export const SET_SELECTED_FILTERS_VIEWMODEL = 'SET_SELECTED_FILTERS_VIEWMODEL'
 export const ADD_MODAL = 'ADD_MODAL'
@@ -10,6 +11,7 @@ export const REMOVE_MODALS = 'REMOVE_MODALS'
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER'
 export const SET_TEMP_REQUEST_LIST = 'SET_TEMP_REQUEST_LIST'
 export const SET_RELOAD_INDEX = 'SET_RELOAD_INDEX'
+export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT'
 export const setIndexTableViewModel = (viewmodel ) => {
     return ({
 
@@ -24,17 +26,24 @@ export const setCategoryPopoverViewModel = (viewmodel) => {
         payload: viewmodel
     })
 }; 
-export const setPricePopoverViewModel = (viewmodel) => {
+export const setPriceSortEnums = (viewmodel) => {
     return ({
 
-        type: SET_PRICE_POPOVER_VIEWMODEL,
+        type: SET_PRICE_SORT_ENUM,
         payload: viewmodel
     })
 };
-export const setTabInfo = (tabValue) => {
+export const setSelectedCurrency = (viewmodel) => {
     return ({
 
-        type: SET_TAB_INFO,
+        type: SET_CURRENCY_ENUM,
+        payload: viewmodel
+    })
+};
+export const setTabValue = (tabValue) => {
+    return ({
+
+        type: SET_TAB_VALUE,
         payload: tabValue
     })
 };
@@ -53,6 +62,15 @@ export const setPageNumber = (viewmodel) => {
         payload: viewmodel
     })
 };
+
+export const setSearchText = (searchText) => {
+    return ({
+
+        type: SET_SEARCH_TEXT,
+        payload: searchText
+    })
+};
+
 
 export const setReloadIndex = (viewmodel) => {
     return ({
@@ -81,7 +99,6 @@ export const removeModal = (modal) => {
 };
 
 export const removeModals = (modals) => {
-    console.log("in remove modals");
     return ({
 
         type: REMOVE_MODALS,

@@ -123,6 +123,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "/DeleteModal", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "var(--order-inv-color)", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+            var missingPaymentIcon = new IconColumnViewModel("icon-inventory_black_24dp", "green-overlay", "pay-one", "Update Payment Details");
             var popoverPartialClarifyIcon = new IconColumnViewModel("Clarify");
             var resendIcon = new IconColumnViewModel("Resend");
             string checkboxString = "Checkbox";
@@ -228,7 +229,7 @@ namespace PrototypeWithAuth.Controllers
                             (p.PaymentReferenceDate.Equals(new DateTime()) || p.PaymentTypeID == null || p.CompanyAccountID == null
                             || (p.CreditCardID == null && p.Reference == null && p.CheckNumber == null))).Count() > 0);
                             checkboxString = "";
-                            iconList.Add(payNowIcon);
+                            iconList.Add(missingPaymentIcon);
                             break;
                     }
                     orderby = r => r.ParentRequest.OrderDate;
@@ -325,7 +326,7 @@ namespace PrototypeWithAuth.Controllers
                 viewModelByVendor.RequestsByVendor = _requestsProc.Read(wheres, includes).OrderByDescending(orderby).Select(select).ToLookup(c => c.Vendor);
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p) }));
             viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
@@ -333,6 +334,7 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PricePopoverViewModel.PopoverSource = 1;
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
+            viewModelByVendor.SectionType = requestIndexObject.SectionType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
             viewModelByVendor.InventoryFilterViewModel = GetInventoryFilterViewModel();
             return viewModelByVendor;
@@ -1280,9 +1282,15 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<JsonResult> GetIndexTableJson(IndexTableJsonViewModel indexTableJsonViewModel)
         {
-            //var indexTableJsonViewModel = JsonConvert.DeserializeObject<IndexTableJsonViewModel>(indexTableJsonViewModelString);
             string json = "";
-            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabInfo.TabValue, PageType = indexTableJsonViewModel.NavigationInfo.PageType, SectionType = indexTableJsonViewModel.NavigationInfo.SectionType, SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, PageNumber = indexTableJsonViewModel.PageNumber };
+            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabValue, 
+                PageType = indexTableJsonViewModel.NavigationInfo.PageType, 
+                SectionType = indexTableJsonViewModel.NavigationInfo.SectionType,
+                SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, 
+                PageNumber = indexTableJsonViewModel.PageNumber,
+                SelectedCurrency = indexTableJsonViewModel.SelectedCurrency,
+                SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums
+          };
          
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {

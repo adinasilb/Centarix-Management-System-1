@@ -2,105 +2,104 @@
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { connect, useDispatch } from 'react-redux';
-import { useState, useEffect
-} from 'react'
+
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 function IndexFilterResults(props) {
-
+    console.log("index filter results")
     const dispatch = useDispatch();
-    const [state, setState] = useState(initialState())
+
 
     const markAsArchived = (e) => {
-        setState({ ...state, isArchived: e.currentTarget.checked });
+        props.setState({ ...props.state, isArchived: e.target.checked });
     }
     const updateSearchName = (e) => {
-        setState({ ...state, searchByName: e.currentTarget.value });
+        props.setState({ ...props.state, searchByName: e.target.value });
     }
     const updateCatalogNumber = (e) => {
-        setState({ ...state, catalogNumber: e.currentTarget.value });
+        props.setState({ ...props.state, catalogNumber: e.target.value });
     }
     const moveVendorToSelected = (e) => {
-        var newNotSelectedList = state.vendors.notSelectedShown.filter(v => v.VendorID != e.currentTarget.value);
-        var vendorToMoveToSelected = state.vendors.notSelectedShown.filter(v => v.VendorID == e.currentTarget.value)[0];
-        setState({ ...state, vendors: { ...state.vendors, filterText: '', selected: [...state.vendors.selected, vendorToMoveToSelected], notSelectedShown: [...newNotSelectedList || [], ...state.vendors.notSelectedHidden || []], notSelectedHidden: [] }, numFilters: state.numFilters+1 });
+        var newNotSelectedList = props.state.vendors.notSelectedShown.filter(v => v.VendorID != e.currentTarget.value);
+        var vendorToMoveToSelected = props.state.vendors.notSelectedShown.filter(v => v.VendorID == e.currentTarget.value)[0];
+        props.setState({ ...props.state, vendors: { ...props.state.vendors, filterText: '', selected: [...props.state.vendors.selected, vendorToMoveToSelected], notSelectedShown: [...newNotSelectedList || [], ...props.state.vendors.notSelectedHidden || []], notSelectedHidden: [] }, numFilters: props.state.numFilters+1 });
     };
     const moveVendorToNotSelected = (e) => {
-        var newSelectedList = state.vendors.selected.filter(v => v.VendorID != e.currentTarget.value);
-        var vendorToMoveToNotSelected = state.vendors.selected.filter(v => v.VendorID == e.currentTarget.value)[0];
-        setState({ ...state, vendors: { ...state.vendors, filterText: '', selected: newSelectedList, notSelectedShown: [...[...state.vendors.notSelectedShown || [], ...state.vendors.notSelectedHidden || []], vendorToMoveToNotSelected], notSelectedHidden: [] }, numFilters: state.numFilters - 1 });
+        var newSelectedList = props.state.vendors.selected.filter(v => v.VendorID != e.currentTarget.value);
+        var vendorToMoveToNotSelected = props.state.vendors.selected.filter(v => v.VendorID == e.currentTarget.value)[0];
+        props.setState({ ...props.state, vendors: { ...props.state.vendors, filterText: '', selected: newSelectedList, notSelectedShown: [...[...props.state.vendors.notSelectedShown || [], ...props.state.vendors.notSelectedHidden || []], vendorToMoveToNotSelected], notSelectedHidden: [] }, numFilters: props.state.numFilters - 1 });
     };
     const moveOwnersToSelected = (e) => {
-        var newNotSelectedList = state.owners.notSelectedShown.filter(v => v.Id != e.currentTarget.value);
-        var ownerToMoveToSelected = state.owners.notSelectedShown.filter(v => v.Id == e.currentTarget.value)[0];
-        setState({ ...state, owners: { ...state.owners, filterText: '', selected: [...state.owners.selected, ownerToMoveToSelected], notSelectedShown: newNotSelectedList }, numFilters: state.numFilters + 1 });
+        var newNotSelectedList = props.state.owners.notSelectedShown.filter(v => v.Id != e.currentTarget.value);
+        var ownerToMoveToSelected = props.state.owners.notSelectedShown.filter(v => v.Id == e.currentTarget.value)[0];
+        props.setState({ ...props.state, owners: { ...props.state.owners, filterText: '', selected: [...props.state.owners.selected, ownerToMoveToSelected], notSelectedShown: newNotSelectedList }, numFilters: props.state.numFilters + 1 });
     };
     const moveOwnersToNotSelected = (e) => {
-        var newSelectedList = state.owners.selected.filter(v => v.Id != e.currentTarget.value);
-        var ownerToMoveToNotSelected = state.owners.selected.filter(v => v.Id == e.currentTarget.value)[0];
-        setState({ ...state, owners: { ...state.owners, filterText: '', selected: newSelectedList, notSelectedShown: [...state.owners.notSelectedShown, ownerToMoveToNotSelected] }, numFilters: state.numFilters - 1 });
+        var newSelectedList = props.state.owners.selected.filter(v => v.Id != e.currentTarget.value);
+        var ownerToMoveToNotSelected = props.state.owners.selected.filter(v => v.Id == e.currentTarget.value)[0];
+        props.setState({ ...props.state, owners: { ...props.state.owners, filterText: '', selected: newSelectedList, notSelectedShown: [...props.state.owners.notSelectedShown, ownerToMoveToNotSelected] }, numFilters: props.state.numFilters - 1 });
     };
 
     const moveLocationsToSelected = (e) => {
-        var newNotSelectedList = state.locations.notSelectedShown.filter(v => v.LocationTypeID != e.currentTarget.value);
-        var locationToMoveToSelected = state.locations.notSelectedShown.filter(v => v.LocationTypeID == e.currentTarget.value)[0];
-        setState({ ...state, locations: { ...state.locations, filterText: '', selected: [...state.locations.selected, locationToMoveToSelected], notSelectedShown: newNotSelectedList||[] }, numFilters: state.numFilters + 1 });
+        var newNotSelectedList = props.state.locations.notSelectedShown.filter(v => v.LocationTypeID != e.currentTarget.value);
+        var locationToMoveToSelected = props.state.locations.notSelectedShown.filter(v => v.LocationTypeID == e.currentTarget.value)[0];
+        props.setState({ ...props.state, locations: { ...props.state.locations, filterText: '', selected: [...props.state.locations.selected, locationToMoveToSelected], notSelectedShown: newNotSelectedList||[] }, numFilters: props.state.numFilters + 1 });
     };
     const moveLocationsToNotSelected = (e) => {
-        var newSelectedList = state.locations.selected.filter(v => v.LocationTypeID != e.currentTarget.value);
-        var locationToMoveToNotSelected = state.locations.selected.filter(v => v.LocationTypeID == e.currentTarget.value)[0];
-        setState({ ...state, locations: { ...state.locations, filterText: '', selected: newSelectedList, notSelectedShown: [...state.locations.notSelectedShown, locationToMoveToNotSelected] }, numFilters: state.numFilters - 1 });
+        var newSelectedList = props.state.locations.selected.filter(v => v.LocationTypeID != e.currentTarget.value);
+        var locationToMoveToNotSelected = props.state.locations.selected.filter(v => v.LocationTypeID == e.currentTarget.value)[0];
+        props.setState({ ...props.state, locations: { ...props.state.locations, filterText: '', selected: newSelectedList, notSelectedShown: [...props.state.locations.notSelectedShown, locationToMoveToNotSelected] }, numFilters: props.state.numFilters - 1 });
     };
     const moveCategoriesToSelected = (e) => {
-        var newNotSelectedList = state.categories.notSelectedShown.filter(v => v.ID != e.currentTarget.value);
-        var categoryToMoveToSelected = state.categories.notSelectedShown.filter(v => v.ID == e.currentTarget.value)[0];
-        setState({ ...state, categories: { ...state.categories, filterText: '', selected: [...state.categories.selected, categoryToMoveToSelected], notSelectedShown: newNotSelectedList }, numFilters: state.numFilters + 1 });
+        var newNotSelectedList = props.state.categories.notSelectedShown.filter(v => v.ID != e.currentTarget.value);
+        var categoryToMoveToSelected = props.state.categories.notSelectedShown.filter(v => v.ID == e.currentTarget.value)[0];
+        props.setState({ ...props.state, categories: { ...props.state.categories, filterText: '', selected: [...props.state.categories.selected, categoryToMoveToSelected], notSelectedShown: newNotSelectedList }, numFilters: props.state.numFilters + 1 });
     };
     const moveCategoriesToNotSelected = (e) => {
-        var newSelectedList = state.categories.selected.filter(v => v.ID != e.currentTarget.value);
-        var categoryToMoveToNotSelected = state.categories.selected.filter(v => v.ID == e.currentTarget.value)[0];      
-        setState({ ...state, categories: { ...state.categories, filterText: '', selected: newSelectedList, notSelectedShown: [...state.categories.notSelectedShown, categoryToMoveToNotSelected] }, numFilters: state.numFilters - 1 });
+        var newSelectedList = props.state.categories.selected.filter(v => v.ID != e.currentTarget.value);
+        var categoryToMoveToNotSelected = props.state.categories.selected.filter(v => v.ID == e.currentTarget.value)[0];      
+        props.setState({ ...props.state, categories: { ...props.state.categories, filterText: '', selected: newSelectedList, notSelectedShown: [...props.state.categories.notSelectedShown, categoryToMoveToNotSelected] }, numFilters: props.state.numFilters - 1 });
     };
 
     const moveSubCategoriesToSelected = (e) => {
-        var newNotSelectedList = state.subcategories.notSelectedShown.filter(v => v.ID != e.currentTarget.value);
-        var subCategoryToMoveToSelected = state.subcategories.notSelectedShown.filter(v => v.ID == e.currentTarget.value)[0];
-        setState({ ...state, subcategories: { ...state.subcategories, filterText: '', selected: [...state.subcategories.selected, subCategoryToMoveToSelected], notSelectedShown: newNotSelectedList }, numFilters: state.numFilters + 1 });
+        var newNotSelectedList = props.state.subcategories.notSelectedShown.filter(v => v.ID != e.currentTarget.value);
+        var subCategoryToMoveToSelected = props.state.subcategories.notSelectedShown.filter(v => v.ID == e.currentTarget.value)[0];
+        props.setState({ ...props.state, subcategories: { ...props.state.subcategories, filterText: '', selected: [...props.state.subcategories.selected, subCategoryToMoveToSelected], notSelectedShown: newNotSelectedList }, numFilters: props.state.numFilters + 1 });
     };
     const moveSubCategoriesToNotSelected = (e) => {
-        var newSelectedList = state.subcategories.selected.filter(v => v.ID != e.currentTarget.value);
-        var subCategoryToMoveToNotSelected = state.subcategories.selected.filter(v => v.ID == e.currentTarget.value)[0];
-        setState({ ...state, subcategories: { ...state.subcategories, filterText: '', selected: newSelectedList, notSelectedShown: [...state.subcategories.notSelectedShown, subCategoryToMoveToNotSelected] }, numFilters: state.numFilters - 1 });
+        var newSelectedList = props.state.subcategories.selected.filter(v => v.ID != e.currentTarget.value);
+        var subCategoryToMoveToNotSelected = props.state.subcategories.selected.filter(v => v.ID == e.currentTarget.value)[0];
+        props.setState({ ...props.state, subcategories: { ...props.state.subcategories, filterText: '', selected: newSelectedList, notSelectedShown: [...props.state.subcategories.notSelectedShown, subCategoryToMoveToNotSelected] }, numFilters: props.state.numFilters - 1 });
     };
     const filterVendors = (e) => {
         var value = e.currentTarget.value.toLowerCase();
-        setState({
-            ...state, vendors: {
-                ...state.vendors,
+        props.setState({
+            ...props.state, vendors: {
+                ...props.state.vendors,
                 filterText: value,
-                notSelectedShown: [...state.vendors.notSelectedShown?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) >= 0) || [], ...state.vendors.notSelectedHidden?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) >= 0) || []],
-                notSelectedHidden: [...state.vendors.notSelectedShown?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) < 0) || [], ...state.vendors.notSelectedHidden?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) < 0)],
+                notSelectedShown: [...props.state.vendors.notSelectedShown?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) >= 0) || [], ...props.state.vendors.notSelectedHidden?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) >= 0) || []],
+                notSelectedHidden: [...props.state.vendors.notSelectedShown?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) < 0) || [], ...props.state.vendors.notSelectedHidden?.filter(v => v.VendorEnName.toLowerCase().indexOf(value) < 0)],
             } });
     };
     const filterOwners = (e) => {
         var value = e.currentTarget.value.toLowerCase();
-        setState({
-            ...state, owners: {
-                ...state.owners,
+        props.setState({
+            ...props.state, owners: {
+                ...props.state.owners,
                 filterText: value,
-                notSelectedShown: [...state.owners.notSelectedShown?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) >= 0) || [], ...state.owners.notSelectedHidden?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) >= 0) || []],
-                notSelectedHidden: [...state.owners.notSelectedShown?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) < 0) || [], ...state.owners.notSelectedHidden?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) < 0)],
+                notSelectedShown: [...props.state.owners.notSelectedShown?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) >= 0) || [], ...props.state.owners.notSelectedHidden?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) >= 0) || []],
+                notSelectedHidden: [...props.state.owners.notSelectedShown?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) < 0) || [], ...props.state.owners.notSelectedHidden?.filter(v => (v.FirstName.toLowerCase() + " " + v.LastName.toLowerCase()).indexOf(value) < 0)],
             }
         });
     };
 
     const filterLocations = (e) => {
         var value = e.currentTarget.value.toLowerCase();   
-          setState({
-              ...state, locations: {
-                  ...state.locations,
+          props.setState({
+              ...props.state, locations: {
+                  ...props.state.locations,
                   filterText: value,
-                  notSelectedShown: [...state.locations.notSelectedShown?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) >= 0) || [], ...state.locations.notSelectedHidden?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) >= 0) || []],
-                  notSelectedHidden: [...state.locations.notSelectedShown?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) < 0) || [], ...state.locations.notSelectedHidden?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) < 0)],
+                  notSelectedShown: [...props.state.locations.notSelectedShown?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) >= 0) || [], ...props.state.locations.notSelectedHidden?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) >= 0) || []],
+                  notSelectedHidden: [...props.state.locations.notSelectedShown?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) < 0) || [], ...props.state.locations.notSelectedHidden?.filter(v => v.LocationTypeName.toLowerCase().indexOf(value) < 0)],
               }
         });
     };
@@ -108,29 +107,29 @@ function IndexFilterResults(props) {
     const filterCategories = (e) => {
         var value = e.currentTarget.value.toLowerCase();
         setCategories({
-            ...state.categories,
+            ...props.state.categories,
             filterText: value,
-            notSelectedShown: [...state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || [], ...state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || []],
-            notSelectedHidden: [...state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) < 0) || [], ...state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) < 0)],
+            notSelectedShown: [...props.state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || [], ...props.state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || []],
+            notSelectedHidden: [...props.state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) < 0) || [], ...props.state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) < 0)],
         });
-        setState({
-            ...state, categories: {
-                ...state.categories,
+        props.setState({
+            ...props.state, categories: {
+                ...props.state.categories,
                 filterText: value,
-                notSelectedShown: [...state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || [], ...state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || []],
-                notSelectedHidden: [...state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) < 0) || [], ...state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) < 0)],
+                notSelectedShown: [...props.state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || [], ...props.state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || []],
+                notSelectedHidden: [...props.state.categories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) < 0) || [], ...props.state.categories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) < 0)],
             }
         });
     };
 
     const filterSubcategories = (e) => {
         var value = e.currentTarget.value.toLowerCase();
-        setState({
-            ...state, subcategories: {
-                ...state.subcategories,
+        props.setState({
+            ...props.state, subcategories: {
+                ...props.state.subcategories,
                 filterText: value,
-                notSelectedShown: [...state.subcategories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || [], ...state.subcategories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || []],
-                notSelectedHidden: [...state.subcategories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) < 0) || [], ...state.subcategories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) < 0)],
+                notSelectedShown: [...props.state.subcategories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || [], ...props.state.subcategories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) >= 0) || []],
+                notSelectedHidden: [...props.state.subcategories.notSelectedShown?.filter(v => v.Description.toLowerCase().indexOf(value) < 0) || [], ...props.state.subcategories.notSelectedHidden?.filter(v => v.Description.toLowerCase().indexOf(value) < 0)],
             }
         });
     };
@@ -138,7 +137,7 @@ function IndexFilterResults(props) {
 
    
     const clearFilter = () => {
-        setState({
+        props.setState({
             numFilters: props.viewModel.NumFilters,
             searchByName: props.viewModel.SearchName,
             catalogNumber: props.viewModel.CatalogNumber,
@@ -152,15 +151,15 @@ function IndexFilterResults(props) {
     }
     const applyFilter = (e) => {
         dispatch(Actions.setSelectedFiltersViewModel({
-            SelectedVendorsIDs:state.vendors.selected.map(v=> v.VendorID),
-            SelectedOwnersIDs: state.owners.selected.map(v => v.Id),
-            SelectedLocationsIDs: state.locations.selected.map(v => v.LocationTypeID),
-            SelectedCategoriesIDs: state.categories.selected.map(v => v.ID),
-            SelectedSubcategoriesIDs: state.subcategories.selected.map(v => v.ID),
-            NumFilters: state.numFilters,
-            Archive: state.isArchived,
-            CatalogNumber: state.catalogNumber,
-            SearchText: state.searchByName
+            SelectedVendorsIDs:props.state.vendors.selected.map(v=> v.VendorID),
+            SelectedOwnersIDs: props.state.owners.selected.map(v => v.Id),
+            SelectedLocationsIDs: props.state.locations.selected.map(v => v.LocationTypeID),
+            SelectedCategoriesIDs: props.state.categories.selected.map(v => v.ID),
+            SelectedSubcategoriesIDs: props.state.subcategories.selected.map(v => v.ID),
+            NumFilters: props.state.numFilters,
+            Archive: props.state.isArchived,
+            CatalogNumber: props.state.catalogNumber,
+            SearchText: props.state.searchByName
         }));
     }
     return (<span>
@@ -174,20 +173,20 @@ function IndexFilterResults(props) {
                 <div className="row py-4 align-items-center">
                     <div className="col-2">
                         <label className="text text-left font-weight-bold">Total Filters:</label>
-                    <span className=" text numFilters font-weight-bold" value={state.numFilters}>{state.numFilters}</span>
+                    <span className=" text numFilters font-weight-bold" value={props.state.numFilters}>{props.state.numFilters}</span>
                     </div>
                 <div className="col-2">
-                    <input type="text" placeholder="Search By Name" className="mb-2 w-100 form-control-plaintext border-bottom search-by-name-in-filter search-requests-in-filter" onChange={updateSearchName} value={state.searchByName??""} />
+                    <input type="text" placeholder="Search By Name" className="mb-2 w-100 form-control-plaintext border-bottom search-by-name-in-filter search-requests-in-filter" onChange={updateSearchName} value={props.state.searchByName??""} />
                 </div>
                 {!props.viewModel.IsProprietary ?
                     <div className="col-2">
-                        <input type="text" placeholder="By Catalog Number" className="mb-2 w-100 form-control-plaintext border-bottom search-by-catalog-number" onChange={updateCatalogNumber} value={state.catalogNumber??""} />
+                        <input type="text" placeholder="By Catalog Number" className="mb-2 w-100 form-control-plaintext border-bottom search-by-catalog-number" onChange={updateCatalogNumber} value={props.state.catalogNumber??""} />
                     </div>
                     : ""}
                 <div className="col-3"></div>
                 {props.viewModel.IsProprietary ?
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={state.isArchived} onChange={markAsArchived} />} label="Archived" />
+                        <FormControlLabel control={<Checkbox checked={props.state.isArchived} onChange={markAsArchived} />} label="Archived" />
                     </FormGroup>                    
                     :""
                     }
@@ -201,14 +200,14 @@ function IndexFilterResults(props) {
                 <div className="row ">
                 {!props.viewModel.IsProprietary ?
                     <div className="border-right col filter-col vendor-col">
-                        <input placeholder="Vendor" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterVendors} value={state.vendors.filterText ??''} />
+                        <input placeholder="Vendor" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterVendors} value={props.state.vendors.filterText ??''} />
                         <div className="inventory-filter-col not-selected ">
-                            {state.vendors.notSelectedShown?.map(v =>
+                            {props.state.vendors.notSelectedShown?.map(v =>
                                 <button key={v.VendorID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left" value={v.VendorID} onClick={moveVendorToSelected} ><span className="filter-button-description">{v.VendorEnName}</span></button>
                             )}
                         </div>
                         <div className="inventory-filter-col selected">  
-                            {state.vendors.selected?.map(v =>
+                            {props.state.vendors.selected?.map(v =>
                                 <button key={v.VendorID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left filter-btn-select" value={v.VendorID} onClick={moveVendorToNotSelected} ><span className="filter-button-description">{v.VendorEnName}</span></button>
                             )}
                         </div>
@@ -216,14 +215,14 @@ function IndexFilterResults(props) {
                     :""
                     }
                 <div className="border-right col filter-col owner-col">
-                    <input placeholder="Owner" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterOwners} value={state.owners.filterText ?? ''} />
+                    <input placeholder="Owner" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterOwners} value={props.state.owners.filterText ?? ''} />
                     <div className="inventory-filter-col not-selected">
-                        {state.owners.notSelectedShown?.map(v =>
+                        {props.state.owners.notSelectedShown?.map(v =>
                             <button key={v.Id} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left"  value={v.Id} onClick={moveOwnersToSelected} ><span className="filter-button-description">{v.FirstName+" " + v.LastName}</span></button>
                             )}
                         </div>
                     <div className="inventory-filter-col selected">
-                        {state.owners.selected?.map(v =>
+                        {props.state.owners.selected?.map(v =>
                             <button key={v.Id} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left filter-btn-select" value={v.Id} onClick={moveOwnersToNotSelected} ><span className="filter-button-description">{v.FirstName +v.LastName}</span></button>
                           ) }
                         </div>
@@ -232,14 +231,14 @@ function IndexFilterResults(props) {
                 {props.navigationInfo.sectionType != "Operations" ?
            
                         <div className="border-right col filter-col location-col">
-                        <input placeholder="Location" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterLocations} value={state.locations.filterText ?? ''} />
+                        <input placeholder="Location" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterLocations} value={props.state.locations.filterText ?? ''} />
                         <div className="inventory-filter-col not-selected">
-                            {state.locations.notSelectedShown?.map(v =>
+                            {props.state.locations.notSelectedShown?.map(v =>
                                 <button key={v.LocationTypeID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left" value={v.LocationTypeID} onClick={moveLocationsToSelected}><span className="filter-button-description" >{v.LocationTypeName}</span></button>
                                 )}
                             </div>
                         <div className="inventory-filter-col selected">
-                            {state.locations.selected?.map(v =>
+                            {props.state.locations.selected?.map(v =>
                                 <button key={ v.LocationTypeID } id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left filter-btn-select" value={v.LocationTypeID} onClick={moveLocationsToNotSelected} ><span className="filter-button-description">{v.LocationTypeName}</span></button>
                                ) }
                             </div>
@@ -247,27 +246,27 @@ function IndexFilterResults(props) {
                     :""
                     }
                     <div className="border-right col filter-col category-col">
-                    <input placeholder="Category" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterCategories} value={state.categories.filterText ?? ''}  />
+                    <input placeholder="Category" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterCategories} value={props.state.categories.filterText ?? ''}  />
                     <div className="inventory-filter-col not-selected">
-                        {state.categories.notSelectedShown?.map(v =>
+                        {props.state.categories.notSelectedShown?.map(v =>
                             <button key={v.ID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left" value={v.ID} onClick={moveCategoriesToSelected} ><span className="filter-button-description">{v.Description}</span></button>
                            ) }
                         </div>
                     <div className="inventory-filter-col selected">
-                        {state.categories.selected?.map(v =>
+                        {props.state.categories.selected?.map(v =>
                             <button key={v.ID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left filter-btn-select" value={v.ID} onClick={moveCategoriesToNotSelected} ><span className="filter-button-description">{v.Description}</span></button>
                         )}
                         </div>
                     </div>
                 <div className="border-right col mh-100 filter-col subcategory-col">
-                    <input placeholder="Subcategory" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterSubcategories} value={state.subcategories.filterText ?? ''} />
+                    <input placeholder="Subcategory" className="mb-2 disabled-text w-100 form-control-plaintext border-bottom " onChange={filterSubcategories} value={props.state.subcategories.filterText ?? ''} />
                     <div className="inventory-filter-col not-selected">
-                        {state.subcategories.notSelectedShown?.map(v =>
+                        {props.state.subcategories.notSelectedShown?.map(v =>
                             <button key={v.ID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left"  value={v.ID} onClick={moveSubCategoriesToSelected} ><span className="filter-button-description">{v.Description}</span></button>
                             )}
                         </div>
                     <div className="inventory-filter-col selected">
-                        {state.subcategories.selected?.map(v =>
+                        {props.state.subcategories.selected?.map(v =>
                             <button key={v.ID} id="" type="button" className="table-button btn-filter btn-filter-style my-1 w-100 text-left filter-btn-select" value={v.ID} onClick={moveSubCategoriesToNotSelected} ><span className="filter-button-description">{v.Description}</span></button>
                             )}
                         </div>
@@ -276,19 +275,7 @@ function IndexFilterResults(props) {
         </div></span>
     )
 
-    function initialState() {
-        return {
-            numFilters: props.viewModel.NumFilters,
-            searchByName: props.viewModel.SearchName,
-            catalogNumber: props.viewModel.CatalogNumber,
-            isArchived: props.viewModel.Archive,
-            vendors: { filterText: "", notSelectedShown: props.viewModel.Vendors, selected: props.viewModel.SelectedVendors||[], notSelectedHidden: [] },
-            owners: { filterText: "", notSelectedShown: props.viewModel.Owners, selected: props.viewModel.SelectedOwners||[], notSelectedHidden: [] },
-            locations: { filterText: "", notSelectedShown: props.viewModel.Locations, selected: props.viewModel.SelectedLocations||[], notSelectedHidden: [] },
-            categories: { filterText: "", notSelectedShown: props.viewModel.Categories, selected: props.viewModel.SelectedCategories||[], notSelectedHidden: [] },
-            subcategories: { filterText: "", notSelectedShown: props.viewModel.Subcategories, selected: props.viewModel.SelectedSubcategories||[], notSelectedHidden: [] }
-        };
-    }
+   
 }
 
 const mapStateToProps = state => {

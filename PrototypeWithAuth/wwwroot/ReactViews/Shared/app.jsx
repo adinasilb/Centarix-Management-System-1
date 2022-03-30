@@ -18,7 +18,7 @@ export default function App(props) {
             <Switch >
                 <Route path={Routes.INDEX_TABLE} render={(innerProps) => <PageLoader {...innerProps} viewModel={props.viewModel} viewEnum={props.viewEnum} />} />
     
-                <Route path={Routes.INDEX_TABLE_DATA_BY_VENDOR} render={(innerProps) => <PageLoader {...innerProps} viewEnum={props.viewEnum} />} />
+                <Route path={Routes.INDEX_TABLE_BY_VENDOR} render={(innerProps) => <PageLoader {...innerProps}  viewModel={props.viewModel}  viewEnum={props.viewEnum} />} />
                 <Route path={Routes.SETTINGS_INVENTORY} render={(innerProps) => <PageLoader {...innerProps} viewEnum={props.viewEnum} />} />
                 <Route path={Routes.ORDER_TAB} render={(innerProps) => <PageLoader  {...innerProps} viewEnum={props.viewEnum} />} />
                 <Route path={Routes.ORDER_EMAIL} render={(innerProps) => <PageLoader  {...innerProps} viewModel={props.viewModel} tempRequestList={props.tempRequestList} viewEnum={props.viewEnum} />} />

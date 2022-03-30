@@ -3,7 +3,7 @@
 import { Route, Switch, MemoryRouter } from 'react-router-dom';
 
 import _IndexTable from '../Requests/index-table.jsx';
-import _IndexTableDataByVendor from '../Requests/index-table-data-by-vendor.jsx';
+import _IndexTableByVendor from '../Requests/index-table-by-vendor.jsx';
 import SettingsInventory from "../Requests/settings-inventory.jsx";
 import OrderTab from "../Requests/order-tab.jsx"
 import OrderEmail from "../Requests/order-email.jsx"
@@ -19,8 +19,8 @@ export default function PageLoader(props) {
         console.log(props.viewEnum)
        
         switch (props.viewEnum) {
-            case Routes.INDEX_TABLE_DATA_BY_VENDOR:
-                return (<_IndexTableDataByVendor key={"indexTableDataByVendor"}  showView={true} bcColor={props.bcColor} ajaxLink={props.ajaxLink} btnText={props.btnText} sectionClass={props.sectionClass} />);
+            case Routes.INDEX_TABLE_BY_VENDOR:
+                return (<_IndexTableByVendor key={"indexTableByVendor"} viewModel={props.viewModel}  />);
                 break;
             case Routes.INDEX_TABLE:
                 return (<_IndexTable viewModel={props.viewModel} key={"indexTable"} />);

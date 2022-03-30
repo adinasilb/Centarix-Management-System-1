@@ -18,5 +18,8 @@ namespace PrototypeWithAuth.ViewModels
         public CategoryPopoverViewModel CategoryPopoverViewModel { get; set; }
         public NotificationFilterViewModel NotificationFilterViewModel { get; set; }
         public InventoryFilterViewModel InventoryFilterViewModel { get; set; }
+        public string ButtonText { get;set; }
+        public string AjaxLink { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
     }
 }

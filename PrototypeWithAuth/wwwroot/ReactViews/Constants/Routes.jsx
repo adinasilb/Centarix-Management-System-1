@@ -1,6 +1,6 @@
 ﻿export const DELETE_ITEM = '/DeleteModal';
 export const INDEX_TABLE = '/_IndexTable';
-export const INDEX_TABLE_DATA_BY_VENDOR = '/_IndexTableDataByVendor';
+export const INDEX_TABLE_BY_VENDOR = '/_IndexTableByVendor';
 export const SETTINGS_INVENTORY = 'SettingsInventory';
 export const REORDER = '/Reorder';
 export const SHARE = '/ShareModal';

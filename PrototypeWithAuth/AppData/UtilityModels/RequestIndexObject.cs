@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.AppData
         public string ErrorMessage { get; set; }
         private int _PageNumber;
         private string _TabValue;
-        private List<string> _SelectedPriceSort;
+        private List<AppUtility.PriceSortEnum> _SelectedPriceSort;
         private AppUtility.PageTypeEnum _PageType;
         public int PageNumber
         {
@@ -63,19 +63,19 @@ namespace PrototypeWithAuth.AppData
             set { _PageType = value; }
         }
         public AppUtility.MenuItems SectionType { get; set; }
-        public List<String> SelectedPriceSort
+        public List<AppUtility.PriceSortEnum> SelectedPriceSort
         {
             get
             {
                 if (_SelectedPriceSort == null)
                 {
-                    return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+                    return new List<AppUtility.PriceSortEnum>() { AppUtility.PriceSortEnum.TotalVat };
                 }
                 else
                 {
                     if (_SelectedPriceSort[0] == null)
                     {
-                        return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+                        return new List<AppUtility.PriceSortEnum>() { AppUtility.PriceSortEnum.TotalVat };
                     }
                     return _SelectedPriceSort;
                 }

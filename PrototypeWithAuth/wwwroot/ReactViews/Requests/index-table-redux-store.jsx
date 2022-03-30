@@ -26,7 +26,7 @@ function IndexTableReduxStore(props) {
         else {
             didMount.current = true;
         }
-    }, [props.selectedFilters, props.navigationInfo, props.categoryPopoverViewModel, props.pricePopoverViewModel, props.tabInfo])
+    }, [props.selectedFilters, props.navigationInfo, props.categoryPopoverViewModel, props.selectedCurrency, props.priceSortEnums, props.tabValue])
     return <div attr={props.pageNumber}></div>;
 }
 
@@ -34,9 +34,10 @@ const mapStateToProps = state => {
     console.log("mstp global")
     return {
         selectedFilters: state.selectedFilters,
-        tabInfo: state.tabInfo,
+        tabValue: state.tabValue,
         categoryPopoverViewModel: state.categoryPopoverViewModel,
-        pricePopoverViewModel: state.pricePopoverViewModel,
+        selectedCurrency: state.selectedCurrency,
+        priceSortEnums: state.priceSortEnums,
         navigationInfo: state.navigationInfo,
         pageNumber: state.pageNumber,
         reloadIndex: state.reloadIndex

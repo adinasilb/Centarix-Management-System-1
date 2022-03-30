@@ -20,19 +20,28 @@ export const categoryPopoverReducer = (state = {}, action) => {
     }
 };
 
-export const pricePopoverReducer = (state = {}, action) => {
+export const setPriceSortEnum = (state = {}, action) => {
     switch (action.type) {
-        case ActionKeys.SET_PRICE_POPOVER_VIEWMODEL:
+        case ActionKeys.SET_PRICE_SORT_ENUM:
             return action.payload;
             break;
         default:
             return state;
     }
 };
-export const tabInfoReducer = (state = {}, action) => {
+export const setSelectedCurrency = (state = {}, action) => {
     switch (action.type) {
-        case ActionKeys.SET_TAB_INFO:
-            return { ...state, tabValue: action.payload };
+        case ActionKeys.SET_CURRENCY_ENUM:
+            return action.payload;
+            break;
+        default:
+            return state;
+    }
+};
+export const tabValueReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ActionKeys.SET_TAB_VALUE:
+            return action.payload;
             break;
         default:
             return state;
@@ -44,6 +53,8 @@ export const selectedFiltersReducer = (state = {}, action) => {
         case ActionKeys.SET_SELECTED_FILTERS_VIEWMODEL:
             return action.payload;
             break;
+        case ActionKeys.SET_SEARCH_TEXT:
+            return { ...state, SearchText: action.payload }
         default:
             return state;
     }

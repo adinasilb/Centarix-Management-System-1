@@ -18,11 +18,11 @@ function _IndexTableHeaders(props) {
                                         {{
                                             "Price":
                                                 <div className="d-inline-block">
-                                                    <PricePopover  />
+                                                    <PricePopover viewModel={props.viewModel.PricePopoverViewModel} />
                                                 </div>,
                                             "Category":
                                                 <div className="d-inline-block">
-                                                    <CategoryPopover />
+                                                    <CategoryPopover viewModel={props.viewModel.CategPopoverViewModel} />
                                                 </div>
                                         }[col.FilterEnum]}
 

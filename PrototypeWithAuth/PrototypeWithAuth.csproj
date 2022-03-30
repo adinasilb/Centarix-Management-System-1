@@ -615,6 +615,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\elixir-fonts\fonts\icomoon.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
     <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
@@ -693,7 +697,24 @@
 
 
   <ItemGroup>
+    <None Include="wwwroot\css\elixir-fonts\fonts\icomoon.svg" />
     <None Include="wwwroot\favicon_io\site.webmanifest" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\elixir-fonts\fonts\icomoon.eot">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\elixir-fonts\fonts\icomoon.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\elixir-fonts\fonts\icomoon.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 

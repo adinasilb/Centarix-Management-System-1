@@ -121,7 +121,7 @@ $(function () {
         e.stopImmediatePropagation();
 
         console.log("upload file submitted");
-        var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
+        var dontAllowMultipleFiles = $("#DontAllowMultiple").val(); 
         if (dontAllowMultipleFiles == false) {
             console.log("disable more files")
         }
@@ -149,12 +149,12 @@ $(function () {
         //var url = $("#documentModalForm").data('string');
         console.log("input button: " + inputButton);
         var url = inputButton.attr("href");
-        var $isEdittable = $('.isEdittable').val();
+        //var $isEdittable = $('.isEdittable').val();
         //alert($isEdittable)
-        var $showSwitch = $('.showSwitch').val();
+        //var $showSwitch = $('.showSwitch').val();
         console.log("url : " + url);
         var formData = new FormData($(".documentModalForm")[0]);
-        var $CustomMainObjectID = $("#CustomMainObjectID").val();
+        //var $CustomMainObjectID = $("#CustomMainObjectID").val();
         console.log(...formData)
         var targetFile = formData.getAll("FilesToSave")
         console.log(targetFile)
@@ -166,21 +166,21 @@ $(function () {
         $(".carousel-item").remove();
 
 
-        var $enumString = $('.folderName').val();
-        var $requestId = $('.objectID').val();
-        var section = $("#masterSectionType").val();
-        var guid = $("#Guid").val();
-        var $CustomMainObjectID = $("#CustomMainObjectID").val();
+        //var $enumString = $('.folderName').val();
+        //var $requestId = $('.objectID').val();
+        //var section = $("#masterSectionType").val();
+        //var guid = $("#Guid").val();
+        //var $CustomMainObjectID = $("#CustomMainObjectID").val();
 
 
-        if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
-            section = "Operations"
-        } else if ($(".open-document-modal.active-document-modal").hasClass('labManagement') || $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
-            section = "LabManagement"
-        }
-        $.fn.ChangeColorsOfModal($enumString, section);
-        var parentFolder = $('.parentFolderName').val();
-        $.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
+        //if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+        //    section = "Operations"
+        //} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement') || $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
+        //    section = "LabManagement"
+        //}
+        //$.fn.ChangeColorsOfModal($enumString, section);
+        //var parentFolder = $('.parentFolderName').val();
+        //$.fn.OpenDocumentsModal(true, $enumString, $requestId, guid, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
         return true;
     });
 
