@@ -20,9 +20,9 @@
         <title>Quote Summary</title>
     </head>-->
     @*<body style="font-family: 'Roboto', sans-serif;">*@
-                            @Html.React("RootComponent", new { viewModel = Model, TempRequestJson= Model.TempRequestListViewModel, viewEnum="/OrderEmail"}) 
-                            @Html.ReactGetScriptPaths()
-@Html.ReactInitJavaScript()
+            @Html.React("OrderEmail", new { viewModel = Model, TempRequestJson= Model.TempRequestListViewModel}) 
+            @Html.ReactGetScriptPaths()
+            @Html.ReactInitJavaScript()
 
     @*</body>
 </html>*@

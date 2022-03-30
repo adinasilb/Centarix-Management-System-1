@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { useDispatch, connect} from 'react-redux';
 import * as AppUtility from '../Constants/AppUtility.jsx'
 
 export default function OrderEmail(props) {
