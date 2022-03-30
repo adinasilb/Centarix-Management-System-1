@@ -34,12 +34,11 @@ const SettingsForm = (props) => {
     alert(JSON.stringify(props));
     alert("in settings form");
     const [remove, setRemove] = useState({ key: false });
-    //const [index, setIndex] = useState();
     const [countCF, setCountCF] = useState([]);
     const [customFields, setCustomFields] = useState([]);
     const currentTabCount = 0;
 
-    const [fieldValues, setFieldValues] = useState({});
+    //const [fieldValues, setFieldValues] = useState({});
 
     var detailsCFStyle = {};
     var priceCFStyle = {};
@@ -59,23 +58,23 @@ const SettingsForm = (props) => {
     }
 
 
+    useEffect(() => {
+        return () => {
+            console.log("unmounted inner");
+        };
+    });
     //var customFields = [];
 
     console.log("RERENDERING");
 
     const onSubmit = (data) => {
-        //console.log(errors);
-        alert(JSON.stringify(data));
         var formData = new FormData();
-        //alert(newFormData);
-        //alert(JSON.stringify(props.SettingsForm));
         alert(JSON.stringify(data.DetailsCustomFields));
         formData.set("DetailsCustomFields", JSON.stringify(data.DetailsCustomFields));
         formData.set("PriceCustomFields", JSON.stringify(data.PriceCustomFields));
         formData.set("DocumentsCustomFields", JSON.stringify(data.DocumentsCustomFields));
         formData.set("ReceivedCustomFields", JSON.stringify(data.ReceivedCustomFields));
         formData.set("Category", JSON.stringify(props.SettingsForm.Category));
-        //formData.append("FieldName", refs.fieldName0)
         for (var value of formData.values()) {
             console.log(value);
         }
@@ -88,36 +87,12 @@ const SettingsForm = (props) => {
             .then(res => console.log("hello"))
             .catch((error) => { console.error(error) });
 
-        //var xhr = new XMLHttpRequest();
-        //xhr.open('post', '/Requests/SettingsInventory', true);
-        //xhr.setRequestHeader("Content-type", "multipart/form-data");
-        ////xhr.onreadystatechange = function () {
-        ////    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-        ////        // Do something on success
-        ////    }
-        ////}
-        //console.dir(formData);
-        //xhr.send(formData);
     };
 
 
-    React.useEffect(() => {
-        return () => { console.log("in use effect on every render") }
-    });
-
     //React.useEffect(() => {
-    //    return () => { console.log("in use effect only once") }
-    //}, []);
-
-    //React.useEffect(() => {
-    //    console.log("in cf use effect")
-    //}, [customFields]);
-
-
-    //React.useEffect((e) => {
-    //    console.log("in outer effect");
-
-    //}, [remove, customFields, index]);
+    //    return () => { alert("in use effect on every render") }
+    //});
 
     const methods = useForm({ mode: "onChange" });
 
@@ -140,6 +115,7 @@ const SettingsForm = (props) => {
 
 
     var RemoveCustomField = (e) => {
+        alert("in remove custom fields");
         e.preventDefault();
         var place = e.target.parentElement.attributes.number.value;
         var index = countCF.indexOf(parseFloat(place));
@@ -154,32 +130,21 @@ const SettingsForm = (props) => {
         setCountCF(count);
     }
 
-    var UpdateFieldValue = (e) => {
-        e.preventDefault();
-        console.log("in update field value");
-    }
-
-    var autoHeight = {
-        height: 'auto'
-    }
-    var fontsize = {
-        fontSize: 2 + 'rem'
-    }
     var showItem = " active show ";
-    var category = props.SettingsForm.Category.Description;
-    var categoryNameRows = category != null ?
+    var category = props?.SettingsForm.Category.Description;
+    var categoryNameRows = ""; category != null ?
         Math.ceil(parseFloat(category.length) / 30) : 1;
     var catName = category ?? "(categoryName)";
     var catText = "Select A Category";
     var subCatText = "Select A Subcategory";
-    if (props.SettingsForm.Category.ParentCategoryEnum == null) {
-        catText = props.SettingsForm.Category.ParentCategory.Description ?? catText;
+    if (props?.SettingsForm?.Category?.ParentCategoryEnum == null) {
+        catText = props?.SettingsForm?.Category?.ParentCategory?.Description ?? catText;
         subCatText = category ?? subCatText;
     }
     else {
         catText = category ?? catText;
     }
-    console.log("categoryNameRows: " + categoryNameRows);
+    console.log("categoryNameRows: " );
     return (
         <>
             <FormProvider {...methods}>
@@ -188,15 +153,15 @@ const SettingsForm = (props) => {
                     <div className="row top-bar border-bottom text-center text-justify under-row-margin d-flex" >
                         <div className="col-12 align-items-center justify-content-center mt-3 mb-3">
                             <span className="align-items-center">
-                                <span className="lab-man-color">{props.SettingsForm.ItemCount}</span> Items &nbsp;&nbsp;&nbsp;&nbsp;
-                              <span className="lab-man-color">{props.SettingsForm.RequestCount}</span> Requests
+                                <span className="lab-man-color">{props?.SettingsForm?.ItemCount}</span> Items &nbsp;&nbsp;&nbsp;&nbsp;
+                              <span className="lab-man-color">{props?.SettingsForm?.RequestCount}</span> Requests
                           </span>
                         </div>
                     </div>
                     <div className="new-modal-header modal-line-1-header-with-back modal-sides ch-scrollable pt-0">
                         <div className="row modal-title-line justify-content-between under-row-margin container">
                             <div className="col-2">
-                                <img src={props.SettingsForm.Category.ImageURL} className="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
+                                <img src={props?.SettingsForm?.Category?.ImageURL??""} className="sub-category-image top-modal-image" alt="Alternate Text" width="75" />
                             </div>
                             <div className="col-8">
                                 <div className="modal-product-title ml-2" >
@@ -225,8 +190,8 @@ const SettingsForm = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="settings new-modal-body edit-modal-outer-body "> {/*style="height:33.5rem;"*/}
-                        <div className="container-fluid edit-modal-body box-shadow orders partial-div"> {/*style="background: #FFF; border: 2px solid #EAEAEB;">*/}
+                    <div className="settings new-modal-body edit-modal-outer-body "> 
+                        <div className="container-fluid edit-modal-body box-shadow orders partial-div"> 
                             <div className="container-fluid div-tabs no-box-shadow p-0">
                                 <div className="tab-content">
                                     <div id="details" className={"tab-pane fade in" + showItem} value="1">
@@ -336,7 +301,7 @@ const SettingsForm = (props) => {
                                                     <div className="col-6">
                                                         <div className="form-group">
                                                             <label className="control-label">Exchange Rate</label>
-                                                            <input name="Requests[0].ExchangeRate" className="form-control-plaintext border-bottom " id="exchangeRate" disabled value={props.SettingsForm.ExchangeRate} />
+                                                            <input name="Requests[0].ExchangeRate" className="form-control-plaintext border-bottom " id="exchangeRate" disabled value={props?.SettingsForm?.ExchangeRate??""} />
                                                             <span className="text-danger-centarix"></span>
                                                         </div>
                                                     </div>
@@ -612,10 +577,7 @@ const SettingsForm = (props) => {
                             </div>
                         </div>
                     </div>
-                    {/*{*/}
-                    {/*    console.log("OUTER FORM LOOP:")*/}
-                    {/*    {register.map(x => console.log(x))}*/}
-                    {/*}*/}
+                    
                 </form>
             </FormProvider>
         </>

@@ -2,13 +2,6 @@
 
 const CategoryListSettings = (props) => {
 
-    //constructor(props) {
-    //    super(props);
-    //    this.state = { categories: this.props.categories };
-    //    this.categoryField1 = this.categoryField1.bind(this);
-    //    this.categoryField2 = this.categoryField2.bind(this);
-    //}
-    //{ (this.props.categories.ColumnNumber == 1) ? this.categoryField1 : this.categoryField2 }
     const categoryField1 = (e) => {
         alert("category field 1");
         var element = document.getElementsByClassName("category-list-1")[0].getElementsByClassName("selected")[0];

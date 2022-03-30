@@ -5271,6 +5271,17 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(await GetSettingsFormViewModel(ModelType, CategoryID));
         }
 
+        public async Task<string> GetSettingsFormJsonResult(string ModelType, int CategoryID)
+        {
+            var json = JsonConvert.SerializeObject(await GetSettingsFormViewModel(ModelType, CategoryID), Formatting.None, new JsonSerializerSettings
+            {
+
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            return json;
+        }
+
         public async Task<SettingsForm> GetSettingsFormViewModel(string ModelType, int CategoryID)
         {
             SettingsForm settingsForm = new SettingsForm();
