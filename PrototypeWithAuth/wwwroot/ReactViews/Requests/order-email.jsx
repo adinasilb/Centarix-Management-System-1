@@ -6,10 +6,11 @@ import * as AppUtility from '../Constants/AppUtility.jsx'
 export default function OrderEmail(props) {
     const [state, setState] = useState({
         viewModel: props.viewModel,
-        showPrice: (!(props.navigationInfo.pageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
-            props.navigationInfo.sidebarType == AppUtility.SidebarEnum.Quotes))
+        showPrice: true
+        //showPrice: (!(props.navigationInfo.pageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
+        //    props.navigationInfo.sidebarType == AppUtility.SidebarEnum.Quotes))
     })
-
+    console.log("order-email")
     var firstRequest = props.tempRequestList.TempRequestViewModels[0].Request ;
     firstRequest.Product = (firstRequest.SingleOrder && firstRequest.SingleOrder) || (firstRequest.RecurringOrder && firstRequest.RecurringOrder) || (firstRequest.StandingOrder && firstRequest.RecurringOrder)
 
@@ -105,12 +106,11 @@ export default function OrderEmail(props) {
                         </header>
                         <div className="row">
                             <div className="col-6">
-                                {props.navigationInfo.pageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
-                                    props.navigationInfo.sidebarType == AppUtility.SidebarEnum.Quotes ?
-                                    <span style={{ fontWeight: "500", fontSize: "1rem" }}>Price Quote Request</span>
-                                    :
+                                {/*{props.navigationInfo.pageType == AppUtility.PageTypeEnum.LabManagementQuotes &&*/}
+                                {/*    props.navigationInfo.sidebarType == AppUtility.SidebarEnum.Quotes ?*/}
+                                {/*    <span style={{ fontWeight: "500", fontSize: "1rem" }}>Price Quote Request</span>*/}
+                                {/*    :*/}
                                     <span style={{ fontWeight: "500" , fontSize: "1rem" }}>{"Purchase Order: " + state.viewModel.ParentRequest?.OrderNumber}</span>
-                                }
                             </div>
                             <div className="col-3 offset-3 text-center">
                                 <span style={{ fontWeight: "500" }} id="date">{moment().format("DD MMM YYYY")}</span>

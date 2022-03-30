@@ -64,12 +64,12 @@ function ConfirmEmailModal(props) {
         //var orderPdf = new File([orderFileBlob], "OrderPdf.pdf")
         //console.log(orderPdf)
 
-        var orderPdf = await ReactPDF.renderToString(<OrderPDF viewModel={state.viewModel} tempRequestList={props.tempRequestList} navigationInfo={props.navigationInfo} />)
+        //var orderPdf = await ReactPDF.renderToString(<OrderPDF viewModel={state.viewModel} tempRequestList={props.tempRequestList} navigationInfo={props.navigationInfo} />)
         firstRequest.Product = null;
         var viewModelFormData = jsonToFormData(state.viewModel)
         var tempRequestFormData = jsonToFormData({ "TempRequestListViewModel": props.tempRequestList })
         var formData = combineTwoFormDatas(viewModelFormData, tempRequestFormData)
-        formData.set("OrderPDF", orderPdf)
+        //formData.set("OrderPDF", orderPdf)
         fetch("/Requests/ConfirmEmailModal", {
             method: "POST",
             body: formData

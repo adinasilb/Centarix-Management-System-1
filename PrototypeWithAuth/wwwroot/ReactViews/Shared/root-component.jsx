@@ -7,6 +7,7 @@ import reducer from '../ReduxRelatedUtils/reducers.jsx';
 
 
 export default function RootComponent(props) {
+    console.log("root component")
     const store = createStore(reducer, {
         viewModel: props.viewModel,
         modals: [],
@@ -21,6 +22,8 @@ export default function RootComponent(props) {
         pageNumber: props.viewModel.PageNumber,
         reloadIndex: false
     }, composeWithDevTools());
+
+    
     const Scripts = lazy(() => import('../scripts.jsx'));  
     const App = lazy(() => import('./app.jsx'));
   

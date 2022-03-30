@@ -1,4 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.ConfirmEmailViewModel
+@using React.AspNet
+
 @{
     ViewData["Title"] = "PurchaseOrderView";
     Layout = "~/Views/Shared/Master.cshtml";
@@ -18,8 +20,9 @@
         <title>Quote Summary</title>
     </head>-->
     @*<body style="font-family: 'Roboto', sans-serif;">*@
-        <div>
-            @{await Html.RenderPartialAsync("_OrderEmail", Model); }
-        </div>
+                            @Html.React("RootComponent", new { viewModel = Model, TempRequestJson= Model.TempRequestListViewModel, viewEnum="/OrderEmail"}) 
+                            @Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
+
     @*</body>
 </html>*@
