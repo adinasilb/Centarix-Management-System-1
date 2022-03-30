@@ -12,9 +12,9 @@ function _IndexTableHeadersByVendor(props) {
                     <table className="table table-headerspaced table-noheaderlines table-hover mb-0">
                         <thead>
                             <tr className="text-center">
-                                {props.viewModel.RequestsByVendor.map((rbv, i) => (
-                                    <th key={i} width={rbv[0].Width + "%"} >
-                                        <label>{rbv[0].Title}</label>
+                                {props.viewModel.RequestsByVendor[0][0].Columns.map((col, i) => (
+                                    <th key={i} width={col.Width + "%"} >{console.log(col)}
+                                        <label>{col.Title}</label>
                                         {{
                                             "Price":
                                                 <div className="d-inline-block">
@@ -24,7 +24,7 @@ function _IndexTableHeadersByVendor(props) {
                                                 <div className="d-inline-block">
                                                     <CategoryPopover />
                                                 </div>
-                                        }[rbv[0].FilterEnum]}
+                                        }[col.FilterEnum]}
 
                                     </th>
                                 ))}

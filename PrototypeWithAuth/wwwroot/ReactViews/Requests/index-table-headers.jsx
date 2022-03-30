@@ -22,7 +22,7 @@ function _IndexTableHeaders(props) {
                                                 </div>,
                                             "Category":
                                                 <div className="d-inline-block">
-                                                    <CategoryPopover viewModel={props.viewModel.CategPopoverViewModel} />
+                                                    <CategoryPopover viewModel={props.viewModel.CategoryPopoverViewModel} />
                                                 </div>
                                         }[col.FilterEnum]}
 
@@ -44,7 +44,6 @@ function _IndexTableHeaders(props) {
 }
 
 const mapStateToProps = state => {
-    console.log("mstp header")
     return {
         viewModel: state.viewModel,
         navigationInfo: state.navigationInfo

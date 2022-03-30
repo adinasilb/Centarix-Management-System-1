@@ -5,7 +5,6 @@ import { connect, useDispatch } from 'react-redux';
 
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 function IndexFilterResults(props) {
-    console.log("index filter results")
     const dispatch = useDispatch();
 
 
@@ -279,7 +278,6 @@ function IndexFilterResults(props) {
 }
 
 const mapStateToProps = state => {
-    console.log("mstp filter")
     return {
         navigationInfo: state.navigationInfo
     };

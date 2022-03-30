@@ -5,8 +5,6 @@ const tempRequestReducer = (state = [], action) => {
 
     switch (action.type) {
         case ActionKeys.SET_TEMP_REQUEST_LIST:
-            console.log("set temp request Json")
-            console.log(action.payload)
             return action.payload;
             break;
         default:

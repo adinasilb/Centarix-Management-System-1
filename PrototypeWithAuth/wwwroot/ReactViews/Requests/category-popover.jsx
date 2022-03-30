@@ -4,7 +4,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { connect } from 'react-redux';
-function CategoryPopover(props) {
+export default function CategoryPopover(props) {
 
     return (
         
@@ -21,8 +21,7 @@ function CategoryPopover(props) {
                         }}
                     >
 
-                        <Typography sx={{p:1  }}> 
-                            <span>
+                        <div className="m-3">
                                     <FormGroup>
                                         <FormControlLabel control={<Checkbox checked={props.viewModel.SelectedCategoryOption[0]} />} label="Category" />
                                     </FormGroup>
@@ -32,8 +31,7 @@ function CategoryPopover(props) {
                                 <FormGroup>
                                     <FormControlLabel control={<Checkbox checked={props.viewModel.SelectedCategoryOption[2]} />} label="Source" />
                                 </FormGroup>
-                            </span>
-                        </Typography>
+                            </div>
                     </Popover>
                 </div>
             )}
@@ -41,13 +39,3 @@ function CategoryPopover(props) {
         
         )
 }
-const mapStateToProps = state => {
-    console.log("mstp category popover")
-    return {
-       viewModel: state.categoryPopoverViewModel
-    };
-};
-
-export default connect(
-    mapStateToProps
-)(CategoryPopover)

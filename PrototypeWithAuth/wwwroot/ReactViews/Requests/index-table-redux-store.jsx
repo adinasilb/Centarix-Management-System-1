@@ -22,8 +22,10 @@ function IndexTableReduxStore(props) {
     }, [props.pageNumber, props.reloadIndex])
 
     useEffect(() => {
+
         if (didMount.current) {
-            useEffectFunc(props, dispatch, true);
+
+            useEffectFunc(props, dispatch, props.pageNumber!=1);
         }
         else {
             didMount.current = true;
@@ -33,7 +35,6 @@ function IndexTableReduxStore(props) {
 }
 
 const mapStateToProps = state => {
-    console.log("mstp global")
     return {
         selectedFilters: state.selectedFilters,
         tabValue: state.tabValue,
@@ -56,6 +57,7 @@ function useEffectFunc(props, dispatch, resetPageNumber) {
 
     if (resetPageNumber) {
         batch(() => {
+            console.log("resetpagenumber")
             dispatch(Actions.setPageNumber(1));
             dispatch(Actions.setReloadIndex(true));
         })
