@@ -16,17 +16,17 @@ function _IndexTableDataByVendor(props) {
 
     var getSumSpan = (requests, currency) => {
         var sum = requests.map(r => r.TotalCost).reduce(function (total, num) {
-            return (parseFloat(total) + parseFloat(num))
+            return (parseFloat(total) + parseFloat(num))?.toFixed(2)
         });
         var currencyString ="₪"
       
         if (currency == "USD") {
             currencyString="$"
             sum = requests.map(r => r.TotalCost / r.ExchangeRate).reduce(function (total, num) {
-                return "$"+(parseFloat(total) + parseFloat(num)).toFixed(2);
+                return "$"+(parseFloat(total) + parseFloat(num))?.toFixed(2);
             });
         }
-        sum = currencyString+ sum.toFixed(2)
+
         return (<span className="text font-weight-bold">{"Total: " + sum}</span>)
     }
 
@@ -34,7 +34,7 @@ function _IndexTableDataByVendor(props) {
         return (
             viewModel.RequestsByVendor.map((rbv, i) => (
                 <div key={"requestsByVendor" + i}>
-                    <table key={"vendor" + i} className="table table-headerspaced  table-borderless table-hover mb-5 ">
+                    <table key={"vendor" + rbv[0].Vendor.VendorID} className="table table-headerspaced  table-borderless table-hover mb-5 ">
                         <tbody>
                             <tr className="text-dark border-0 no-hover h-50">
                                 <td className="p-0" rowSpan="2" width="14%"><span className="heading-1 supplierName" value={rbv[0].Vendor.VendorID}>{rbv[0].Vendor.VendorEnName}</span></td>
@@ -52,9 +52,9 @@ function _IndexTableDataByVendor(props) {
                             <tr className="border-0 d-none vendor-warning"><td colSpan="5"><span className="text-danger-centarix">you can only select items from the same vendor</span></td></tr>
                             {
                                 rbv.map((row, i) => (
-                                    <tr key={row.r.RequestID} className="text-center inv-list-item">
+                                    <tr key={row.r.RequestID+i} className="text-center inv-list-item">
                                         {row.Columns.map((col, i) => (
-                                            <IndexTableColumn key={i} columnData={col} vendorID={rbv[0].Vendor.VendorID} sideBar={viewModel.SidebarType} />
+                                            <IndexTableColumn key={i + (col.ValueWithError.map(v => { return v.String }).join(""))} columnData={col} vendorID={rbv[0].Vendor.VendorID} sideBar={viewModel.SidebarType} />
                                         ))}
                                     </tr>
                                 ))
