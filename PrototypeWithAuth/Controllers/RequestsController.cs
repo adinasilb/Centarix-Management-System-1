@@ -1289,8 +1289,11 @@ namespace PrototypeWithAuth.Controllers
                 SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, 
                 PageNumber = indexTableJsonViewModel.PageNumber,
                 SelectedCurrency = indexTableJsonViewModel.SelectedCurrency,
-                SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums
-          };
+                SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums,
+                CategorySelected = indexTableJsonViewModel.CategorySelected,
+                SubcategorySelected = indexTableJsonViewModel.SubcategorySelected,
+                SourceSelected = indexTableJsonViewModel.SourceSelected,
+            };
          
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {

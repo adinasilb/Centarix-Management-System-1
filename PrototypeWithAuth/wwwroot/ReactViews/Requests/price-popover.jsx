@@ -10,7 +10,7 @@ import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 import {
     useState, useEffect, useRef
 } from 'react'
-import { connect, useDispatch, batch } from 'react-redux';
+import {  useDispatch, batch } from 'react-redux';
 import { CurrencyEnum } from '../Constants/AppUtility.jsx'
 export default function PricePopover(props) {
     const [state, setState] = useState({ selectedCurrency: props.viewModel.SelectedCurrency ?? CurrencyEnum.NIS, priceSortEnums: props.viewModel.PriceSortEnums.map(v => { return { priceSortEnum: v.PriceSortEnum, selected: v.Selected } }) })

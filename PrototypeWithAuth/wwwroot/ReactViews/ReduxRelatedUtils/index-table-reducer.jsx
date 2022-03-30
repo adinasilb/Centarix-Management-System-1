@@ -10,15 +10,6 @@ const indexTableReducer = (state = {}, action) => {
     }
 };
 
-export const categoryPopoverReducer = (state = {}, action) => {
-    switch (action.type) {
-        case ActionKeys.SET_CATEGORY_POPOVER_VIEWMODEL:
-            return action.payload;
-            break;
-        default:
-            return state;
-    }
-};
 
 export const setPriceSortEnum = (state = {}, action) => {
     switch (action.type) {
@@ -58,6 +49,37 @@ export const selectedFiltersReducer = (state = {}, action) => {
             return state;
     }
 };
+export const setSourceSelected = (state = {}, action) => {
+    switch (action.type) {
+        case ActionKeys.SET_SOURCE_SELECTED:
+            return action.payload;
+            break;
+        default:
+            return state;
+    }
+};
+
+export const setSelectedCategory = (state = {}, action) => {
+    switch (action.type) {
+        case ActionKeys.SET_CATEGORY_SELECTED:
+            return action.payload;
+            break;
+        default:
+            return state;
+    }
+};
+
+export const setSelectedSubCategory = (state = {}, action) => {
+    switch (action.type) {
+        case ActionKeys.SET_SUBCATEGORY_SELECTED:
+            return action.payload;
+            break;
+        default:
+            return state;
+    }
+};
+
+
 
 export const setPageNumberReducer = (state = {}, action) => {
     switch (action.type) {

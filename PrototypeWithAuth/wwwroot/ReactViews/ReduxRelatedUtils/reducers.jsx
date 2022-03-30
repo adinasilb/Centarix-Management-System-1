@@ -1,6 +1,6 @@
 ﻿import { combineReducers } from 'redux'
-import { setPriceSortEnums, SET_RELOAD_INDEX } from './actions.jsx'
-import indexTableReducer, { categoryPopoverReducer,  tabValueReducer, selectedFiltersReducer, setPageNumberReducer, setReloadIndexReducer, setPriceSortEnum, setSelectedCurrency } from './index-table-reducer.jsx'
+import { setCategorySelected, setPriceSortEnums, setSubCategorySelected, SET_RELOAD_INDEX } from './actions.jsx'
+import indexTableReducer, {  tabValueReducer, selectedFiltersReducer, setPageNumberReducer, setReloadIndexReducer, setPriceSortEnum, setSelectedCurrency, setSelectedCategory, setSelectedSubCategory, setSourceSelected } from './index-table-reducer.jsx'
 import modalsReducer from './modals-reducer.jsx'
 import tempRequestReducer from './temp-request-reducer.jsx'
 
@@ -10,12 +10,14 @@ export default combineReducers({
     navigationInfo: (state = {}, action) => {
         return state;
     },
-    categoryPopoverViewModel: categoryPopoverReducer,
     selectedCurrency: setSelectedCurrency,
     priceSortEnums: setPriceSortEnum,
     tabValue: tabValueReducer,
     selectedFilters: selectedFiltersReducer,
     tempRequestList: tempRequestReducer,
     pageNumber: setPageNumberReducer,
-    reloadIndex: setReloadIndexReducer
+    reloadIndex: setReloadIndexReducer,
+    sourceSelected: setSourceSelected,
+    subcategorySelected: setSelectedSubCategory,
+    categorySelected: setSelectedCategory
 })
