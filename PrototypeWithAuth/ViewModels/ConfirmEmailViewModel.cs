@@ -1,8 +1,10 @@
-﻿using PrototypeWithAuth.AppData;
+﻿using Microsoft.AspNetCore.Http;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +20,7 @@ namespace PrototypeWithAuth.ViewModels
         public PaymentStatus PaymentStatus { get; set; }
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
+        public String OrderPDF { get; set; }
         
     }
 }

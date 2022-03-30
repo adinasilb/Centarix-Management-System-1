@@ -11,7 +11,7 @@ export default function IndexTableColumn(props) {
     const getInsideView=(col, sideBar)=> {
         var imgDangerColor = col.Image.includes("error") ? " text-danger-centarix " : "";
         if (col.Image != "") {
-
+            console.log(col.Image)
             return (<img src={col.Image} alt="Image" width="75" className={"category-image " + imgDangerColor} />)
         }
         else if (col.Icons != null) {
@@ -152,7 +152,6 @@ export default function IndexTableColumn(props) {
 
         return (
             <td width={state.col.Width + "%"} className={state.col.Width == 0 ? "p-0" : ""} >
-                {console.log("in render of index table data")}
                 {getInsideView(state.col, state.sideBar)}
             </td>
         )

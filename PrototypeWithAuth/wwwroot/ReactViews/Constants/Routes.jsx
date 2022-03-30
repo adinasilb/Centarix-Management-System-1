@@ -13,3 +13,4 @@ export const UPLOAD_QUOTE = '/UploadQuoteModal';
 export const TERMS = '/TermsModal';
 export const ORDER_OPERATIONS_MODAL = '/OrderOperationsModal';
 export const CONFIRM_EMAIL_MODAL = '/ConfirmEmailModal';
+export const ORDER_EMAIL = '/OrderEmail';

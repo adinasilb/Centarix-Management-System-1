@@ -10,6 +10,9 @@ module.exports = {
 		publicPath: '/dist/'
 	},
 	mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+	node: {
+		__dirname: true
+	},
 	optimization: {
 		runtimeChunk: {
 			name: 'runtime', // necessary when using multiple entrypoints on the same page

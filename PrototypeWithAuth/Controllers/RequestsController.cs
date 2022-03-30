@@ -2008,20 +2008,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             //render the purchase order view into a string using a the co.nfirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
-
-            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-            string path2 = Path.Combine(path1, guid.ToString());
-            if (!Directory.Exists(path2))
-            {
-                Directory.CreateDirectory(path2);
-            }
-            string fileName = Path.Combine(path2, "Order.txt");
-
-            using (StreamWriter writer = new StreamWriter(fileName))
-            {
-                await writer.WriteAsync(renderedView);
-            }
+            
             return Json(JsonConvert.SerializeObject(confirm, Formatting.Indented, new JsonSerializerSettings
             {
 
@@ -2034,8 +2021,27 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [RequestFormLimits(ValueLengthLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
+        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel )
         {
+
+            string renderedView = await RenderPartialViewToString("OrderEmailView", confirmEmailViewModel);
+
+
+            string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+            string folder2 = Path.Combine(uploadFolder, "TEST");
+
+
+
+            //base url needs to be declared - perhaps should be getting from js?
+            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+            //instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+
+            PdfDocument doc = new PdfDocument();
+            // create a new pdf document converting an url
+            doc = converter.ConvertHtmlString(renderedView, baseUrl);
+            doc.Save(Path.Combine(folder2, "Order.pdf"));
             bool rolledBackTempRequest = false;
             var tempRequestListViewModel = confirmEmailViewModel.TempRequestListViewModel;
             try
@@ -2238,22 +2244,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     try
                     {
-                        string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-                        string folder2 = Path.Combine(uploadFolder, tempRequestListViewModel.Guids.ToString());
-                        string fileName = Path.Combine(folder2, "Order.txt");
-                        //read the text file to convert to pdf
-                        string renderedView = System.IO.File.ReadAllText(fileName);
-                        //delete file
-                        System.IO.File.Delete(fileName);
-                        //base url needs to be declared - perhaps should be getting from js?
-                        //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-                        var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
-                        //instantiate a html to pdf converter object
-                        HtmlToPdf converter = new HtmlToPdf();
-
-                        PdfDocument doc = new PdfDocument();
-                        // create a new pdf document converting an url
-                        doc = converter.ConvertHtmlString(renderedView, baseUrl);
+                        
 
                         //save this as orderform
                         string id;
@@ -4514,7 +4505,7 @@ namespace PrototypeWithAuth.Controllers
                 saveUsingTempRequest = true;
             }
             termsViewModel = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel, needsApproval, saveUsingTempRequest);
-            if (termsViewModel.ErrorMessage != "")
+            if (termsViewModel.ErrorMessage != null)
             {
                 throw new Exception(termsViewModel.ErrorMessage);
                 //Response.StatusCode = 500;

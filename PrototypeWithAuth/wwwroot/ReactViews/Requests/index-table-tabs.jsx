@@ -6,7 +6,6 @@ import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 
 
 function _IndexTableTabs(props) {
-    console.log("indextable tabs")
     const dispatch = useDispatch();
     return (      
         <div>
@@ -32,7 +31,6 @@ function _IndexTableTabs(props) {
 }
 
 const mapStateToProps = state => {
-    console.log("mstp tabs")
     return {
         tabValue: state.tabValue,
         navigationInfo: state.navigationInfo
