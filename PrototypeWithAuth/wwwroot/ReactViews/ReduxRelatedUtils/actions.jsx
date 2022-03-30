@@ -9,6 +9,7 @@ export const SET_SELECTED_FILTERS_VIEWMODEL = 'SET_SELECTED_FILTERS_VIEWMODEL'
 export const ADD_MODAL = 'ADD_MODAL'
 export const REMOVE_MODAL = 'REMOVE_MODAL'
 export const REMOVE_MODALS = 'REMOVE_MODALS'
+export const REMOVE_ALL_MODALS = 'REMOVE_ALL_MODALS'
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER'
 export const SET_TEMP_REQUEST_LIST = 'SET_TEMP_REQUEST_LIST'
 export const SET_RELOAD_INDEX = 'SET_RELOAD_INDEX'
@@ -124,6 +125,14 @@ export const removeModals = (modals) => {
 
         type: REMOVE_MODALS,
         payload:  modals 
+    })
+};
+
+export const removeAllModals = () => {
+    return ({
+
+        type: REMOVE_ALL_MODALS,
+        payload: []
     })
 };
 

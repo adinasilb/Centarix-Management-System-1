@@ -822,57 +822,57 @@ table td, table td .btn, .text, table th {
 }
 
 
-.Accounting .modal-content {
+/*.Accounting .modal-content {
     border-left: solid .438rem var(--acc-color) !important;
-}
+}*/
 
 .Accounting .modal-header {
     color: var(--acc-color) !important;
 }
 
-.Operations .modal-content {
+/*.Operations .modal-content {
     border-left: solid .438rem var(--operations-color) !important;
-}
+}*/
 
 .Operations .modal-header {
     color: var(--operations-color) !important;
 }
 
-.TimeKeeper .modal-content {
+/*.TimeKeeper .modal-content {
     border-left: solid .438rem var(--timekeeper-color) !important;
-}
+}*/
 
 .TimeKeeper .modal-header {
     color: var(--timekeeper-color) !important;
 }
 
-.Requests .modal-content {
+/*.Requests .modal-content {
     border-left: solid .438rem var(--order-inv-color) !important;
-}
+}*/
 
 .Requests .modal-header {
     color: var(--order-inv-color) !important;
 }
 
-.Users .modal-content {
+/*.Users .modal-content {
     border-left: solid .438rem var(--user-color) !important;
-}
+}*/
 
 .Users .modal-header {
     color: var(--user-color) !important;
 }
 
-.Protocols .modal-content {
+/*.Protocols .modal-content {
     border-left: solid .438rem var(--protocols-color) !important;
-}
+}*/
 
 .Protocols .modal-header {
     color: var(--protocols-color) !important;
 }
 
-.Biomarkers .modal-content {
+/*.Biomarkers .modal-content {
     border-left: solid .438rem var(--biomarkers-color) !important;
-}
+}*/
 
 .Biomarkers .modal-header {
     color: var(--biomarkers-color) !important;

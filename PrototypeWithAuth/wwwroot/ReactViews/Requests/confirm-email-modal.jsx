@@ -5,7 +5,7 @@ import {
 import GlobalModal from '../Utility/global-modal.jsx';
 import 'regenerator-runtime/runtime'
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
-import { useDispatch, connect } from 'react-redux';
+import { useDispatch, connect, batch } from 'react-redux';
 import { useForm, FormProvider } from 'react-hook-form';
 import { DevTool } from "@hookform/devtools";
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
@@ -16,6 +16,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import ReactPDF from '@react-pdf/renderer'
 import ReactDOMServer from 'react-dom/server';
+import { SidebarEnum } from '../Constants/AppUtility.jsx'
 
 
 function ConfirmEmailModal(props) {
@@ -48,49 +49,46 @@ function ConfirmEmailModal(props) {
 
     }, [state.ID]);
 
-    const createPDF = async () => {
-        const pdf = new jsPDF("portrait", "pt", "a4");
-        const data = await html2canvas(document.querySelector("#orderEmail"));
-        const img = data.toDataURL("image/png");
-        const imgProperties = pdf.getImageProperties(img);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
-        pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight);
-        return pdf.output();
-    };
+    //const createPDF = async () => {
+    //    const pdf = new jsPDF("portrait", "pt", "a4");
+    //    const data = await html2canvas(document.querySelector("#orderEmail"));
+    //    const img = data.toDataURL("image/png");
+    //    const imgProperties = pdf.getImageProperties(img);
+    //    const pdfWidth = pdf.internal.pageSize.getWidth();
+    //    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+    //    pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight);
+    //    return pdf.output();
+    //};
 
     async function onSubmit (data, e){
-        var orderFileBlob = await createPDF()
+        //var orderFileBlob = await createPDF()
         //var orderPdf = new File([orderFileBlob], "OrderPdf.pdf")
         //console.log(orderPdf)
 
-        //var orderPdf = await ReactPDF.renderToString(<OrderPDF viewModel={state.viewModel} tempRequestList={props.tempRequestList} navigationInfo={props.navigationInfo} />)
+        var orderPdf = ReactDOMServer.renderToString(<OrderEmail viewModel={state.viewModel} tempRequestList={props.tempRequestList} navigationInfo={props.navigationInfo} />)
         firstRequest.Product = null;
         var viewModelFormData = jsonToFormData(state.viewModel)
         var tempRequestFormData = jsonToFormData({ "TempRequestListViewModel": props.tempRequestList })
         var formData = combineTwoFormDatas(viewModelFormData, tempRequestFormData)
-        //formData.set("OrderPDF", orderPdf)
+        formData.set("OrderPDF", orderPdf)
         fetch("/Requests/ConfirmEmailModal", {
             method: "POST",
             body: formData
         })
             .then((response) => {
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        console.log(text)
-                        throw new Error(text)
-                    })
-                }
-                else {
-                    return response.json();
-                }
-            })
-            .then(result => {
+                alert("hello")
+                props.navigationInfo.sideBarType = SidebarEnum.Add ?
+                    window.location.href = "/Requests"
+                    :
+                props.removeAllModals();
                 props.setTempRequestList([]);
-                props.removeModals(props.modals);
-                props.setReloadIndex(true);
-
-            }).catch(err => {
+                batch(() => {
+                    props.setReloadIndex(true);
+                    props.setPageNumber(1)
+                }
+                )
+            })
+            .catch(err => {
                 console.dir(err)
                 setState({
                     ...state,
@@ -120,8 +118,9 @@ const mapDispatchToProps = dispatch => (
     {
         setTempRequestList: (tempRequest) => dispatch(Actions.setTempRequestList(tempRequest)),
         addModal: (modalKey) => dispatch(Actions.addModal(modalKey)),
-        removeModals: (modals) => dispatch(Actions.removeModals(modals)),
-        setReloadIndex: (reload) => dispatch(Actions.setReloadIndex(reload))
+        removeAllModals: () => dispatch(Actions.removeAllModals()),
+        setReloadIndex: (reload) => dispatch(Actions.setReloadIndex(reload)),
+        setPageNumer: (number) => dispatch(Actions.setPageNumber(number))
     }
 );
 

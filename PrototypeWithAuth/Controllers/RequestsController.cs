@@ -1383,6 +1383,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests[0].IncludeVAT = true;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
+            requestItemViewModel.SidebarType = AppUtility.SidebarEnum.Add;
 
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
@@ -2026,27 +2027,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel )
         {
-
-            string renderedView = await RenderPartialViewToString("OrderEmailView", confirmEmailViewModel);
-
-
-            string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
-            string folder2 = Path.Combine(uploadFolder, "TEST");
-
-
-
-            //base url needs to be declared - perhaps should be getting from js?
-            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
-            //instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
-
-            PdfDocument doc = new PdfDocument();
-            // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
-            doc.Save(Path.Combine(folder2, "Order.pdf"));
             bool rolledBackTempRequest = false;
             var tempRequestListViewModel = confirmEmailViewModel.TempRequestListViewModel;
+            
             try
             {
 
@@ -2131,7 +2114,8 @@ namespace PrototypeWithAuth.Controllers
                                     RequestRollbackList = ModelsCreated;
                                     if (tempRequest.Request.ProductID == 0)
                                     {
-                                        tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(false);
+                                        bool isOperations = tempRequest.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2;
+                                        tempRequest.Request.Product.SerialNumber = await _requestsProc.GetSerialNumberAsync(isOperations);
                                         ProductRollbackList = ModelsCreated;
                                     }
                                     var productModelState = new ModelAndState
@@ -2260,11 +2244,27 @@ namespace PrototypeWithAuth.Controllers
                         {
                             id = tempRequestListViewModel.Guids.ToString();
                         }
+
+                        string renderedView = await RenderPartialViewToString("OrderEmailView", confirmEmailViewModel);
+
+                        string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.ParentRequest.ToString());
+
                         string NewFolder = Path.Combine(uploadFolder, id);
                         //string NewFolder = Path.Combine(uploadFolder, deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ParentRequestID.ToString());
                         string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
                         Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
+
                         string filePath = Path.Combine(folderPath, "CentarixOrder" + firstTempRequestViewModel.Request.ParentRequest.OrderNumber + ".pdf");
+
+                        //base url needs to be declared - perhaps should be getting from js?
+                        //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+                        var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+                        //instantiate a html to pdf converter object
+                        HtmlToPdf converter = new HtmlToPdf();
+
+                        PdfDocument doc = new PdfDocument();
+                        // create a new pdf document converting an url
+                        doc = converter.ConvertHtmlString(renderedView, baseUrl);;
 
                         if (System.IO.File.Exists(filePath))
                         {
