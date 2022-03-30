@@ -13,8 +13,6 @@ export var combineTwoFormDatas = function (formdata1, formdata2) {
 
 
 export function jsonToFormData(inJSON, inTestJSON, inFormData, parentKey) {
-
-    console.log(inJSON)
     var form_data = inFormData || new FormData();
     var testJSON = inTestJSON || {};
     for (var key in inJSON) {

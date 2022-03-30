@@ -48,7 +48,6 @@ export const tabValueReducer = (state = {}, action) => {
     }
 };
 export const selectedFiltersReducer = (state = {}, action) => {
-    console.log(action.type)
     switch (action.type) {
         case ActionKeys.SET_SELECTED_FILTERS_VIEWMODEL:
             return action.payload;

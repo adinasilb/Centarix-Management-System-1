@@ -21,7 +21,6 @@ function _IndexTableData(props) {
                         <tbody className="scroll-tbody">                          
                             {viewModel.PagedList.map((r, i) => (
                                 <IndexTableRow key={r.r.RequestID} row={ r}/>
-
                             ))}
                         </tbody>
                     </table >
@@ -57,7 +56,6 @@ function _IndexTableData(props) {
 }
 
 const mapStateToProps = state => {
-    console.log("mstp data")
     return {
         viewModel: state.viewModel
     };
