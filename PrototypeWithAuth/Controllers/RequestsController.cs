@@ -1287,7 +1287,7 @@ namespace PrototypeWithAuth.Controllers
          
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {
-                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
+                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject, indexTableJsonViewModel.SelectedFilters);
                 json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
                    new JsonSerializerSettings
                    {
