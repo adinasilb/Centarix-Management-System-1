@@ -11,7 +11,7 @@ export default function RootComponent(props) {
     const store = createStore(reducer, {
         viewModel: props.viewModel,
         navigationInfo: {
-            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType || {}  },       
+            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SidebarType || {}  },       
         tabValue: props.viewModel?.TabValue,
         pageNumber: props.viewModel.PageNumber,
         reloadIndex: false,

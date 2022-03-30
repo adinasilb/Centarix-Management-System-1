@@ -99,7 +99,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel = null)
+        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, SelectedRequestFilters selectedRequestFilters =null)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
             if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
@@ -115,6 +115,10 @@ namespace PrototypeWithAuth.Controllers
                     requestIndexObject.SourceSelected
                 }
             };
+            if(selectedRequestFilters == null)
+            {
+                selectedRequestFilters = new SelectedRequestFilters();
+            }
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color)", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
@@ -190,16 +194,9 @@ namespace PrototypeWithAuth.Controllers
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
 
-                    if (notificationFilterViewModel == null)
-                    {
-                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
-                    }
-                    else
-                    {
-                        wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
-                        && (notificationFilterViewModel.NameOrCentarixOrderNumber == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber.ToLower())
-                        || r.ParentRequest.OrderNumber.ToString().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber)));
-                    }
+                  
+                    wheres.Add(r => (selectedRequestFilters.SearchText == null || r.Product.ProductName.ToLower().Contains(selectedRequestFilters.SearchText.ToLower())
+                    || r.ParentRequest.OrderNumber.ToString().Contains(selectedRequestFilters.SearchText)));
 
                     switch (requestIndexObject.SidebarType)
                     {
@@ -242,16 +239,9 @@ namespace PrototypeWithAuth.Controllers
                     };
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    if (notificationFilterViewModel == null)
-                    {
-                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
-                    }
-                    else
-                    {
-                        wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
-                        && (notificationFilterViewModel.NameOrCentarixOrderNumber == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber.ToLower())
-                        || r.ParentRequest.OrderNumber.ToString().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber)));
-                    }
+                    
+                    wheres.Add(r =>  (selectedRequestFilters.SearchText == null || r.Product.ProductName.ToLower().Contains(selectedRequestFilters.SearchText.ToLower())
+                    || r.ParentRequest.OrderNumber.ToString().Contains(selectedRequestFilters.SearchText)));
                     var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType, wheres);
                     switch (requestIndexObject.SidebarType)
                     {
@@ -327,7 +317,7 @@ namespace PrototypeWithAuth.Controllers
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p) }));
-            viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
+            viewModelByVendor.SelectedRequestFilters = selectedRequestFilters;
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
             viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
@@ -2737,27 +2727,9 @@ namespace PrototypeWithAuth.Controllers
         {
             return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
         }
-        [HttpGet]
-        [HttpPost]
-        public async Task<IActionResult> _IndexTableDataByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
-        }
 
-        [HttpGet]
-        [HttpPost]
-        public async Task<IActionResult> _IndexTableByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
-        }
+
+   
 
         /*
          * BEGIN SEARCH
