@@ -54,6 +54,11 @@ function TermsModal(props) {
             }
         })
     }
+    function closeClick(e) {
+        e.preventDefault()
+        props.tempRequestList.undo();
+        dispatch(removeModal(props.modalKey));
+    }
 
     const handleDateChange = (newValue) => {
         //var newValue = Date.parse(newValue)
@@ -147,7 +152,7 @@ function TermsModal(props) {
 
     return (
 
-        <GlobalModal backdrop={props.backdrop} value={state.ID} modalKey={props.modalKey} key={state.ID} size="lg" header="Place Order">
+        <GlobalModal backdrop={props.backdrop} value={state.ID} closeClick={ closeClick} modalKey={props.modalKey} key={state.ID} size="lg" header="Place Order">
             {state.viewModel.ErrorMessage && <span className="danger-color">{state.viewModel.Error.String}</span>}
             <FormProvider {...methods} >
                 <form action="" data-string="" method="post" encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>

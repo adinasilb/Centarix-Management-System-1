@@ -6,6 +6,8 @@ import _IndexTable from '../Requests/index-table.jsx';
 import _IndexTableByVendor from '../Requests/index-table-by-vendor.jsx';
 import SettingsInventory from "../Requests/settings-inventory.jsx";
 import OrderTab from "../Requests/order-tab.jsx"
+import OrderEmail from "../Requests/order-email.jsx"
+
 
 import ModalLoader from './modal-loader.jsx';
 import * as ModalKeys from '../Constants/ModalKeys.jsx'
@@ -28,6 +30,9 @@ export default function PageLoader(props) {
                 break;
             case Routes.ORDER_TAB:
                 return (<OrderTab key={"orderTab"} viewModel={props.viewModel} />);
+                break;
+            case Routes.ORDER_EMAIL:
+                return (<OrderEmail key={"orderEmail"} tempRequestList={props.tempRequestList} viewModel={props.viewModel} />);
                 break;
         }
 

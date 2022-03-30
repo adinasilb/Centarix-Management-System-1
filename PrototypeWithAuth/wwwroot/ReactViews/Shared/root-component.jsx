@@ -7,6 +7,7 @@ import reducer from '../ReduxRelatedUtils/reducers.jsx';
 import { CurrencyEnum, PriceSortEnum } from '../Constants/AppUtility.jsx'
 
 export default function RootComponent(props) {
+    console.log("root component")
     const store = createStore(reducer, {
         viewModel: props.viewModel,
         navigationInfo: {
@@ -18,6 +19,8 @@ export default function RootComponent(props) {
         selectedCurrency: CurrencyEnum.NIS,
         priceSortEnums: PriceSortEnum.TotalVat,
     }, composeWithDevTools());
+
+    
     const Scripts = lazy(() => import('../scripts.jsx'));  
     const App = lazy(() => import('./app.jsx'));
   
