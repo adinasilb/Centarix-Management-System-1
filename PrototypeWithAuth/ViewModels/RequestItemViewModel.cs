@@ -74,6 +74,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> EmailAddresses { get; set; } //to pass back the email addresses in the create modal view
         public int RequestStatusID { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
+        public AppUtility.SidebarEnum SidebarType { get; set; }
         public ReceivedLocationViewModel ReceivedLocationViewModel { get; set; }
         public ReceivedModalSublocationsViewModel ReceivedModalSublocationsViewModel { get; set; }
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }

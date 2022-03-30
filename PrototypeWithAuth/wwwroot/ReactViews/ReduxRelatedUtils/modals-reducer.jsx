@@ -11,6 +11,9 @@ const modalsReducer = (state = [], action) => {
         case ActionKeys.REMOVE_MODAL:
             return state.filter(m => m != action.payload);
             break;
+        case ActionKeys.REMOVE_ALL_MODALS:
+            return [];
+            break;
         case ActionKeys.REMOVE_MODALS:
             var newState = state;
             action.payload.map(item => {

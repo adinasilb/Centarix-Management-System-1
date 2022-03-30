@@ -9,8 +9,10 @@ function IndexTableReduxStore(props) {
     const didMount = useRef(false);
 
     useEffect(() => {
+        console.log("reloadindex/pagenumber")
         if (didMount.current) {
             if (props.reloadIndex) {
+                console.log("reloadindex true")
                 useEffectFunc(props, dispatch, false);
             }
         }

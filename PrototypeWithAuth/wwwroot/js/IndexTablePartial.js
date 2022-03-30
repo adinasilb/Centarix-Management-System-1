@@ -143,7 +143,7 @@ $(function () {
         return false;
     });
 
-    $(".load-receive-and-location").on("click", function (e) {
+    $("body, .modal").off("click", ".load-receive-and-location").on("click", ".load-receive-and-location", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
@@ -350,7 +350,7 @@ $(function () {
     })
 
 
-    $.fn.ajaxPartialIndexTable = function (url, viewClass, type, formdata, modalClass = "", tabName="", requestStatus = -1 /*months, years, */) {
+    $.fn.ajaxPartialIndexTable = function (url, viewClass, type, formdata, modalClass = "", tabName = "", requestStatus = -1, reloadIndex = false /*months, years, */) {
         console.log("in ajax partial index call " + url);
         //alert('before bind filter')
         if ($('#searchHiddenForsForm').length) {
@@ -450,18 +450,23 @@ $(function () {
             type: type,
             cache: true,
             success: function (data) {
-                $(viewClass).html(data);
-                $(".tooltip").remove();
-                $("#loading").hide();
-                //workaround for price radio button not coming in when switching from nothing is here tab
-                var id = "#nis";
-                //alert($(id).prop('checked'))
-                if ($('#tempCurrency').val() === "USD") {
-                    id = "#usd";
+                if (reloadIndex) {
+                    window.location.href = "/Requests&" + $.fn.getRequestIndexString(requestStatus, tabName);
                 }
-                if ($(id).attr("checked") !== "checked") {
-                    console.log('checking button')
-                    $(id).attr("checked", "checked");
+                else {
+                    $(viewClass).html(data);
+                    $(".tooltip").remove();
+                    $("#loading").hide();
+                    //workaround for price radio button not coming in when switching from nothing is here tab
+                    var id = "#nis";
+                    //alert($(id).prop('checked'))
+                    if ($('#tempCurrency').val() === "USD") {
+                        id = "#usd";
+                    }
+                    if ($(id).attr("checked") !== "checked") {
+                        console.log('checking button')
+                        $(id).attr("checked", "checked");
+                    }
                 }
                 return true;
             },

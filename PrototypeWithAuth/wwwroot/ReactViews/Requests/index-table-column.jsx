@@ -98,10 +98,16 @@ export default function IndexTableColumn(props) {
                         }
                         else {
                             return (<div key={"icon" + i} className="table-icon-div">
-                                <Tooltip title={icon.TooltipTitle??""} arrow>
-                                 <Link className={"d-flex requests " + icon.IconAjaxLink} to={{ pathname: icon.IconAjaxLink, state: { ID: col.AjaxID } }}  value={col.AjaxID}>
-                                        <i style={{ fontSize: "2rem", color: icon.Color }} className={icon.IconClass + " hover-bold"}></i>
-                                    </Link>
+                                <Tooltip title={icon.TooltipTitle ?? ""} arrow>
+                                    {icon.IconAjaxLink?.indexOf("/") != -1 ?
+                                        <Link className={"d-flex requests " + icon.IconAjaxLink} to={{ pathname: icon.IconAjaxLink, state: { ID: col.AjaxID } }} value={col.AjaxID}>
+                                            <i style={{ fontSize: "2rem", color: icon.Color }} className={icon.IconClass + " hover-bold"}></i>
+                                        </Link>
+                                        :
+                                        <a className={"btn p-0 m-0 no-box-shadow requests " + icon.IconAjaxLink} value={col.AjaxID }>
+                                            <i style={{ fontSize: "2rem", color: icon.Color }} className={icon.IconClass + " hover-bold"}></i>
+                                        </a>
+                                        }
                                     </Tooltip>
                             </div>
                             )
