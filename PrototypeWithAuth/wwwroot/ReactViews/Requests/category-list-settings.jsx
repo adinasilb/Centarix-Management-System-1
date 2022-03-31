@@ -3,15 +3,13 @@
 const CategoryListSettings = (props) => {
 
     const categoryField1 = (e) => {
-        alert("category field 1");
         var element = document.getElementsByClassName("category-list-1")[0].getElementsByClassName("selected")[0];
         element.classList.remove("selected");
         e.target.classList.add("selected");
         var catNum = e.target.getAttribute('data-catid');
-        props.changeCategory("ParentCategory", catNum);
+        props.changeCategory(catNum);
     }
     const categoryField2 = (e) => {
-        alert("category field 2");
         var element = document.getElementsByClassName("category-list-2")[0].getElementsByClassName("selected")[0];
         element.classList.remove("selected");
         e.target.classList.add("selected");

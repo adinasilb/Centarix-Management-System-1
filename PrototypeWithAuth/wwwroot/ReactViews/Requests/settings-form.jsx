@@ -30,13 +30,9 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 const SettingsForm = (props) => {
-
-    alert(JSON.stringify(props));
-    alert("in settings form");
     const [remove, setRemove] = useState({ key: false });
     const [countCF, setCountCF] = useState([]);
     const [customFields, setCustomFields] = useState([]);
-    const currentTabCount = 0;
 
     //const [fieldValues, setFieldValues] = useState({});
 
@@ -69,7 +65,6 @@ const SettingsForm = (props) => {
 
     const onSubmit = (data) => {
         var formData = new FormData();
-        alert(JSON.stringify(data.DetailsCustomFields));
         formData.set("DetailsCustomFields", JSON.stringify(data.DetailsCustomFields));
         formData.set("PriceCustomFields", JSON.stringify(data.PriceCustomFields));
         formData.set("DocumentsCustomFields", JSON.stringify(data.DocumentsCustomFields));
@@ -89,10 +84,6 @@ const SettingsForm = (props) => {
 
     };
 
-
-    //React.useEffect(() => {
-    //    return () => { alert("in use effect on every render") }
-    //});
 
     const methods = useForm({ mode: "onChange" });
 
@@ -115,7 +106,6 @@ const SettingsForm = (props) => {
 
 
     var RemoveCustomField = (e) => {
-        alert("in remove custom fields");
         e.preventDefault();
         var place = e.target.parentElement.attributes.number.value;
         var index = countCF.indexOf(parseFloat(place));
@@ -132,18 +122,25 @@ const SettingsForm = (props) => {
 
     var showItem = " active show ";
     var category = props?.SettingsForm.Category.Description;
-    var categoryNameRows = ""; category != null ?
+    var categoryNameRows = category != null ?
         Math.ceil(parseFloat(category.length) / 30) : 1;
-    var catName = category ?? "(categoryName)";
     var catText = "Select A Category";
     var subCatText = "Select A Subcategory";
+    var catName = "";
     if (props?.SettingsForm?.Category?.ParentCategoryEnum == null) {
         catText = props?.SettingsForm?.Category?.ParentCategory?.Description ?? catText;
         subCatText = category ?? subCatText;
+        catName = subCatText;
     }
     else {
         catText = category ?? catText;
+        catName = catText;
     }
+    const [categoryDescription, setCategoryDescription] = useState(catText);
+    var handleCategoryDescription = (e) => {
+        setCategoryDescription(e.target.value);
+    }
+
     console.log("categoryNameRows: " );
     return (
         <>
@@ -165,11 +162,14 @@ const SettingsForm = (props) => {
                             </div>
                             <div className="col-8">
                                 <div className="modal-product-title ml-2" >
-                                    <textarea value={catName} {...methods.register("categoryName", { required: true, maxLength: 10 })} className="form-control-plaintext border-bottom heading-1" placeholder="(category name)" rows={categoryNameRows} cols="50" maxLength="150"></textarea>
+                                    <textarea value={catName}
+                                        {...methods.register("categoryName", { required: true })}
+                                        className="form-control-plaintext border-bottom heading-1" placeholder="(category name)"
+                                        onChange={handleCategoryDescription}
+                                        rows={categoryNameRows} cols="50" maxLength="150"></textarea>
                                 </div>
                                 <span className="text-danger-centarix">
                                     {methods.formState.errors.categoryName && methods.formState.errors.categoryName.type === "required" && <span>{Constant.Required}</span>}
-                                    {methods.formState.errors.categoryName && methods.formState.errors.categoryName.type === "maxLength" && <span>{Constant.MaxLength + "10"}</span>}
                                 </span>
                             </div>
                             <div className="col-2">
@@ -627,8 +627,7 @@ function CustomField(props) {
                                     className="form-control-plaintext border-bottom" />
                             }
                             rules={{
-                                required: Constant.Required,
-                                maxLength: { value: 10, message: Constant.MaxLength + "10" }
+                                required: Constant.Required
                             }}
                         />
                         <span className="text-danger-centarix"><ErrorMessage

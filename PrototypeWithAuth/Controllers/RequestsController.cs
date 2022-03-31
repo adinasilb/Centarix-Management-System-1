@@ -5183,6 +5183,21 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        public async Task<string> GetNewSettingsInventory(int CategoryID)
+        {
+            SettingsInventory settings = new SettingsInventory(); 
+            settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, CategoryID);
+            settings.SettingsForm = await GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
+            var json = JsonConvert.SerializeObject(settings, Formatting.None, new JsonSerializerSettings
+            {
+
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            return json;
+        }
+
+        [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> SettingsInventory()
         {
@@ -5221,14 +5236,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public ActionResult SettingsInventory(SaveSettingsCategory settingsForm)
+        public async Task<ActionResult> SettingsInventory(SaveSettingsCategory settingsForm)
         {
             List<CustomField> DetailsCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.DetailsCustomFields, new JsonSerializerSettings());
             List<CustomField> PriceCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.PriceCustomFields, new JsonSerializerSettings());
             List<CustomField> DocumentsCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.DocumentsCustomFields, new JsonSerializerSettings());
             List<CustomField> ReceivedCustomFields = JsonConvert.DeserializeObject<List<CustomField>>(settingsForm.ReceivedCustomFields, new JsonSerializerSettings());
             ProductSubcategory category = JsonConvert.DeserializeObject<ProductSubcategory>(settingsForm.Category, new JsonSerializerSettings());
-            _productSubcategoriesProc.UpdateWithoutTransaction(category, DetailsCustomFields, PriceCustomFields, DocumentsCustomFields, ReceivedCustomFields);
+            await _productSubcategoriesProc.UpdateWithoutTransaction(category, DetailsCustomFields, PriceCustomFields, DocumentsCustomFields, ReceivedCustomFields);
             return RedirectToAction("SettingsInventory");
         }
 
