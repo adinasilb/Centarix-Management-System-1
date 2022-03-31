@@ -32,7 +32,7 @@ function _IndexTableDataByVendor(props) {
 
 
         return (
-            viewModel.RequestsByVendor.map((rbv, i) => (
+            viewModel.RequestsByVendor?.map((rbv, i) => (
                 <div key={"requestsByVendor" + i}>
                     <table key={"vendor" + rbv[0].Vendor.VendorID} className="table table-headerspaced  table-borderless table-hover mb-5 ">
                         <tbody>
@@ -80,7 +80,7 @@ function _IndexTableDataByVendor(props) {
                         </tbody>
                     </table>
                 </div>
-            ))
+            ))??""
         );
 
 
