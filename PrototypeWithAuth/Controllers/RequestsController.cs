@@ -1217,7 +1217,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, IndexTableJsonViewModel indexTableJsonViewModel)
         {
             try
             {
@@ -1234,36 +1234,8 @@ namespace PrototypeWithAuth.Controllers
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 return null;
             }
-            return await GetIndexTableJson(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
+            return await GetIndexTableJson(indexTableJsonViewModel);
 
-        }
-
-        public async Task<JsonResult> GetIndexTableJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
-                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
-        {
-            string json = "";
-            if (CheckIfIndexTableByVendor(requestIndexObject.SectionType, requestIndexObject.PageType, requestIndexObject.SidebarType))
-            {
-                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
-                json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
-                   new JsonSerializerSettings
-                   {
-                       Converters = new List<JsonConverter> { new StringEnumConverter() },
-                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                   });
-            }
-            else
-            {
-                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters, requestsSearchViewModel: requestsSearchViewModel);
-                json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
-                   new JsonSerializerSettings
-                   {
-                       Converters = new List<JsonConverter> { new StringEnumConverter() },
-                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                   });
-            }
-
-            return Json(json);
         }
 
 
@@ -1277,6 +1249,7 @@ namespace PrototypeWithAuth.Controllers
                 PageType = indexTableJsonViewModel.NavigationInfo.PageType, 
                 SectionType = indexTableJsonViewModel.NavigationInfo.SectionType,
                 SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, 
+                SidebarFilterID = indexTableJsonViewModel.NavigationInfo.SidebarFilterID,
                 PageNumber = indexTableJsonViewModel.PageNumber,
                 SelectedCurrency = indexTableJsonViewModel.SelectedCurrency,
                 SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums,
@@ -2775,7 +2748,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
-            var viewModel = await base.GetIndexViewModel(requestIndexObject, Years: new List<int>() { DateTime.Now.Year }, Months: new List<int>() { DateTime.Now.Month }, requestsSearchViewModel: requestsSearchViewModel);
+            var viewModel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
             viewModel.RequestsSearchViewModel = requestsSearchViewModel;
             viewModel.SidebarFilterName = AppUtility.SidebarEnum.Search.ToString();
             return PartialView("SearchResults", viewModel);
@@ -4708,14 +4681,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, IndexTableJsonViewModel indexTableJsonViewModel)
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
-            requestIndexObject.TabValue = newList.ListID.ToString();
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+            indexTableJsonViewModel.TabValue = newList.ListID.ToString();
+            if (indexTableJsonViewModel.NavigationInfo.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                return await GetIndexTableJson(requestIndexObject);
+                return await GetIndexTableJson(indexTableJsonViewModel);
             }
             else
             {

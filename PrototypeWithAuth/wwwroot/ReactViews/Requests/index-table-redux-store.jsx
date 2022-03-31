@@ -45,7 +45,8 @@ const mapStateToProps = state => {
         reloadIndex: state.reloadIndex,
         categorySelected: state.categorySelected,
         subcategorySelected: state.subcategorySelected,
-        sourceSelected: state.sourceSelected
+        sourceSelected: state.sourceSelected,
+        requestsSearchViewModel: state.requestsSearchViewModel
     };
 };
 

@@ -158,7 +158,7 @@ export default function IndexTableColumn(props) {
 
         return (
             <td width={state.col.Width + "%"} className={state.col.Width == 0 ? "p-0" : ""} >
-                {getInsideView(state.col, state.sideBar)}
+                    {getInsideView(state.col, state.sideBar)}
             </td>
         )
 
