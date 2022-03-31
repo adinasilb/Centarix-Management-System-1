@@ -20,7 +20,7 @@ export default function RootComponent(props) {
         categorySelected: false,
         subcategorySelected: false,
         sourceSelected: false,
-        requestsSearchViewModel: props.viewModel?.RequestsSearchViewModel
+        requestsSearchViewModel: props.viewModel?.RequestsSearchViewModel ?? {}
     }, composeWithDevTools());
 
     
