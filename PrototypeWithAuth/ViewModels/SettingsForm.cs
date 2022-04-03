@@ -17,5 +17,9 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<CustomDataType> CustomFieldData { get; set; }
         public List<UnitParentType> UnitParentTypes { get; set; }
         public decimal ExchangeRate { get; set; }
+        public List<CustomField> DetailsCustomFields { get; set; }
+        public List<CustomField> PriceCustomFields { get; set; }
+        public List<CustomField> DocumentsCustomFields { get; set; }
+        public List<CustomField> ReceivedCustomFields { get; set; }
     }
 }

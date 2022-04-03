@@ -1,6 +1,8 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useState } from 'react';
 
 const CategoryListSettings = (props) => {
+
+    const [categoryList, setCategoryList] = useState(props.categories);
 
     const categoryField1 = (e) => {
         var element = document.getElementsByClassName("category-list-1")[0].getElementsByClassName("selected")[0];
@@ -22,7 +24,8 @@ const CategoryListSettings = (props) => {
             <div className={"col-12 category-cols ch-scrollable h-100 " + (props.categories.ColumnNumber)}>
                 <input type="text" placeholder="search" className="search-by-category col-input" />
                 {props.categories.CategoryBases.map((CategoryBase, i) => (
-                    <button key={"Category" + i} href="#" className={"category-field col-input " + " category-field" + props.categories.ColumnNumber + ((i == 0) ? " selected " : "")}
+                    <button key={"Category" + CategoryBase.ID} href="#"
+                        className={"category-field col-input " + " category-field" + props.categories.ColumnNumber + ((i == 0) ? " selected " : "")}
                         data-catid={CategoryBase.ID} onClick={props.categories.ColumnNumber == 1 ? categoryField1 : categoryField2} >
                         {CategoryBase.Description}
                     </button>

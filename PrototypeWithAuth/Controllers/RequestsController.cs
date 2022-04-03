@@ -46,6 +46,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json.Converters;
 using System.Reflection;
 using PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels;
+using System.Collections.Specialized;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -4566,7 +4567,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 needsApproval = true;
             }
-            if(tempRequestListViewModel.TempRequestViewModels[0].Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AlreadyPurchased.ToString() || needsApproval)
+            if (tempRequestListViewModel.TempRequestViewModels[0].Request.OrderMethod.DescriptionEnum == AppUtility.OrderMethod.AlreadyPurchased.ToString() || needsApproval)
             {
                 saveUsingTempRequest = true;
             }
@@ -5185,7 +5186,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<string> GetNewSettingsInventory(int CategoryID)
         {
-            SettingsInventory settings = new SettingsInventory(); 
+            SettingsInventory settings = new SettingsInventory();
             settings.Subcategories = GetCategoryList(new ProductSubcategory().GetType().Name, 2, CategoryID);
             settings.SettingsForm = await GetSettingsFormViewModel(settings.Subcategories.CategoryBases.FirstOrDefault().GetType().Name, settings.Subcategories.CategoryBases.FirstOrDefault().ID);
             var json = JsonConvert.SerializeObject(settings, Formatting.None, new JsonSerializerSettings
@@ -5247,7 +5248,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("SettingsInventory");
         }
 
-        [HttpGet] 
+        [HttpGet]
         public IActionResult _CategoryList(String modelType, int ColumnNumber, int? ParentCategoryID)
         {
             var categoryBases = GetCategoryList(modelType, ColumnNumber, ParentCategoryID);
@@ -5307,11 +5308,18 @@ namespace PrototypeWithAuth.Controllers
             else if (ModelType == new ProductSubcategory().GetType().Name)
             {
                 settingsForm.Category = _productSubcategoriesProc.Read(new List<Expression<Func<ProductSubcategory, bool>>> { ps => ps.ID == CategoryID },
-                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory} }).FirstOrDefault();
+                    new List<ComplexIncludes<ProductSubcategory, ModelBase>> { new ComplexIncludes<ProductSubcategory, ModelBase> { Include = ps => ps.ParentCategory } }).FirstOrDefault();
             }
             settingsForm.RequestCount = _requestsProc.Read(new List<Expression<Func<Request, bool>>> { r => r.Product.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.ItemCount = _productsProc.Read(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategoryID == settingsForm.Category.ID }).Count();
             settingsForm.CustomFieldData = this._CustomField();
+
+            var firstJson = JsonConvert.DeserializeObject<ListDictionary>(settingsForm.Category.CategoryJson);
+            settingsForm.DetailsCustomFields = firstJson[AppUtility.CategorySettingType.Details.ToString()] != null ? JsonConvert.DeserializeObject<List<CustomField>>(firstJson[AppUtility.CategorySettingType.Details.ToString()].ToString()) : new List<CustomField>();
+            settingsForm.PriceCustomFields = firstJson[AppUtility.CategorySettingType.Price.ToString()] != null ? JsonConvert.DeserializeObject<List<CustomField>>(firstJson[AppUtility.CategorySettingType.Price.ToString()].ToString()) : new List<CustomField>();
+            settingsForm.DocumentsCustomFields = firstJson[AppUtility.CategorySettingType.Documents.ToString()] != null ? JsonConvert.DeserializeObject<List<CustomField>>(firstJson[AppUtility.CategorySettingType.Documents.ToString()].ToString()) : new List<CustomField>();
+            settingsForm.ReceivedCustomFields = firstJson[AppUtility.CategorySettingType.Received.ToString()] != null ? JsonConvert.DeserializeObject<List<CustomField>>(firstJson[AppUtility.CategorySettingType.Received.ToString()].ToString()) : new List<CustomField>();
+
             var rate = await _globalInfosProc.ReadOneAsync(new List<Expression<Func<GlobalInfo, bool>>> { gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString() });
             settingsForm.ExchangeRate = Convert.ToDecimal(rate.Description);
             //settingsForm.UnitParentTypes = _uni.Read().ToList();

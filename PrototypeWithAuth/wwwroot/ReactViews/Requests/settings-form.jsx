@@ -54,12 +54,7 @@ const SettingsForm = (props) => {
     }
 
 
-    useEffect(() => {
-        return () => {
-            console.log("unmounted inner");
-        };
-    });
-    //var customFields = [];
+       //var customFields = [];
 
     console.log("RERENDERING");
 
@@ -141,7 +136,6 @@ const SettingsForm = (props) => {
         setCategoryDescription(e.target.value);
     }
 
-    console.log("categoryNameRows: " );
     return (
         <>
             <FormProvider {...methods}>
