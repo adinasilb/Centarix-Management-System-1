@@ -41,7 +41,7 @@
     <input type="hidden" asp-for="RequestsSearchViewModel.Payment.CreditCardID" />
     <input type="hidden" asp-for="RequestsSearchViewModel.Payment.Reference" />
 </form>
-@
+
 
 @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTable" })
 

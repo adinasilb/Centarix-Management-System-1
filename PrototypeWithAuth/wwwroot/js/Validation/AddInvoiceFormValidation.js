@@ -50,7 +50,7 @@ $('.addInvoiceForm').validate({
 			number: true,
 			min: 0
         },
-		"Invoice.InvoiceDate": {
+		"DiscountAmount": {
 			number: true,
 			min: 0
         }
