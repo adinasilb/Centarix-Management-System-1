@@ -41,8 +41,8 @@ function OrderTab(props) {
                             <span className="small-text">If you want to process a single order immediately</span>
                         </div>
                     <div className="col-5">
-                        <Link onClick={()=>submitOrder("OrderNow")} to={{
-                                pathname: history.location.pathname + Routes.UPLOAD_QUOTE,
+                        <Link className="text w-100  float-right section-custom-input text-center" onClick={() => submitOrder("OrderNow")} to={{
+                            pathname: history.entries[1].pathname + Routes.UPLOAD_QUOTE,
                             state: { ID: viewModel.GUID, moveToTerms: true}
                             }} >Order Now
                             </Link>
@@ -65,7 +65,7 @@ function OrderTab(props) {
                         </div>
                         <div className="col-5">
                             
-                                <Link to={{
+                        <Link className="text w-100  float-right section-custom-input text-center" to={{
                                     pathname: Routes.ORDER_OPERATIONS_MODAL,
                                     state: { ID: 2 }
                                 }} >Already Purchased

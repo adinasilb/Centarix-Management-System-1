@@ -67,17 +67,17 @@ async function UploadFileChunk(Chunk, FileName, formData) {
         .then((data) => { return data })
 
 }
-async function DirectlyUploadDocFromCard(folderName, parentFolderName, objectID, guid = "") {
+async function DirectlyUploadDocFromCard(folderName, parentFolderName, objectID, formID) {
     console.log("in direct upload function")
-
-
-    var targetFile = new FormData(document.querySelector(".ordersItemForm")).getAll("FilesToSave").filter(f => f.size > 0)
+    var targetFile = new FormData(document.querySelector("form[id='" + formID + "']")).getAll("FilesToSave").filter(f => f.size > 0)
+    console.log(targetFile)
+    console.log(objectID)
 
     var uploadFileFormData = new FormData()
     uploadFileFormData.append("ObjectID", objectID)
     uploadFileFormData.append("ParentFolderName", parentFolderName)
     uploadFileFormData.append("FolderName", folderName)
-    uploadFileFormData.append("Guid", guid)
+    //uploadFileFormData.append("Guid", guid)
     await UploadFile(targetFile[0], uploadFileFormData)
     var folderID = objectID == "0" ? guid : objectID;
     return (fetch("/Requests/_DocumentsCard?requestFolderNameEnum=" + folderName + "&id=" + folderID + "&parentFolderName=" + parentFolderName,
@@ -91,7 +91,7 @@ async function DirectlyUploadDocFromCard(folderName, parentFolderName, objectID,
 
 }
 
-export async function FileSelectChange(element, folderName, parentFolderName, objectID, guid = "") {
+export async function FileSelectChange(element, folderName, parentFolderName, objectID, formID) {
 
     console.log(element)
 
@@ -122,7 +122,7 @@ export async function FileSelectChange(element, folderName, parentFolderName, ob
 
     if (element.classList.contains("direct-upload")) {
         console.log("direct upload")
-        return await DirectlyUploadDocFromCard(folderName, parentFolderName, objectID, guid).then(response => {
+        return await DirectlyUploadDocFromCard(folderName, parentFolderName, objectID, formID).then(response => {
             return JSON.parse(response)
         })
 
@@ -139,7 +139,7 @@ export async function FileSelectChange(element, folderName, parentFolderName, ob
             await UploadFile(targetFile[i], formData);
         }
 
-        return await OpenDocumentsModal(folderName, objectID, guid, parentFolderName, dontAllowMultipleFiles, CustomMainObjectID).then(response => {
+        return await OpenDocumentsModal(folderName, objectID, /*guid,*/ parentFolderName, dontAllowMultipleFiles, CustomMainObjectID).then(response => {
             return JSON.parse(response)
         })
     }
@@ -153,7 +153,7 @@ export async function FileSelectChange(element, folderName, parentFolderName, ob
     return true;
 };
 
-async function OpenDocumentsModal(enumString, requestId, guid, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID) {
+async function OpenDocumentsModal(enumString, requestId, /*guid,*/ parentFolder, dontAllowMultipleFiles, $CustomMainObjectID) {
     //document.getElementById('loading');
     var section = document.getElementById("masterSectionType").value;
     var urlbeginning = "/Requests/"
@@ -164,7 +164,7 @@ async function OpenDocumentsModal(enumString, requestId, guid, parentFolder, don
         urlbeginning = "/Biomarkers/"
     }
 
-    var urltogo = urlbeginning + "DocumentsModal?id=" + requestId + "&Guid=" + guid + "&RequestFolderNameEnum=" + enumString + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
+    var urltogo = urlbeginning + "DocumentsModal?id=" + requestId /*+ "&Guid=" + guid*/ + "&RequestFolderNameEnum=" + enumString + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles + "&CustomMainObjectID=" + $CustomMainObjectID;
 
     console.log(urltogo);
     return fetch(urltogo, {
@@ -231,7 +231,7 @@ export function GetFileString(fileString) {
         case "docx":
             newFileString = "images/wordicon.png";
         default:
-            newFileString = fileString
+            newFileString = "/"+fileString
     }
     return newFileString;
 }

@@ -15,10 +15,12 @@ export default function DocumentsCard(props) {
         documentsInfo: props.documentsInfo,
         fileRequired: props.fileRequired
     });
-    var id = state.documentsInfo?.ObjectID == null ? document.querySelector("hidden-guid") : state.documentsInfo.ObjectID;
+    var id = state.documentsInfo?.ObjectID == null ? document.querySelector(".hidden-guid").getAttribute("value") : state.documentsInfo.ObjectID;
 
     async function uploadFile(e) {
-        var response = await FileSelectChange(e.target, state.documentsInfo.FolderName, state.documentsInfo.ParentFolderName, id)
+        var formID = e.target.closest("form").getAttribute("id");
+        console.log(formID)
+        var response = await FileSelectChange(e.target, state.documentsInfo.FolderName, state.documentsInfo.ParentFolderName, id, formID)
         setState({ ...state, documentsInfo:response })
     }
 

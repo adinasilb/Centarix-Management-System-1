@@ -152,22 +152,23 @@ function UploadQuoteModal(props) {
 
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                    <div className="col-md-6">
+                                        <div className="form-group ">
+                                            <label className=" control-label m-0 mt-2" style={{ width: "100%" }}>Quote Date</label>
                                     <LocalizationProvider dateAdapter={DateAdapter}>
-                                        <MobileDatePicker
-                                            label="Expiration Date"
-
+                                        <MobileDatePicker                                            
                                             inputFormat="dd MMM yyyy"
                                             value={state.viewModel.ParentQuote?.ExpirationDate}
                                             onChange={handleDateChange}
-                                            renderInput={(params) =>
-                                                <TextField  {...params} {...register("ParentQuote.ExpirationDate")} />
+                                                renderInput={(params) =>
+                                                    <TextField variant="standard" className="form-control-plaintext border-bottom align-with-select" {...params} {...register("ParentQuote.ExpirationDate")} />
                                             }
                                             minDate={new Date()}
 
                                         />
                                     </LocalizationProvider>
 
+                                            </div>
                                 </div>
 
                             </div>
@@ -197,7 +198,7 @@ function UploadQuoteModal(props) {
                                                 value={state.expectedSupplyDate}
                                                 onChange={handleExpectedSupplyDateChange}
                                                 renderInput={(params) =>
-                                                    <TextField  {...params} {...register("ParentQuote.ExpirationDate")} />
+                                                    <TextField variant="standard" {...params} {...register("ParentQuote.ExpirationDate")} />
                                                 }
                                                 minDate={new Date()}
 
