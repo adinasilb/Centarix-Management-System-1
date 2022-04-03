@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
         public String OrderPDF { get; set; }
+        public bool IsPriceQuote { get; set; }
         
     }
 }

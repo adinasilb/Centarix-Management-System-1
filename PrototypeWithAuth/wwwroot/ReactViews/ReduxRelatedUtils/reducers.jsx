@@ -19,5 +19,8 @@ export default combineReducers({
     reloadIndex: setReloadIndexReducer,
     sourceSelected: setSourceSelected,
     subcategorySelected: setSelectedSubCategory,
-    categorySelected: setSelectedCategory
+    categorySelected: setSelectedCategory,
+    requestsSearchViewModel: (state = {}, action) => {
+    return state;
+},
 })

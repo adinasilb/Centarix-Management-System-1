@@ -17,7 +17,7 @@ export default function GlobalModal(props) {
     }
 
     return (
-        <MDBContainer>
+        <MDBContainer className="modal-open">
             <MDBModal staticBackdrop backdrop={props.backdrop} tabIndex="-1" size={props.size} id="myModal" show={true} >
                 <MDBModalDialog size={props.size} centered>
                     <MDBModalContent>

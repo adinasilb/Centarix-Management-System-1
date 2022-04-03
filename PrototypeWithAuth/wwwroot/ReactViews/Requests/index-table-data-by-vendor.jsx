@@ -32,7 +32,7 @@ function _IndexTableDataByVendor(props) {
 
 
         return (
-            viewModel.RequestsByVendor.map((rbv, i) => (
+            viewModel.RequestsByVendor?.map((rbv, i) => (
                 <div key={"requestsByVendor" + i}>
                     <table key={"vendor" + rbv[0].Vendor.VendorID} className="table table-headerspaced  table-borderless table-hover mb-5 ">
                         <tbody>
@@ -52,7 +52,7 @@ function _IndexTableDataByVendor(props) {
                             <tr className="border-0 d-none vendor-warning"><td colSpan="5"><span className="text-danger-centarix">you can only select items from the same vendor</span></td></tr>
                             {
                                 rbv.map((row, i) => (
-                                    <tr key={row.r.RequestID+i} className="text-center inv-list-item">
+                                    <tr key={row.r.RequestID+""+i} className="text-center inv-list-item">
                                         {row.Columns.map((col, i) => (
                                             <IndexTableColumn key={i + (col.ValueWithError.map(v => { return v.String }).join(""))} columnData={col} vendorID={rbv[0].Vendor.VendorID} sideBar={viewModel.SidebarType} />
                                         ))}
@@ -80,7 +80,7 @@ function _IndexTableDataByVendor(props) {
                         </tbody>
                     </table>
                 </div>
-            ))
+            ))??""
         );
 
 

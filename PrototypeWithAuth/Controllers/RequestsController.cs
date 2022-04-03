@@ -330,7 +330,7 @@ namespace PrototypeWithAuth.Controllers
             return viewModelByVendor;
         }
 
-        
+
 
         [HttpGet]
         [HttpPost]
@@ -1004,7 +1004,6 @@ namespace PrototypeWithAuth.Controllers
                                 tempRequest.Payments = new List<Payment>();
                                 tempRequest.Emails = termsViewModel.EmailAddresses.Where(e => e != null).ToList();
                             }
-
                             for (int i = 0; i < tempRequest.Request.Installments; i++)
                             {
                                 Payment payment = UpdatePaymentFields(termsViewModel, ref hasShippingOnPayment, tempRequest, i);
@@ -1217,7 +1216,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, IndexTableJsonViewModel indexTableJsonViewModel)
         {
             try
             {
@@ -1234,36 +1233,8 @@ namespace PrototypeWithAuth.Controllers
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 return null;
             }
-            return await GetIndexTableJson(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
+            return await GetIndexTableJson(indexTableJsonViewModel);
 
-        }
-
-        public async Task<JsonResult> GetIndexTableJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
-                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
-        {
-            string json = "";
-            if (CheckIfIndexTableByVendor(requestIndexObject.SectionType, requestIndexObject.PageType, requestIndexObject.SidebarType))
-            {
-                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
-                json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
-                   new JsonSerializerSettings
-                   {
-                       Converters = new List<JsonConverter> { new StringEnumConverter() },
-                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                   });
-            }
-            else
-            {
-                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters, requestsSearchViewModel: requestsSearchViewModel);
-                json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
-                   new JsonSerializerSettings
-                   {
-                       Converters = new List<JsonConverter> { new StringEnumConverter() },
-                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                   });
-            }
-
-            return Json(json);
         }
 
 
@@ -1273,10 +1244,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<JsonResult> GetIndexTableJson(IndexTableJsonViewModel indexTableJsonViewModel)
         {
             string json = "";
-            var requestIndexObject = new RequestIndexObject { TabValue = indexTableJsonViewModel.TabValue, 
-                PageType = indexTableJsonViewModel.NavigationInfo.PageType, 
+            var requestIndexObject = new RequestIndexObject
+            {
+                TabValue = indexTableJsonViewModel.TabValue,
+                PageType = indexTableJsonViewModel.NavigationInfo.PageType,
                 SectionType = indexTableJsonViewModel.NavigationInfo.SectionType,
                 SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, 
+                SidebarFilterID = indexTableJsonViewModel.NavigationInfo.SidebarFilterID,
                 PageNumber = indexTableJsonViewModel.PageNumber,
                 SelectedCurrency = indexTableJsonViewModel.SelectedCurrency,
                 SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums,
@@ -2002,7 +1976,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             //render the purchase order view into a string using a the co.nfirmEmailViewModel
-            
+
             return Json(JsonConvert.SerializeObject(confirm, Formatting.Indented, new JsonSerializerSettings
             {
 
@@ -2015,26 +1989,19 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [RequestFormLimits(ValueLengthLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel )
+        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
         {
             bool rolledBackTempRequest = false;
             var tempRequestListViewModel = confirmEmailViewModel.TempRequestListViewModel;
-            
+
             try
             {
 
                 List<ModelAndID> ModelsCreated = new List<ModelAndID>(); //for rollback
                 List<ModelAndID> ModelsModified = new List<ModelAndID>(); //for rollback
-                //var isRequests = true;
-                //var RequestNum = 1;
-                //var PaymentNum = 1;
-                //var requests = new List<Request>();
-                //var payments = new List<Payment>();
 
                 try
                 {
-                    
-
                     var userId = tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
 
                     var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Id == userId });
@@ -2067,7 +2034,6 @@ namespace PrototypeWithAuth.Controllers
 
                             for (int tr = 0; tr < tempRequestListViewModel.TempRequestViewModels.Count(); tr++)
                             {
-
                                 var tempRequest = tempRequestListViewModel.TempRequestViewModels[tr];
 
                                 switch (tempRequestListViewModel.OrderType)
@@ -2146,7 +2112,7 @@ namespace PrototypeWithAuth.Controllers
                                 });
                                 //if there are no payments it means that the payments were saved previously
                                 //bool AddedPayments = false;
-                                if (tempRequest.Payments != null)
+                                if (tempRequest.Payments != null && tempRequest.Payments.Count > 0)
                                 {
                                     foreach (var p in tempRequest.Payments)
                                     {
@@ -2191,7 +2157,6 @@ namespace PrototypeWithAuth.Controllers
                                     MoveDocumentsOutOfTempFolder(tempRequest.Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests, tempRequestListViewModel.Guids.LastOrDefault());
                                 }
 
-                                //tempRequest.Request.Product = await _productsProc.ReadOneAsync( new List<Expression<Func<Product, bool>>> { p => p.ProductID == tempRequest.Request.ProductID }, new List<ComplexIncludes<Product, ModelBase>> { new ComplexIncludes<Product, ModelBase> { Include =p => p.Vendor } });
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = tempRequest.Request.RequestID;
                                 requestNotification.IsRead = false;
@@ -2221,8 +2186,6 @@ namespace PrototypeWithAuth.Controllers
                     }
                     try
                     {
-                        
-
                         //save this as orderform
                         string id;
                         var firstTempRequestViewModel = tempRequestListViewModel.TempRequestViewModels.FirstOrDefault();
@@ -2254,7 +2217,7 @@ namespace PrototypeWithAuth.Controllers
 
                         PdfDocument doc = new PdfDocument();
                         // create a new pdf document converting an url
-                        doc = converter.ConvertHtmlString(renderedView, baseUrl);;
+                        doc = converter.ConvertHtmlString(renderedView, baseUrl); ;
 
                         if (System.IO.File.Exists(filePath))
                         {
@@ -2775,7 +2738,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
-            var viewModel = await base.GetIndexViewModel(requestIndexObject, Years: new List<int>() { DateTime.Now.Year }, Months: new List<int>() { DateTime.Now.Month }, requestsSearchViewModel: requestsSearchViewModel);
+            var viewModel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
             viewModel.RequestsSearchViewModel = requestsSearchViewModel;
             viewModel.SidebarFilterName = AppUtility.SidebarEnum.Search.ToString();
             return PartialView("SearchResults", viewModel);
@@ -2969,7 +2932,8 @@ namespace PrototypeWithAuth.Controllers
                     var requestReceived = await _requestsProc.ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == receivedLocationViewModel.Request.RequestID },
                         new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Product } ,
                         new ComplexIncludes<Request, ModelBase>{ Include = r => r.Product.Vendor}, new ComplexIncludes<Request, ModelBase>{ Include =r => r.Product.ProductSubcategory},
-                         new ComplexIncludes<Request, ModelBase>{ Include =r => r.Product.ProductSubcategory.ParentCategory}});
+                         new ComplexIncludes<Request, ModelBase>{ Include =r => r.Product.ProductSubcategory.ParentCategory},
+                            new ComplexIncludes<Request, ModelBase> { Include = r => r.ParentRequest}});
 
                     decimal pricePerUnit;
                     if (receivedLocationViewModel.IsPartial)
@@ -2992,6 +2956,18 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.Cost = pricePerUnit * requestReceived.Unit;
                     }
                     await _requestsProc.ReceiveRequestWithoutTransactionAsync(receivedLocationViewModel, receivedModalVisualViewModel, requestReceived);
+                    if (requestReceived.PaymentStatusID == 2)
+                    {
+                        var payments = _paymentsProc.Read(new List<Expression<Func<Payment, bool>>> { p => p.RequestID == requestReceived.RequestID });
+                        var updatePayments = new List<ModelAndState>();
+                        foreach (var payment in payments)
+                        {
+                            payment.PaymentDate = requestReceived.ArrivalDate;
+                            updatePayments.Add(new ModelAndState { Model = payment, StateEnum = EntityState.Modified });
+                        }
+                        _paymentsProc.UpdateModelsWithoutSaveChanges(updatePayments);
+                        await _paymentsProc.SaveDbChangesAsync();
+                    }
                     await transaction.CommitAsync();
 
                 }
@@ -3011,8 +2987,8 @@ namespace PrototypeWithAuth.Controllers
                 }
 
             }
-
-            return PartialView("_IndexTableData", await GetIndexViewModel(receivedLocationViewModel.RequestIndexObject, selectedFilters: selectedFilters, requestsSearchViewModel: requestsSearchViewModel));
+            return EmptyResult();
+            //return PartialView("_IndexTableData", await GetIndexViewModel(receivedLocationViewModel.RequestIndexObject, selectedFilters: selectedFilters, requestsSearchViewModel: requestsSearchViewModel));
 
 
         }
@@ -4708,14 +4684,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, IndexTableJsonViewModel indexTableJsonViewModel)
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
-            requestIndexObject.TabValue = newList.ListID.ToString();
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+            indexTableJsonViewModel.TabValue = newList.ListID.ToString();
+            if (indexTableJsonViewModel.NavigationInfo.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                return await GetIndexTableJson(requestIndexObject);
+                return await GetIndexTableJson(indexTableJsonViewModel);
             }
             else
             {

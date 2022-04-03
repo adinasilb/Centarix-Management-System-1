@@ -17,5 +17,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels
         public bool CategorySelected { get; set; }
         public bool SubcategorySelected { get; set; }
         public bool SourceSelected { get; set; }
+        public RequestsSearchViewModel RequestsSearchViewModel { get; set; }
+
     }
 }

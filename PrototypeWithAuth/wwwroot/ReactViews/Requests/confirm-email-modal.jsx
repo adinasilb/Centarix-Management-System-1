@@ -29,7 +29,7 @@ function ConfirmEmailModal(props) {
         viewModel: {}
     })
     const guid = props.tempRequestList.Guids[props.tempRequestList.Guids.length - 1];
-    var firstRequest = props.tempRequestList.TempRequestViewModels[0].Request ;
+    var firstRequest = props.tempRequestList.TempRequestViewModels[0].Request;
 
     useEffect(() => {
 
@@ -60,7 +60,7 @@ function ConfirmEmailModal(props) {
     //    return pdf.output();
     //};
 
-    async function onSubmit (data, e){
+    async function onSubmit(data, e) {
         //var orderFileBlob = await createPDF()
         //var orderPdf = new File([orderFileBlob], "OrderPdf.pdf")
         //console.log(orderPdf)
@@ -71,22 +71,28 @@ function ConfirmEmailModal(props) {
         var tempRequestFormData = jsonToFormData({ "TempRequestListViewModel": props.tempRequestList })
         var formData = combineTwoFormDatas(viewModelFormData, tempRequestFormData)
         formData.set("OrderPDF", orderPdf)
+        document.getElementById("loading").style.display = "block";
+
         fetch("/Requests/ConfirmEmailModal", {
             method: "POST",
             body: formData
         })
             .then((response) => {
-                alert("hello")
-                props.navigationInfo.sideBarType = SidebarEnum.Add ?
+                if (props.navigationInfo.sideBarType = SidebarEnum.Add) {
+
                     window.location.href = "/Requests"
-                    :
-                props.removeAllModals();
-                props.setTempRequestList([]);
-                batch(() => {
-                    props.setReloadIndex(true);
-                    props.setPageNumber(1)
                 }
-                )
+                else {
+                    props.removeAllModals();
+                    props.setTempRequestList([]);
+                    batch(() => {
+                        props.setReloadIndex(true);
+                        props.setPageNumber(1)
+                    }
+                    )
+                    document.getElementById("loading").style.display = "none";
+
+                }
             })
             .catch(err => {
                 console.dir(err)

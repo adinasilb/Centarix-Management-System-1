@@ -98,11 +98,11 @@ function TermsModal(props) {
     };
 
     var onSubmit = (data, e) => {
-        setState({
-            ...state, viewModel: { ...state.viewModel, ParentRequest: { ...state.viewModel.ParentRequest, Shipping: data.shipping } }
-        })
 
         var viewModelFormData = jsonToFormData(state.viewModel)
+        viewModelFormData.set("ParentRequest.Shipping", data.shipping)
+        viewModelFormData.set("Installments", data.Installments)
+        viewModelFormData.set("InstallmentDate", data.InstallmentDate)
         var tempRequestFormData = jsonToFormData({ "TempRequestListViewModel": props.tempRequestList })
         var formData = combineTwoFormDatas(viewModelFormData, tempRequestFormData)
 
@@ -199,12 +199,11 @@ function TermsModal(props) {
                                             <LocalizationProvider dateAdapter={DateAdapter}>
                                                 <MobileDatePicker
                                                     label="Installment Date"
-                                                    variant="standard"
                                                     inputFormat="dd MMM yyyy"
                                                     value={state.viewModel.InstallmentDate}
                                                     onChange={handleDateChange}
                                                     renderInput={(params) =>
-                                                        <TextField  {...params} {...register("InstallmentDate")} />
+                                                        <TextField variant="standard" className="form-control-plaintext border-bottom align-with-select" {...params} {...register("InstallmentDate")} />
                                                     }
                                                 />
                                             </LocalizationProvider>

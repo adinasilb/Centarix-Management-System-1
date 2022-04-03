@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.AppData.UtilityModels.ReactUtilityModels
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.SidebarEnum SideBarType { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
+        public string SidebarFilterID { get; set; }
     }
 }
