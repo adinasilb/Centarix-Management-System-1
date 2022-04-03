@@ -11,13 +11,16 @@ export default function RootComponent(props) {
     const store = createStore(reducer, {
         viewModel: props.viewModel,
         navigationInfo: {
-            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SideBarType || {}  },
-        categoryPopoverViewModel: { ...props.viewModel?.CategoryPopoverViewModel || {}  },        
+            pageType: props.viewModel?.PageType, sectionType: props.viewModel?.SectionType, sideBarType: props.viewModel?.SidebarType || {}, sideBarFilterID: props.viewModel?.SidebarFilterID },
         tabValue: props.viewModel?.TabValue,
         pageNumber: props.viewModel.PageNumber,
         reloadIndex: false,
         selectedCurrency: CurrencyEnum.NIS,
         priceSortEnums: PriceSortEnum.TotalVat,
+        categorySelected: false,
+        subcategorySelected: false,
+        sourceSelected: false,
+        requestsSearchViewModel: props.viewModel?.RequestsSearchViewModel ?? {}
     }, composeWithDevTools());
 
     

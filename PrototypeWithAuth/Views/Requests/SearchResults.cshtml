@@ -1,6 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
 @using PrototypeWithAuth.AppData
 @using Microsoft.Extensions.Primitives
+@using React.AspNet
 @{
     StringValues action;
     Context.Request.Headers.TryGetValue("Referer", out action);
@@ -40,33 +41,12 @@
     <input type="hidden" asp-for="RequestsSearchViewModel.Payment.CreditCardID" />
     <input type="hidden" asp-for="RequestsSearchViewModel.Payment.Reference" />
 </form>
-@{
-    string view = "";
+@
 
-}
-@switch ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()])
-{
-    case AppUtility.PageTypeEnum.RequestRequest:
-    case AppUtility.PageTypeEnum.OperationsRequest:
-        view = "_IndexTableWithCounts";
-        break;
-    case AppUtility.PageTypeEnum.RequestSummary:
-        view = "_IndexTableWithProprietaryTabs";
-        break;
-    case AppUtility.PageTypeEnum.AccountingGeneral:
-        view = "AccountingGeneral";
-        break;
-    case AppUtility.PageTypeEnum.LabManagementQuotes:
-        //how do we know if it's quotes or orders?
-        break;
-    case AppUtility.PageTypeEnum.AccountingPayments:
-        //how do we know which payment type to show?
-        break;
+@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTable" })
 
-}
-<div class="@view">
-    @{ await Html.RenderPartialAsync(view, Model);}
-</div>
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
 <script>
     $('.back-to-search').click(function (e) {
         e.preventDefault();

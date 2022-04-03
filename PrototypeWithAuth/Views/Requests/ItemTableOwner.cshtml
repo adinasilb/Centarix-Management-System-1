@@ -1,5 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
 @using PrototypeWithAuth.AppData
+@using React.AspNet
 @{
     ViewData["Title"] = "Owner";
 
@@ -13,30 +14,9 @@
     </a>
 </div>
 
-@if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest || (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.OperationsRequest)
-{
-    <div class="_IndexTableWithCounts">
-        @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
-    </div>
+@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTable" })
 
-}
-else
-{
-    if (Model.PagedList.Count == 0)
-    {
-        <div>
-            @{
-                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
-            }
-        </div>
-    }
-    else
-    {
-        <div class="_IndexTableWithProprietaryTabs">
-            @{ await Html.RenderPartialAsync("_IndexTableWithProprietaryTabs", Model);}
-        </div>
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
 
-    }
-
-}
 

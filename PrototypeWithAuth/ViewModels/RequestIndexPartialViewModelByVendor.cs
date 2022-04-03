@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.SidebarEnum SidebarType { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public CategoryPopoverViewModel CategoryPopoverViewModel { get; set; }
-        public NotificationFilterViewModel NotificationFilterViewModel { get; set; }
+        public SelectedRequestFilters SelectedRequestFilters { get; set; }
         public InventoryFilterViewModel InventoryFilterViewModel { get; set; }
         public string ButtonText { get;set; }
         public string AjaxLink { get; set; }

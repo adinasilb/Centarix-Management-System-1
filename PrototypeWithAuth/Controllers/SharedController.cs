@@ -1071,6 +1071,7 @@ namespace PrototypeWithAuth.Controllers
                     requestIndexObject.SourceSelected
                 }
             };
+            requestIndexViewModel.SectionType = requestIndexObject.SectionType;
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
             requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;

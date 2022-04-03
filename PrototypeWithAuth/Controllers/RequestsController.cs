@@ -99,7 +99,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel = null)
+        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, SelectedRequestFilters selectedRequestFilters =null)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
             if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
@@ -115,6 +115,10 @@ namespace PrototypeWithAuth.Controllers
                     requestIndexObject.SourceSelected
                 }
             };
+            if(selectedRequestFilters == null)
+            {
+                selectedRequestFilters = new SelectedRequestFilters();
+            }
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color)", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
@@ -190,16 +194,9 @@ namespace PrototypeWithAuth.Controllers
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
 
-                    if (notificationFilterViewModel == null)
-                    {
-                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
-                    }
-                    else
-                    {
-                        wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
-                        && (notificationFilterViewModel.NameOrCentarixOrderNumber == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber.ToLower())
-                        || r.ParentRequest.OrderNumber.ToString().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber)));
-                    }
+                  
+                    wheres.Add(r => (selectedRequestFilters.SearchText == null || r.Product.ProductName.ToLower().Contains(selectedRequestFilters.SearchText.ToLower())
+                    || r.ParentRequest.OrderNumber.ToString().Contains(selectedRequestFilters.SearchText)));
 
                     switch (requestIndexObject.SidebarType)
                     {
@@ -242,16 +239,9 @@ namespace PrototypeWithAuth.Controllers
                     };
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    if (notificationFilterViewModel == null)
-                    {
-                        notificationFilterViewModel = new NotificationFilterViewModel() { Vendors = _vendorsProc.Read(new List<Expression<Func<Vendor, bool>>> { v => v.VendorCategoryTypes.Select(v => v.CategoryTypeID).Contains(1) }).ToList() };
-                    }
-                    else
-                    {
-                        wheres.Add(r => (notificationFilterViewModel.SelectedVendor == null || r.Product.VendorID == notificationFilterViewModel.SelectedVendor)
-                        && (notificationFilterViewModel.NameOrCentarixOrderNumber == null || r.Product.ProductName.ToLower().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber.ToLower())
-                        || r.ParentRequest.OrderNumber.ToString().Contains(notificationFilterViewModel.NameOrCentarixOrderNumber)));
-                    }
+                    
+                    wheres.Add(r =>  (selectedRequestFilters.SearchText == null || r.Product.ProductName.ToLower().Contains(selectedRequestFilters.SearchText.ToLower())
+                    || r.ParentRequest.OrderNumber.ToString().Contains(selectedRequestFilters.SearchText)));
                     var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType, wheres);
                     switch (requestIndexObject.SidebarType)
                     {
@@ -327,7 +317,7 @@ namespace PrototypeWithAuth.Controllers
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p) }));
-            viewModelByVendor.NotificationFilterViewModel = notificationFilterViewModel;
+            viewModelByVendor.SelectedRequestFilters = selectedRequestFilters;
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
             viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
@@ -1226,7 +1216,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, RequestIndexObject requestIndexObject, RequestsSearchViewModel requestsSearchViewModel, SelectedRequestFilters selectedFilters, int numFilters = 0)
+        public async Task<JsonResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel, IndexTableJsonViewModel indexTableJsonViewModel)
         {
             try
             {
@@ -1243,36 +1233,8 @@ namespace PrototypeWithAuth.Controllers
                 await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 return null;
             }
-            return await GetIndexTableJson(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel, selectedFilters: selectedFilters, numFilters: numFilters);
+            return await GetIndexTableJson(indexTableJsonViewModel);
 
-        }
-
-        public async Task<JsonResult> GetIndexTableJson(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null,
-                                                                              SelectedRequestFilters selectedFilters = null, int numFilters = 0, RequestsSearchViewModel? requestsSearchViewModel = null)
-        {
-            string json = "";
-            if (CheckIfIndexTableByVendor(requestIndexObject.SectionType, requestIndexObject.PageType, requestIndexObject.SidebarType))
-            {
-                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
-                json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
-                   new JsonSerializerSettings
-                   {
-                       Converters = new List<JsonConverter> { new StringEnumConverter() },
-                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                   });
-            }
-            else
-            {
-                var viewModel = await GetIndexViewModel(requestIndexObject, Months, Years, selectedFilters: selectedFilters, requestsSearchViewModel: requestsSearchViewModel);
-                json = JsonConvert.SerializeObject(viewModel, Formatting.Indented,
-                   new JsonSerializerSettings
-                   {
-                       Converters = new List<JsonConverter> { new StringEnumConverter() },
-                       ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                   });
-            }
-
-            return Json(json);
         }
 
 
@@ -1287,15 +1249,19 @@ namespace PrototypeWithAuth.Controllers
                 TabValue = indexTableJsonViewModel.TabValue,
                 PageType = indexTableJsonViewModel.NavigationInfo.PageType,
                 SectionType = indexTableJsonViewModel.NavigationInfo.SectionType,
-                SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType,
+                SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, 
+                SidebarFilterID = indexTableJsonViewModel.NavigationInfo.SidebarFilterID,
                 PageNumber = indexTableJsonViewModel.PageNumber,
                 SelectedCurrency = indexTableJsonViewModel.SelectedCurrency,
-                SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums
+                SelectedPriceSort = indexTableJsonViewModel.PriceSortEnums,
+                CategorySelected = indexTableJsonViewModel.CategorySelected,
+                SubcategorySelected = indexTableJsonViewModel.SubcategorySelected,
+                SourceSelected = indexTableJsonViewModel.SourceSelected,
             };
-
+         
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {
-                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject);
+                var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject, indexTableJsonViewModel.SelectedFilters);
                 json = JsonConvert.SerializeObject(viewModelByVendor, Formatting.Indented,
                    new JsonSerializerSettings
                    {
@@ -2724,27 +2690,9 @@ namespace PrototypeWithAuth.Controllers
         {
             return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
         }
-        [HttpGet]
-        [HttpPost]
-        public async Task<IActionResult> _IndexTableDataByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
-        }
 
-        [HttpGet]
-        [HttpPost]
-        public async Task<IActionResult> _IndexTableByVendor(RequestIndexObject requestIndexObject, NotificationFilterViewModel notificationFilterViewModel)
-        {
-            if (!AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView("InvalidLinkPage");
-            }
-            return PartialView(await GetIndexViewModelByVendor(requestIndexObject, notificationFilterViewModel));
-        }
+
+   
 
         /*
          * BEGIN SEARCH
@@ -2790,7 +2738,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
-            var viewModel = await base.GetIndexViewModel(requestIndexObject, Years: new List<int>() { DateTime.Now.Year }, Months: new List<int>() { DateTime.Now.Month }, requestsSearchViewModel: requestsSearchViewModel);
+            var viewModel = await base.GetIndexViewModel(requestIndexObject, requestsSearchViewModel: requestsSearchViewModel);
             viewModel.RequestsSearchViewModel = requestsSearchViewModel;
             viewModel.SidebarFilterName = AppUtility.SidebarEnum.Search.ToString();
             return PartialView("SearchResults", viewModel);
@@ -4736,14 +4684,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, RequestIndexObject requestIndexObject)
+        public async Task<JsonResult> NewListModal(NewListViewModel newListViewModel, IndexTableJsonViewModel indexTableJsonViewModel)
         {
 
             var newList = await _requestListsProc.CreateAndGetAsync(newListViewModel);
-            requestIndexObject.TabValue = newList.ListID.ToString();
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+            indexTableJsonViewModel.TabValue = newList.ListID.ToString();
+            if (indexTableJsonViewModel.NavigationInfo.PageType == AppUtility.PageTypeEnum.RequestCart)
             {
-                return await GetIndexTableJson(requestIndexObject);
+                return await GetIndexTableJson(indexTableJsonViewModel);
             }
             else
             {

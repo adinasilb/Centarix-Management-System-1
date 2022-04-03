@@ -30,7 +30,7 @@ function IndexTableReduxStore(props) {
         else {
             didMount.current = true;
         }
-    }, [props.selectedFilters, props.navigationInfo, props.categoryPopoverViewModel, props.selectedCurrency, props.priceSortEnums, props.tabValue])
+    }, [props.selectedFilters, props.navigationInfo, props.selectedCurrency, props.priceSortEnums, props.tabValue, props.categorySelected, props.sourceSelected, props.subcategorySelected])
     return <div attr={props.pageNumber}></div>;
 }
 
@@ -38,12 +38,15 @@ const mapStateToProps = state => {
     return {
         selectedFilters: state.selectedFilters,
         tabValue: state.tabValue,
-        categoryPopoverViewModel: state.categoryPopoverViewModel,
         selectedCurrency: state.selectedCurrency,
         priceSortEnums: state.priceSortEnums,
         navigationInfo: state.navigationInfo,
         pageNumber: state.pageNumber,
-        reloadIndex: state.reloadIndex
+        reloadIndex: state.reloadIndex,
+        categorySelected: state.categorySelected,
+        subcategorySelected: state.subcategorySelected,
+        sourceSelected: state.sourceSelected,
+        requestsSearchViewModel: state.requestsSearchViewModel
     };
 };
 

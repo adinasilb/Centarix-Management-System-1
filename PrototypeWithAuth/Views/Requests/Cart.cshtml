@@ -1,5 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
+@using React.AspNet
 @{
     ViewData["Title"] = "Cart";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
@@ -9,22 +10,13 @@
             <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
         </div>
     }
-    if (Model.RequestsByVendor.Count() == 0)
-    {
-        <div class="mt-4">
-            @{
-                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
-            }
-        </div>
-    }
-    else
-    {
-        <div class="_IndexTableByVendor">
-            @{
-                await Html.RenderPartialAsync("_IndexTableByVendor", Model);
-            }
-        </div>
-    }
+    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTableByVendor" })
+
+    @Html.ReactGetScriptPaths()
+    @Html.ReactInitJavaScript()
+
+
+
 
 }
 

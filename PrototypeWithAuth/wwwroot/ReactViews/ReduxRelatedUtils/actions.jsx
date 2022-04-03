@@ -1,5 +1,6 @@
-﻿export const SET_INDEX_TABLE_VIEWMODEL = 'SET_INDEX_TABLE_VIEWMODEL'
-export const SET_CATEGORY_POPOVER_VIEWMODEL = 'SET_CATEGORY_POPOVER_VIEWMODEL'
+﻿import { set } from "date-fns/esm/fp"
+
+export const SET_INDEX_TABLE_VIEWMODEL = 'SET_INDEX_TABLE_VIEWMODEL'
 export const SET_CURRENCY_ENUM = 'SET_CURRENCY_ENUM'
 export const SET_PRICE_SORT_ENUM = 'SET_PRICE_SORT_ENUM'
 export const SET_TAB_VALUE = 'SET_TAB_VALUE'
@@ -13,6 +14,9 @@ export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER'
 export const SET_TEMP_REQUEST_LIST = 'SET_TEMP_REQUEST_LIST'
 export const SET_RELOAD_INDEX = 'SET_RELOAD_INDEX'
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT'
+export const SET_CATEGORY_SELECTED = 'SET_CATEGORY_SELECTED'
+export const SET_SUBCATEGORY_SELECTED = 'SET_SUBCATEGORY_SELECTED '
+export const SET_SOURCE_SELECTED = 'SET_SOURCE_SELECTED'
 export const setIndexTableViewModel = (viewmodel ) => {
     return ({
 
@@ -20,13 +24,7 @@ export const setIndexTableViewModel = (viewmodel ) => {
         payload: viewmodel 
     })
 };
-export const setCategoryPopoverViewModel = (viewmodel) => {
-    return ({
-
-        type: SET_CATEGORY_POPOVER_VIEWMODEL,
-        payload: viewmodel
-    })
-}; 
+ 
 export const setPriceSortEnums = (viewmodel) => {
     return ({
 
@@ -71,6 +69,29 @@ export const setSearchText = (searchText) => {
         payload: searchText
     })
 };
+
+export const setSubCategorySelected = (searchText) => {
+    return ({
+
+        type: SET_SUBCATEGORY_SELECTED,
+        payload: searchText
+    })
+};
+export const setCategorySelected = (searchText) => {
+    return ({
+
+        type: SET_CATEGORY_SELECTED,
+        payload: searchText
+    })
+};
+export const setSourceSelected = (searchText) => {
+    return ({
+
+        type: SET_SOURCE_SELECTED,
+        payload: searchText
+    })
+};
+
 
 
 export const setReloadIndex = (viewmodel) => {
