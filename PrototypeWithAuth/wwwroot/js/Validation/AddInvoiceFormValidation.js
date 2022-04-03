@@ -49,10 +49,6 @@ $('.addInvoiceForm').validate({
 		"Invoice.InvoiceDiscount": {
 			number: true,
 			min: 0
-        },
-		"Invoice.InvoiceDate": {
-			number: true,
-			min: 0
         }
 	},
 	messages: {
