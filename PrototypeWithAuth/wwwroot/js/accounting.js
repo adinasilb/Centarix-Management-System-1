@@ -135,7 +135,7 @@
 	//	$("#loading").show();
 	//	$.fn.CallModal(itemurl, "payments-invoice");
 	//});
-	$(".pay-invoice-one").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-invoice-one").on("click", ".pay-invoice-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var typeEnum = $("#masterSidebarType").val();
@@ -168,7 +168,7 @@
 		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay", parameterName);
 	});
 
-	$("body").off("click", "invoice-add-all").on("click", "invoice-add-all", function (e) {
+	$("body").off("click", ".invoice-add-all").on("click", ".invoice-add-all", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log('invoice add all')

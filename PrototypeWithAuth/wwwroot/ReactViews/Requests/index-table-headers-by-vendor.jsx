@@ -13,7 +13,7 @@ function _IndexTableHeadersByVendor(props) {
                         <thead>
                             <tr className="text-center">
                                 {props.viewModel.RequestsByVendor[0][0].Columns.map((col, i) => (
-                                    <th key={i} width={col.Width + "%"} >{console.log(col)}
+                                    <th key={i} width={col.Width + "%"} >
                                         <label>{col.Title}</label>
                                         {{
 

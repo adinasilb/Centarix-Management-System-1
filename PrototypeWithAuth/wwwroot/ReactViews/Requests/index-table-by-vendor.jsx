@@ -8,7 +8,7 @@ export default function _IndexTableByVendor(props) {
         <_IndexTableTabs viewModel={props.viewModel} key={"indexTableTabs"}/>
         <_IndexTableHeadersByVendor key={"indexTableHeader"} />
         <_IndexTableDataByVendor key={"indexTableData"} />
-        <IndexTableReduxStore/>
+        <IndexTableReduxStore />
     </div>
     )
 }
