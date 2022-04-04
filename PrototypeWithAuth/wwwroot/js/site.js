@@ -651,11 +651,11 @@ $(function () {
     
 
     $("#InvoiceImage").on("change", function () {
-        alert("invoiceimage is clicked");
-        $.fn.InvoiceImageClick("InvoiceImage");
+        $.fn.InvoiceImageClick("InvoiceImage", "InvoiceImage", "addInvoiceForm");
     });
 
-    $.fn.InvoiceImageClick = function (buttonID) {
+    $.fn.InvoiceImageClick = function (buttonID, buttonClass, form) {
+        alert("buttonID");
         var imgPath = $("#" + buttonID)[0].value;
         console.log("imgPath: " + imgPath);
         var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
@@ -684,7 +684,8 @@ $(function () {
         $(".invoice-image-name").text(fileName)
         var guid = $("#Guid").val()
 
-        var targetFile = new FormData($(".addInvoiceForm")[0]).getAll(buttonID).filter(f => f.size > 0)
+        var targetFile = new FormData($("." + form)[0]).getAll(buttonClass).filter(f => f.size > 0)
+        console.log("targetFile")
         console.log(targetFile)
 
         var uploadFileFormData = new FormData();

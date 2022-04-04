@@ -99,7 +99,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, SelectedRequestFilters selectedRequestFilters =null)
+        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject, SelectedRequestFilters selectedRequestFilters = null)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
             if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
@@ -115,7 +115,7 @@ namespace PrototypeWithAuth.Controllers
                     requestIndexObject.SourceSelected
                 }
             };
-            if(selectedRequestFilters == null)
+            if (selectedRequestFilters == null)
             {
                 selectedRequestFilters = new SelectedRequestFilters();
             }
@@ -194,7 +194,7 @@ namespace PrototypeWithAuth.Controllers
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
                     includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
 
-                  
+
                     wheres.Add(r => (selectedRequestFilters.SearchText == null || r.Product.ProductName.ToLower().Contains(selectedRequestFilters.SearchText.ToLower())
                     || r.ParentRequest.OrderNumber.ToString().Contains(selectedRequestFilters.SearchText)));
 
@@ -239,8 +239,8 @@ namespace PrototypeWithAuth.Controllers
                     };
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    
-                    wheres.Add(r =>  (selectedRequestFilters.SearchText == null || r.Product.ProductName.ToLower().Contains(selectedRequestFilters.SearchText.ToLower())
+
+                    wheres.Add(r => (selectedRequestFilters.SearchText == null || r.Product.ProductName.ToLower().Contains(selectedRequestFilters.SearchText.ToLower())
                     || r.ParentRequest.OrderNumber.ToString().Contains(selectedRequestFilters.SearchText)));
                     var paymentList = await GetPaymentRequests(requestIndexObject.SidebarType, wheres);
                     switch (requestIndexObject.SidebarType)
@@ -1249,7 +1249,7 @@ namespace PrototypeWithAuth.Controllers
                 TabValue = indexTableJsonViewModel.TabValue,
                 PageType = indexTableJsonViewModel.NavigationInfo.PageType,
                 SectionType = indexTableJsonViewModel.NavigationInfo.SectionType,
-                SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType, 
+                SidebarType = indexTableJsonViewModel.NavigationInfo.SideBarType,
                 SidebarFilterID = indexTableJsonViewModel.NavigationInfo.SidebarFilterID,
                 PageNumber = indexTableJsonViewModel.PageNumber,
                 SelectedCurrency = indexTableJsonViewModel.SelectedCurrency,
@@ -1258,7 +1258,7 @@ namespace PrototypeWithAuth.Controllers
                 SubcategorySelected = indexTableJsonViewModel.SubcategorySelected,
                 SourceSelected = indexTableJsonViewModel.SourceSelected,
             };
-         
+
             if (CheckIfIndexTableByVendor(indexTableJsonViewModel.NavigationInfo.SectionType, indexTableJsonViewModel.NavigationInfo.PageType, indexTableJsonViewModel.NavigationInfo.SideBarType))
             {
                 var viewModelByVendor = await GetIndexViewModelByVendor(requestIndexObject, indexTableJsonViewModel.SelectedFilters);
@@ -2692,7 +2692,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-   
+
 
         /*
          * BEGIN SEARCH
@@ -3778,7 +3778,8 @@ namespace PrototypeWithAuth.Controllers
                 PaymentTypes = _paymentTypesProc.Read().Select(pt => pt).ToList(),
                 CompanyAccounts = _companyAccountsProc.Read().Select(ca => ca).ToList(),
                 ShippingToPay = await GetShippingsToPay(payments),
-                Error = Error
+                Error = Error,
+                Guid = Guid.NewGuid()
             };
             return PartialView(paymentsPayModalViewModel);
         }
@@ -3809,8 +3810,56 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
-            var stringWithBool = await _paymentsProc.UpdateAsync(paymentsPayModalViewModel);
-            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum, ErrorMessage = stringWithBool.String });
+            var stringWithBool = new StringWithBool();
+            try
+            {
+                using (var transaction = _applicationDbContextTransaction.Transaction)
+                {
+                    if (paymentsPayModalViewModel.AddInvoice && !(paymentsPayModalViewModel.InvoiceInfoViewModel.CurrentPayment))
+                    {
+                        List<int> RequestIDs = new List<int>();
+                        paymentsPayModalViewModel.Payments.ForEach(p => RequestIDs.Add(p.RequestID));
+                        var addInvoiceViewModel = new AddInvoiceViewModel()
+                        {
+                            Invoice = new Invoice()
+                            {
+                                InvoiceDate = paymentsPayModalViewModel.InvoiceInfoViewModel.Invoice.InvoiceDate,
+                                InvoiceDate_submit = paymentsPayModalViewModel.InvoiceInfoViewModel.Invoice.InvoiceDate,
+                                InvoiceNumber = paymentsPayModalViewModel.InvoiceInfoViewModel.Invoice.InvoiceNumber,
+                                InvoiceDiscount = 0.00m
+                            },
+                            InvoiceImageSaved = paymentsPayModalViewModel.InvoiceInfoViewModel.InvoiceImageSaved,
+                            Guid = paymentsPayModalViewModel.Guid,
+                            Paid = true,
+                            Vendor = _vendorsProc.ReadOne(new List<Expression<Func<Vendor, bool>>>() { v => v.VendorID == paymentsPayModalViewModel.VendorID}).FirstOrDefault(),
+                            Requests = _requestsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Request, bool>>>() { r => RequestIDs.Contains(r.RequestID) }).ToList()
+                        };
+                        await _paymentsProc.UpdateAsync(paymentsPayModalViewModel, addInvoiceViewModel);
+                        addInvoiceViewModel = await UpdateRequestsWithInvoiceInfo(addInvoiceViewModel);
+                        if (addInvoiceViewModel.ErrorMessage != null)
+                        {
+                            Response.StatusCode = 500;
+                            return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
+                        }
+                        await _requestsProc.SaveDbChangesAsync();
+                    }
+                    else
+                    {
+                        await _paymentsProc.UpdateAsync(paymentsPayModalViewModel);
+                    }
+                    await transaction.CommitAsync();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                stringWithBool.SetStringAndBool(false, AppUtility.GetExceptionMessage(ex));
+            }
+            return RedirectToAction("AccountingPayments", new
+            {
+                accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum,
+                ErrorMessage = stringWithBool.String
+            });
 
         }
         /*        [HttpGet]
@@ -3979,7 +4028,7 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
 
-                    var createInvoiceSuccess = await _invoicesProc.CreateAsync(addInvoiceViewModel);
+                    var createInvoiceSuccess = await _invoicesProc.CreateAsyncWithTransaction(addInvoiceViewModel);
                     if (!createInvoiceSuccess.Bool)
                     {
                         addInvoiceViewModel.ErrorMessage = ElixirStrings.ServerExistingInvoiceNumberVendorErrorMessage;
@@ -3987,22 +4036,30 @@ namespace PrototypeWithAuth.Controllers
                         return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
                     }
 
-                    foreach (var request in addInvoiceViewModel.Requests)
+                    addInvoiceViewModel = await UpdateRequestsWithInvoiceInfo(addInvoiceViewModel);
+                    if (addInvoiceViewModel.ErrorMessage != null)
                     {
-                        await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request);
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString(),
-                            addInvoiceViewModel.Guid.ToString(), AppUtility.FolderNamesEnum.Invoices.ToString());
-                        if (!Directory.Exists(uploadFolder) || Directory.GetFiles(uploadFolder).Length == 0)
-                        {
-                            addInvoiceViewModel.ErrorMessage = ElixirStrings.ServerMissingFile;
-                            Response.StatusCode = 500;
-                            return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
-                        }
-
-                        MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
+                        Response.StatusCode = 500;
+                        return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
                     }
                     await _requestsProc.SaveDbChangesAsync();
                     await transaction.CommitAsync();
+                    //foreach (var request in addInvoiceViewModel.Requests)
+                    //{
+                    //    await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request);
+                    //    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString(),
+                    //        addInvoiceViewModel.Guid.ToString(), AppUtility.FolderNamesEnum.Invoices.ToString());
+                    //    if (!Directory.Exists(uploadFolder) || Directory.GetFiles(uploadFolder).Length == 0)
+                    //    {
+                    //        addInvoiceViewModel.ErrorMessage = ElixirStrings.ServerMissingFile;
+                    //        Response.StatusCode = 500;
+                    //        return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
+                    //    }
+
+                    //    MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
+                    //}
+                    //await _requestsProc.SaveDbChangesAsync();
+                    //await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
@@ -4015,6 +4072,23 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_IndexTableDataByVendor", indexViewModel);
         }
 
+
+        public async Task<AddInvoiceViewModel> UpdateRequestsWithInvoiceInfo(AddInvoiceViewModel addInvoiceViewModel)
+        {
+            foreach (var request in addInvoiceViewModel.Requests)
+            {
+                await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request);
+                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString(),
+                    addInvoiceViewModel.Guid.ToString(), AppUtility.FolderNamesEnum.Invoices.ToString());
+                if (!Directory.Exists(uploadFolder) || Directory.GetFiles(uploadFolder).Length == 0)
+                {
+                    addInvoiceViewModel.ErrorMessage = ElixirStrings.ServerMissingFile;
+                }
+
+                MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
+            }
+            return addInvoiceViewModel;
+        }
         public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
         {
             var oldJsonSequenceNumber = _tempRequestJsonsProc.Read(new List<Expression<Func<TempRequestJson, bool>>> { trj => trj.GuidID == requestIndexObject.GUID }).Select(trj => trj.SequencePosition)

@@ -33,14 +33,14 @@ $('.payModalForm').validate({
                 url: '/Requests/CheckUniqueVendorAndInvoiceNumber',
                 type: 'POST',
                 data: {
-                    "VendorID": function () { return $("#Vendor_VendorID").val() },
+                    "VendorID": function () { return $("#VendorID").val() },
                     "InvoiceNumber": function () { return $("#InvoiceInfoViewModel_Invoice_InvoiceNumber").val() }
                 },
             },
         },
         "InvoiceInfoViewModel.Invoice.InvoiceDate": {
             required: true,
-            IsTodayOrEarlier: true
+            //IsTodayOrEarlier: true
         },
         "Requests[0].Payments[0].Sum": {
             required: true,

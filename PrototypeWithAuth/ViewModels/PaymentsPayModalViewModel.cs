@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<Request> Requests { get; set; }
         public List<Payment> Payments { get; set; }
+        public int VendorID { get; set; }
         public Payment Payment { get; set; }
         public List<CompanyAccount> CompanyAccounts {get; set;}
         public AppUtility.SidebarEnum AccountingEnum { get; set; }
@@ -23,5 +24,6 @@ namespace PrototypeWithAuth.ViewModels
         public bool PartialPayment { get; set; }
         public decimal PartialAmtToPay { get; set; }
         public decimal PercentageToPay { get; set; }
+        public Guid Guid { get; set; }
     }
 }

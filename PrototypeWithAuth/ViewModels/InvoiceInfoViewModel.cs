@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public bool CurrentPayment { get; set; }
         [Display(Name = "Invoice Image")]
         public IFormFile InvoiceImage { get; set; }
+        public string InvoiceImageSaved { get; set; }
         public Invoice Invoice { get; set; }
     }
 }
