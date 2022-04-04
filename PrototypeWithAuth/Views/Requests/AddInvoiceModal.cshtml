@@ -68,8 +68,8 @@
                                         var totalCost = 0.0m;
                                         //var totalCostShekel = 0.0m;
                                         var totalVAT = 0.0m;
-                                        var totalShipping = 0.0;
-                                        var VATShipping = 0.0;
+                                        var totalShipping = 0m;
+                                        var VATShipping = 0m;
                                         var x = -1; 
                                     }
                                     @foreach (var Request in Model.Requests)
@@ -79,8 +79,8 @@
                                         totalCost += request.Currency == AppUtility.CurrencyEnum.NIS.ToString() ? (decimal)request.Cost: (decimal)request.Cost / request.ExchangeRate;
                                         //totalCostShekel += (decimal)request.Cost;
                                         totalVAT += request.Currency == AppUtility.CurrencyEnum.NIS.ToString() ? (decimal)request.VAT: (decimal)request.VAT / request.ExchangeRate;
-                                        totalShipping += request.ParentRequest.Shipping;
-                                        VATShipping += request.ParentRequest.Shipping * .17;
+                                        totalShipping += request.Shipping;
+                                        VATShipping += request.Shipping * .17m;
                                         <tr class="invoice-request">
                                             <td style="width:15%;">
                                                 <input style="display: none;" asp-for="Requests[x].RequestID" />
@@ -244,7 +244,7 @@
                                         <label class="control-label">Shipping </label>
                                         <div class="input-group">
                                             <span class="input-group-text  pr-1">@Html.Raw(currency)</span>
-                                            <input value="@String.Format("{0:0.00}", totalShipping)" class="form-control-plaintext border-bottom total-shipping" name="Shipping" />
+                                            <input value="@String.Format("{0:0.00}", totalShipping)" class="form-control-plaintext border-bottom total-shipping" name="Requests[0].Shipping" />
                                             <span  class="text-danger-centarix"></span>
                                         </div>
                                     </div>

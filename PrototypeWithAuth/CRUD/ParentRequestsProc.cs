@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.CRUD
             if (!FromBase) { this.InstantiateProcs(); }
         }
 
-        public async Task UpdateShippingPaidAsync(PaymentsPayModalViewModel paymentsPayModalViewModel)
+/*        public async Task UpdateShippingPaidAsync(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
             foreach (var shipping in paymentsPayModalViewModel.ShippingToPay)
             {
@@ -30,6 +30,6 @@ namespace PrototypeWithAuth.CRUD
                 _context.Update(parentRequest);
             }
             await _context.SaveChangesAsync();
-        }
+        }*/
     }
 }
