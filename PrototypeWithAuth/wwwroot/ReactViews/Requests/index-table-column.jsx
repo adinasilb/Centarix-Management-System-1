@@ -40,7 +40,7 @@ export default function IndexTableColumn(props) {
                                                
                                         <Typography sx={{ p: 2 }}> {icon.IconPopovers.map((iconpopover, i) => (
                                             <span key={"iconPopover" + i} className="row px-3 icon-more-popover accounting-popover">
-                                                <Link className={" popover-text requests black-87 " + iconpopover.AjaxCall} to={{ pathname: history.location.pathname + iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
+                                                <Link className={" popover-text requests black-87 " + iconpopover.AjaxCall} to={{ pathname: history.entries[1].pathname + iconpopover.AjaxCall, state: { ID: col.AjaxID, newStatus: iconpopover.Description, modelsEnum: "Request" } }} >
                                                     <i className={iconpopover.Icon} style={{ color: "" + iconpopover.Color }}></i>
                                                     <label className="m-2 ">{iconpopover.DescriptionDisplayName}</label>
                                                 </Link>

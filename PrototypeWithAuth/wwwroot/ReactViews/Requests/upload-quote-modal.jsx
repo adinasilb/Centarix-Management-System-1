@@ -127,7 +127,7 @@ function UploadQuoteModal(props) {
 
     return (
 
-        <GlobalModal backdrop={props.backdrop} value={state.ID} modalKey={props.modalKey} key={state.ID} size="lg" header="Upload Quote">
+        <GlobalModal backdrop={props.backdrop} value={state.ID} modalKey={props.modalKey} key={state.ID} size="lg" header="Upload Price Quote">
             <FormProvider {...methods} >
             <form action="" data-string="" method="post" encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)} id={props.modalKey}>
                 <DevTool control={control} />
@@ -154,7 +154,7 @@ function UploadQuoteModal(props) {
                                 </div>
                                     <div className="col-md-6">
                                         <div className="form-group ">
-                                            <label className=" control-label m-0 mt-2" style={{ width: "100%" }}>Quote Date</label>
+                                            <label className=" control-label m-0 mt-2" style={{ width: "100%" }}>Expiration Date</label>
                                     <LocalizationProvider dateAdapter={DateAdapter}>
                                         <MobileDatePicker                                            
                                             inputFormat="dd MMM yyyy"
