@@ -440,7 +440,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 decimal amount;
                 string currencyFormat;
-                if (currency.Equals(AppUtility.CurrencyEnum.USD.ToString()))
+                if (currency.Equals(AppUtility.CurrencyEnum.USD))
                 {
                     amount = payments.FirstOrDefault().Sum / r.ExchangeRate;
                     currencyFormat = "en-US";
