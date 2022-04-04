@@ -241,7 +241,7 @@ $(function () {
     $.fn.CheckVendorAndCatalogNumbers = function () {
         //var vendorID = $("#vendorList").val();
         //var catalogNumber = $("#Request_Catalog").val();
-        //alert("vendor id: " + vendorID + " && catalog number: " + catalogNumber);
+
     }
 
     //view documents on modal view
@@ -341,7 +341,6 @@ $(function () {
     //    console.log(dontAllowMultipleFiles)
     //    var $CustomMainObjectID = $("#CustomMainObjectID").val();
     //    console.log("CustomMainObjectID " + $("#CustomMainObjectID").val());
-    //    //alert("before open doc modal");
     //    $.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
     //    return true;
     //});
@@ -602,7 +601,6 @@ $(function () {
                 console.log("result: " + result);
                 if (result) {
                     if (/*( extn == "png" || extn == "jpg" || extn == "jpeg") && */result > '') {
-                        //alert("empty string");
                         console.log("inside the if statement");
                         if (typeof (FileReader) != "undefined") {
                             console.log("file reader does not equal undefined");
@@ -642,7 +640,6 @@ $(function () {
         var imgPath = $("#UserImagePath").val();
         //$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
         $("#user-image").attr("src", "/" + imgPath);
-        //alert("img path: " + imgPath);
         $(".userImage i").hide();
 
         $.fn.CloseModal('user-picture');
@@ -655,7 +652,6 @@ $(function () {
     });
 
     $.fn.InvoiceImageClick = function (buttonID, buttonClass, form) {
-        alert("buttonID");
         var imgPath = $("#" + buttonID)[0].value;
         console.log("imgPath: " + imgPath);
         var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
@@ -1309,7 +1305,6 @@ $(function () {
         var formData = new FormData($("#myForm")[0]);
         //console.log(...formData)
         console.log(dateFrom + "-" + dateTo);
-        //alert("about to go into ajax, url: " + url);
         $.ajax({
             processData: false,
             contentType: false,
@@ -1326,7 +1321,6 @@ $(function () {
                     $(".report-days-off-partial").html(data);
                 }
                 else {
-                    //	alert("else")
                     $(".render-body").html(data);
                 }
                 $(this).prop('disabled', false)
@@ -1346,8 +1340,6 @@ $(function () {
 
     $(".modal").on("click", "#saveOffDayConfirmation", function (e) {
         e.preventDefault();
-        //alert("save sick confirmation");
-        //alert($('#SelectedDate').val())
         $("#FromDate").val($('#SelectedDate').val());
         $("#Month").val($("#months").val());
         //var dd = parseInt(date[2]);
@@ -1435,7 +1427,6 @@ $(function () {
 
     $('.turn-edit-on-off').off("click").on("click", function () {
         //if ($('.modal-open-state').attr("text") == "open") {
-        //	alert("turn edit on off");
         //	$(".modal-open-state").attr("text", "close");
         //	$(".confirm-edit-modal").remove();
         //	return false;
@@ -1660,7 +1651,6 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
         console.log("submit order from _ordertab");
-        //alert("validate form");
         $("#myForm").data("validator").settings.ignore = "";
         var valid = $("#myForm").valid();
         console.log("valid form: " + valid)

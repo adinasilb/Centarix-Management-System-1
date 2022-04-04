@@ -1,5 +1,5 @@
 ﻿$.validator.addMethod("IsTodayOrEarlier", function (value, element) {
-    return Date.parse($("#InvoiceInfoViewModel.Invoice.InvoiceDate").val()) <= new Date();
+    return Date.parse($("#InvoiceInfoViewModel_Invoice_InvoiceDate").val()) <= new Date();
 }, 'Invoice Must Be Today or Earlier');
 
 $('.payModalForm').validate({
@@ -44,7 +44,7 @@ $('.payModalForm').validate({
         },
         "InvoiceInfoViewModel.Invoice.InvoiceDate": {
             required: true,
-            //IsTodayOrEarlier: true
+            IsTodayOrEarlier: true
         },
         "Requests[0].Payments[0].Sum": {
             required: true,
