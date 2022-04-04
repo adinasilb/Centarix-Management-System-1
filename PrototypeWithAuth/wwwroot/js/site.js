@@ -648,8 +648,15 @@ $(function () {
         $.fn.CloseModal('user-picture');
     });
 
+    
+
     $("#InvoiceImage").on("change", function () {
-        var imgPath = $("#InvoiceImage")[0].value;
+        $.fn.InvoiceImageClick("InvoiceImage", "InvoiceImage", "addInvoiceForm");
+    });
+
+    $.fn.InvoiceImageClick = function (buttonID, buttonClass, form) {
+        alert("buttonID");
+        var imgPath = $("#" + buttonID)[0].value;
         console.log("imgPath: " + imgPath);
         var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
         console.log("extn: " + extn);
@@ -677,7 +684,8 @@ $(function () {
         $(".invoice-image-name").text(fileName)
         var guid = $("#Guid").val()
 
-        var targetFile = new FormData($(".addInvoiceForm")[0]).getAll("InvoiceImage").filter(f => f.size > 0)
+        var targetFile = new FormData($("." + form)[0]).getAll(buttonClass).filter(f => f.size > 0)
+        console.log("targetFile")
         console.log(targetFile)
 
         var uploadFileFormData = new FormData();
@@ -687,11 +695,10 @@ $(function () {
             FolderName: 'Invoices',
             Guid: guid
         })
-        $('#InvoiceImage').addClass("contains-file");
+        $('#' + buttonID).addClass("contains-file");
         UploadFile(targetFile[0], uploadFileFormData);
-        
 
-    });
+    };
 
 
     $.fn.validateDateisGreaterThanOrEqualToToday = function (date) {

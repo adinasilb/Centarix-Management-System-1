@@ -28,8 +28,8 @@ namespace PrototypeWithAuth.CRUD
                 parentRequest.IsShippingPaid = true;
 
                 _context.Update(parentRequest);
-                await _context.SaveChangesAsync();
             }
+            await _context.SaveChangesAsync();
         }
     }
 }

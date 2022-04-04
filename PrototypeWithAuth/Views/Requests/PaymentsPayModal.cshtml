@@ -3,6 +3,7 @@
 <script src="~/js/InitializeDatePicker.js"></script>
 <script src="~/js/Validation/PayModalValidation.js"></script>
 <script src="~/js/validate.js"></script>
+<script src="~/js/DocumentModalJS.js"></script>
 
 
 
@@ -20,7 +21,7 @@
                 else
                 {
                     <input type="hidden" asp-for="AccountingEnum" />
-                    var header = "Pay " +Model.Payments.FirstOrDefault().Request.Product.Vendor.VendorEnName.ToLower();
+                    var header = "Pay " + Model.Payments.FirstOrDefault().Request.Product.Vendor.VendorEnName.ToLower();
                     var paymentTypeDnone = Model.Payment.CompanyAccountID == null ? "d-none" : "";
                     var dateDnone = "d-none";
                     var cardNumDnone = "d-none";
@@ -29,6 +30,8 @@
                     var paymentReferenceDisabled = "disabled";
                     var checkNumDnone = "d-none";
                     var checkNumDisabled = "disabled";
+                    var addInvoicePropsDnone = "add-invoice d-none";
+                    var addInvoicePropsDisabled = "disabled";
                     switch (Model.Payment.PaymentTypeID)
                     {
                         case 1:
@@ -48,7 +51,7 @@
                             paymentReferenceDisabled = "";
                             break;
                     }
-                    if(Model.AccountingEnum == AppUtility.SidebarEnum.MissingPaymentDetails)
+                    if (Model.AccountingEnum == AppUtility.SidebarEnum.MissingPaymentDetails)
                     {
                         header = "Update Payment Details";
                     }
@@ -58,6 +61,9 @@
                         <input type="hidden" asp-for="Payments[i].Sum" />
                         <input type="hidden" asp-for="Payments[i].RequestID" />
                     }
+                    <input type="hidden" asp-for="Guid" />
+                    <input type="hidden" asp-for="Payments[0].Request.ProductID" />
+                    <input type="hidden" asp-for="VendorID" value=@Model.Payments[0].Request.Product.VendorID id="VendorID" />
 
                     <div class="modal-body">
                         <div class="container ">
@@ -73,7 +79,7 @@
                                     decimal ShippingTotalShekel = 0;
                                     @for (var s = 0; s < Model.ShippingToPay.Count; s++)
                                     {
-                                        
+
                                         var ShekelShipping = Convert.ToDecimal(Model.ShippingToPay[s].CostShekel);
                                         var DollarShipping = Convert.ToDecimal(Model.ShippingToPay[s].CostDollar);
                                         ShippingTotalDollar += DollarShipping;
@@ -132,44 +138,44 @@
                                     </div>
                                 </div>
                             </div>
-                                <div class="row">
-                                    <div class="col-3 pl-0">
-                                        <div class="form-group">
-                                            <label class="control-label">VAT</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text pr-1">&#x20aa;</span>
-                                                <input value="@String.Format("{0:0.00}",ShekelVAT)" class="form-control-plaintext border-bottom" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3 pl-0">
-                                        <div class="form-group">
-
-                                            <label class="control-label"></label>
-                                            <div class="input-group">
-                                                <span class="input-group-text pr-1">&#36;</span>
-                                                <input value="@String.Format("{0:0.00}",DollarVAT)" class="form-control-plaintext border-bottom" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="form-group">
-                                            <label class=" control-label">Total + Shipping + VAT</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text pr-1">&#x20aa;</span>
-                                                <input value="@String.Format("{0:0.00}", TotalShekel)" class="form-control-plaintext border-bottom total-shekel" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <label class=" control-label"></label>
+                            <div class="row">
+                                <div class="col-3 pl-0">
+                                    <div class="form-group">
+                                        <label class="control-label">VAT</label>
                                         <div class="input-group">
-                                            <span class="input-group-text pr-1">&#36;</span>
-                                            <input value="@String.Format("{0:0.00}", TotalDollar)" class="form-control-plaintext border-bottom total-dollar" disabled />
+                                            <span class="input-group-text pr-1">&#x20aa;</span>
+                                            <input value="@String.Format("{0:0.00}",ShekelVAT)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
                                 </div>
-                                @if(Model.AccountingEnum == AppUtility.SidebarEnum.PayNow) //confirm which sections should show in
+                                <div class="col-3 pl-0">
+                                    <div class="form-group">
+
+                                        <label class="control-label"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pr-1">&#36;</span>
+                                            <input value="@String.Format("{0:0.00}",DollarVAT)" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label class=" control-label">Total + Shipping + VAT</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pr-1">&#x20aa;</span>
+                                            <input value="@String.Format("{0:0.00}", TotalShekel)" class="form-control-plaintext border-bottom total-shekel" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class=" control-label"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text pr-1">&#36;</span>
+                                        <input value="@String.Format("{0:0.00}", TotalDollar)" class="form-control-plaintext border-bottom total-dollar" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.AccountingEnum == AppUtility.SidebarEnum.PayNow) //confirm which sections should show in
                             {
                                 <div class="row">
                                     <div class="col-3 pl-0 ">
@@ -179,14 +185,14 @@
                                         </div>
                                     </div>
                                     <div class="col-3 pl-0">
-                                            <label class=" control-label d-none pay-partial">Pay Now</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text d-none pay-partial pr-1">@Html.Raw(currencySymbol)</span>
-                                                <input asp-for="PartialAmtToPay" class="form-control-plaintext border-bottom d-none pay-partial" disabled />
-                                                <input type="hidden" asp-for="PercentageToPay" value="1" />
-                                                <input type="hidden" asp-for="Payments.FirstOrDefault().Request.Currency" class="payment-currency"/>
-                                            </div>
+                                        <label class=" control-label d-none pay-partial">Pay Now</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text d-none pay-partial pr-1">@Html.Raw(currencySymbol)</span>
+                                            <input asp-for="PartialAmtToPay" class="form-control-plaintext border-bottom d-none pay-partial" disabled />
+                                            <input type="hidden" asp-for="PercentageToPay" value="1" />
+                                            <input type="hidden" asp-for="Payments.FirstOrDefault().Request.Currency" class="payment-currency" />
                                         </div>
+                                    </div>
                                 </div>
                             }
                             <div class="row ">
@@ -217,7 +223,7 @@
                                 <div class="col-3 credit-card @cardNumDnone">
                                     <div class="form-group ">
                                         <label class="control-label credit-card d-none">Card #</label>
-                                        <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist "  name="Payment.CreditCardID" value = "@Model.Payment.CreditCardID" id="Payment_CreditCardID" @cardNumDisabled></select>
+                                        <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " name="Payment.CreditCardID" value="@Model.Payment.CreditCardID" id="Payment_CreditCardID" @cardNumDisabled></select>
                                     </div>
                                 </div>
                                 <div class="col-3 pl-0">
@@ -231,17 +237,60 @@
                                 <div class="col-3 wire @paymentReferenceDnone">
                                     <div class="form-group ">
                                         <label class="control-label">Payment Reference</label>
-                                        <input  type="text"  name="Payment.Reference" class="form-control-plaintext border-bottom reference-1" value="@Model.Payment.Reference" id="Payment_Reference" @paymentReferenceDisabled/>
+                                        <input type="text" name="Payment.Reference" class="form-control-plaintext border-bottom reference-1" value="@Model.Payment.Reference" id="Payment_Reference" @paymentReferenceDisabled />
                                     </div>
                                 </div>
                                 <div class="col-3 bank-check @checkNumDnone">
                                     <div class="form-group ">
                                         <label class="control-label">Check Number</label>
-                                        <input class="form-control-plaintext border-bottom"  type="text"  name="Payment.CheckNumber" value="@Model.Payment.CheckNumber" id="Payment_CheckNumber" @checkNumDisabled/>
+                                        <input class="form-control-plaintext border-bottom" type="text" name="Payment.CheckNumber" value="@Model.Payment.CheckNumber" id="Payment_CheckNumber" @checkNumDisabled />
                                     </div>
                                 </div>
                             </div>
-
+                            @if (!Model.Payments[0].HasInvoice)
+                            {
+                                <div class="row pt-5">
+                                    <div class="col-4">
+                                        <div class="input-group">
+                                            <input type="checkbox" asp-for="AddInvoice" id="AddInvoice" class="form-check-input filled-in " />
+                                            <label class="form-check-label" asp-for="AddInvoice" id="AddInvoice">Add Invoice</label>
+                                        </div>
+                                        <input type="checkbox" class="d-none" asp-for="InvoiceInfoViewModel.CurrentPayment" />
+                                    </div>
+                                    <div class="col-4 @addInvoicePropsDnone">
+                                        <div class="custom-control custom-radio mr-4 ">
+                                            <input class="custom-control-input invoiceSavingType" id="currentPayment" name="invoiceSavingType" type="radio" value="false" disabled />
+                                            <label class="radio-button custom-control-label pt-1 pl-2" for="Received">Invoice for current payment</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 @addInvoicePropsDnone">
+                                        <div class="custom-control custom-radio mr-4 ml-4">
+                                            <input class="custom-control-input invoiceSavingType " checked id="entireOrder" name="invoiceSavingType" type="radio" value="true" />
+                                            <label class="radio-button custom-control-label pt-1 pl-2 " for="entireOrder">Invoice for entire order</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row @addInvoicePropsDnone">
+                                    <div class="col-5">
+                                        <div class="upload-btn-wrapper between-button-margin">
+                                            <button type="button" class="custom-button custom-button-font section-bg-color" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()">Select Invoice</button>
+                                            <input type="file" asp-for="InvoiceInfoViewModel.InvoiceImage" class="/*file-select*/ h-100" />
+                                            <span class="invoice-image-name document-name pl-2" id="invoice-image"></span>
+                                            <span asp-validation-for="InvoiceInfoViewModel.InvoiceImage" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="control-label">Invoice Number </label>
+                                        <input asp-for="InvoiceInfoViewModel.Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="InvoiceInfoViewModel.Invoice.InvoiceNumber" class="text-danger-centarix" id="invoice-number-validation"></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="control-label">Invoice Date </label>
+                                        <input asp-for="InvoiceInfoViewModel.Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
+                                        <span asp-validation-for="InvoiceInfoViewModel.Invoice.InvoiceDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                            }
                             <div class="row">
                                 <div class="modal-footer-mt mx-auto">
                                     @*<button class="btn inv-payments-button float-right">Paid</button>*@
@@ -298,8 +347,21 @@
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,input:visible, textarea:visible)';
     })
+    $('.payModalForm').on('click', "#AddInvoice", function (e) {
+        console.log("pay partial")
+        if ($("#AddInvoice:checkbox").is(":checked")) {
+            console.log("add invoice is checked");
+            $(".add-invoice").removeClass("d-none");
+            $('.addInvoicePropsDisabled').prop('disabled', false);
+        }
+        else {
+            console.log("add invoice is not checked");
+            $(".add-invoice").addClass("d-none");
+            $('.addInvoicePropsDisabled').prop('disabled', true);
+        }
 
-        $('.payModalForm').on('click', "#partialPayment", function (e) {
+    });
+    $('.payModalForm').on('click', "#partialPayment", function (e) {
         console.log("pay partial")
         if ($("#partialPayment:checkbox").is(":checked")) {
             $(".pay-partial").addClass("d-none")
@@ -313,7 +375,7 @@
         }
 
     });
-    $('.payModalForm').on('change', '#PartialAmtToPay', function(e) {
+    $('.payModalForm').on('change', '#PartialAmtToPay', function (e) {
         var total = $('.payment-currency').val() == 'NIS' ? '.total-shekel' : '.total-dollar';
         console.log(total);
         console.log($('.payment-currency').val());
@@ -323,6 +385,11 @@
         var percentage = $('#PartialAmtToPay').val() / $(total).attr('value')
         console.log(percentage)
         $('#PercentageToPay').val(percentage)
+    });
+
+    $("#InvoiceInfoViewModel_InvoiceImage").on("change", function () {
+        alert("InvoiceInfoViewModel_InvoiceImage is clicked");
+        $.fn.InvoiceImageClick("InvoiceInfoViewModel_InvoiceImage", "InvoiceInfoViewModel.InvoiceImage", "payModalForm");
     });
 
 </script>

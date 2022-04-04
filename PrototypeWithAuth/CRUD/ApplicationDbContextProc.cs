@@ -68,6 +68,7 @@ namespace PrototypeWithAuth.CRUD
         protected TemporaryLocationInstancesProc _temporaryLocationInstancesProc;
         protected TimePeriodsProc _timePeriodsProc;
         protected CustomDataTypesProc _customDataTypesProc;
+        protected InvoicesProc _invoicesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -122,6 +123,7 @@ namespace PrototypeWithAuth.CRUD
             _temporaryLocationInstancesProc = new TemporaryLocationInstancesProc(_context, true);
             _customDataTypesProc = new CustomDataTypesProc(_context, true);
             _timePeriodsProc = new TimePeriodsProc(_context, true);
+            _invoicesProc = new InvoicesProc(_context, true);
         }
 
         //protected void InstantiateProcs(List<String> Types)
