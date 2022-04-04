@@ -4076,7 +4076,9 @@ namespace PrototypeWithAuth.Controllers
         {
             foreach (var request in addInvoiceViewModel.Requests)
             {
-                if (UpdateRequest) { await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request); }
+                if (UpdateRequest) { 
+                    await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request); 
+                }
                 string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString(),
                     addInvoiceViewModel.Guid.ToString(), AppUtility.FolderNamesEnum.Invoices.ToString());
                 if (!Directory.Exists(uploadFolder) || Directory.GetFiles(uploadFolder).Length == 0)

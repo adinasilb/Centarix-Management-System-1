@@ -111,7 +111,6 @@ namespace PrototypeWithAuth.CRUD
                 payment.CreditCardID = paymentsPayModalViewModel.Payment.CreditCardID;
                 payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
                 payment.IsPaid = true;
-                var changeTracker2 = _context.ChangeTracker.Entries();
                 if (invoiceID != null) {
                     payment.InvoiceID = invoiceID;
                     payment.HasInvoice = true;
