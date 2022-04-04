@@ -217,7 +217,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
                             wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false);
-                            wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 5/*installments*/));
+                            wheres.Add(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8) || (r.PaymentStatusID == 5/*installments*/));
                             iconList.Add(addInvoiceIcon);
                             buttonText = "Add To All";
                             break;
@@ -248,7 +248,6 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.Installments:
                         case AppUtility.SidebarEnum.StandingOrders:
                             //payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
-                            checkboxString = "";
                             iconList.Add(payNowIcon);
 
                             orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
@@ -3655,7 +3654,7 @@ namespace PrototypeWithAuth.Controllers
                     wheres.Add(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
                     break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
-                    wheres.Add(r => r.PaymentStatusID == 8 && r.Payments.FirstOrDefault().HasInvoice);
+                    wheres.Add(r => r.PaymentStatusID == 8);
                     break;
             }
 
@@ -3977,7 +3976,7 @@ namespace PrototypeWithAuth.Controllers
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubSubUnitType });
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.SubUnitType });
             Includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments });
-            Wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 5)));
+            Wheres.Add(r => r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8) || (r.PaymentStatusID == 5)));
             Wheres.Add(r => r.RequestStatusID != 7);
             if (vendorid != null)
             {
@@ -3987,7 +3986,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Wheres.Add(r => r.RequestID == requestid);
             }
-            else if (requestIds != null)
+            else if (requestIds != null && requestIds.Length>0)
             {
                 Wheres.Add(r => requestIds.Contains(r.RequestID));
 
@@ -4064,7 +4063,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    addInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    addInvoiceViewModel.Error = new StringWithBool() { String= AppUtility.GetExceptionMessage(ex), Bool = true };
                     return PartialView("AddInvoiceModal", addInvoiceViewModel);
                 }
             }

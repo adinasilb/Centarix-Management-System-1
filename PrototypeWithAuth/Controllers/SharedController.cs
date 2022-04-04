@@ -512,12 +512,7 @@ namespace PrototypeWithAuth.Controllers
             bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false, int productSubCategoryID = 0)
         {
 
-            var categoryType = 1;
-            if (SectionType == AppUtility.MenuItems.Operations)
-            {
-                categoryType = 2;
-            }
-
+            
             string ModalViewType = "";
             if (id == null)
             {
@@ -563,6 +558,8 @@ namespace PrototypeWithAuth.Controllers
                 },
                 new ComplexIncludes<Request, ModelBase> { Include = r => r.ApplicationUserReceiver }
             });
+
+            var categoryType = request.Product.ProductSubcategory.ParentCategory.CategoryTypeID;
 
 
             if (request.RequestStatusID == 7)
@@ -1008,11 +1005,11 @@ namespace PrototypeWithAuth.Controllers
                 //we need both categories
                 wheres.Add(r => r.RequestStatusID == 3 || r.RequestStatusID == 2);
                 //wheres.Add(r => !r.IsClarify && r.Payments.Where(p => p.IsPaid && p.HasInvoice).Count() == r.Payments.Count());
-                wheres.Add(r => Years.Contains(r.ParentRequest.OrderDate.Year));
-                if (Months != null && Months.Count() > 0)
-                {
-                    wheres.Add(r => Months.Contains(r.ParentRequest.OrderDate.Month));
-                }
+                //wheres.Add(r => Years.Contains(r.ParentRequest.OrderDate.Year));
+                //if (Months != null && Months.Count() > 0)
+                //{
+                //    wheres.Add(r => Months.Contains(r.ParentRequest.OrderDate.Month));
+                //}
                 includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((Payment)p).Invoice } });
                 includes.Add(new ComplexIncludes<Request, ModelBase> { Include = r => r.Product.ProductSubcategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = p => ((ProductSubcategory)p).ParentCategory, ThenInclude = new ComplexIncludes<ModelBase, ModelBase> { Include = pc => ((ParentCategory)pc).CategoryType } } });
             }
@@ -1526,7 +1523,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.AccountingGeneral:
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Skip(20*(requestIndexObject.PageNumber-1)).Take(20).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.AccountingGeneral,
                              r, r.OrderMethod, r.ApplicationUserCreator, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                          r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToListAsync();
+                                          r.Product.UnitType, r.Product.SubUnitType, r.Product.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, "", r.Payments)).ToListAsync();
                     //.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 20);
 
                     break;
@@ -1801,13 +1798,24 @@ namespace PrototypeWithAuth.Controllers
             var paymenttypes = await _paymentTypesProc.Read().ToListAsync();
             var companyaccounts = await _companyAccountsProc.Read().ToListAsync();
             var timeperiods = await _timePeriodProc.Read().ToListAsync();
+            if (categoryTypeId == 2)
+            {
+                requestItemViewModel.ApplicationUsers = _employeesProc.Read()
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id,
+                                      Selected = u.Id == _userManager.GetUserId(User)
+                                  }
+                              ).ToList();
+            }
 
             requestItemViewModel.ParentCategories = parentcategories;
             requestItemViewModel.ProductSubcategories = productsubcategories;
             requestItemViewModel.Vendors = vendors;
             requestItemViewModel.Projects = projects;
             requestItemViewModel.SubProjects = subprojects;
-
             requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
             requestItemViewModel.UnitTypes = unittypes;
             requestItemViewModel.CommentTypes = _commentType.Read().AsEnumerable();

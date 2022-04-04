@@ -8,6 +8,7 @@ import * as Actions from '../ReduxRelatedUtils/actions.jsx';
 import { batch } from 'react-redux'
 
 function _IndexTableData(props) {
+    console.log("index table data")
     var viewModel = props.viewModel;
     const dispatch = useDispatch();
     const didMount = useRef(false);

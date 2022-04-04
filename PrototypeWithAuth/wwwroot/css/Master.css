@@ -490,7 +490,6 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--order-inv-color) !important;
 }
 
-.custom-radius
 
 .Operations  .section-outline-color{
     border: .125rem solid var(--operations-color) !important;
@@ -793,7 +792,7 @@ table td, table td .btn, .text, table th {
 }
 
 .modal-padding {
-    margin: 4.625rem;
+    padding: 4.625rem;
 }
 
 .small-modal-padding {

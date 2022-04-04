@@ -470,8 +470,32 @@ namespace PrototypeWithAuth.ViewModels
                 {
                     statusColumn.Add(new StringWithBool { String = "ordered" });
                 }
+                var paidString = "";
+                var paid = false;
+                foreach (var p in r.Payments)
+                {
+                    if (p.IsPaid)
+                    {
+                        paid = true;
+                    }
+                    else if (paid)
+                    {
+                        paidString = "Partial Payment";
+                        break;
+                    }
+                }
+                if (!paid)
+                {
+                    paidString = "Pending Payment";
+                }
+                else if(paidString == "")
+                {
+                    paidString = "Paid";
+                }
 
-                if(r.Payments.Where(p=> p.HasInvoice == true).Count() >= 1)
+                statusColumn.Add(new StringWithBool {String = paidString });
+
+                if (r.Payments.Where(p=> p.HasInvoice == true).Count() >= 1)
                 {
                     statusColumn.Add(new StringWithBool { String = "invoiced" });
                 }
@@ -705,7 +729,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, ValueWithError = GetProductName(), AjaxLink = "load-product-details-summary", AjaxID = r.RequestID, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, ValueWithError = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product, requestIndexObject.SourceSelected), FilterEnum = AppUtility.FilterEnum.Category, ShowTooltip = true };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn(false) };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 11, ValueWithError = GetStatusColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Invoice Details", Width = 9, ValueWithError = GetInvoiceColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Units", Width = 8, ValueWithError = AppUtility.GetAmountColumn(r) };
@@ -843,7 +867,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Units", Width = 8, ValueWithError = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn(false) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 9, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 11, ValueWithError = GetStatusColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
             yield return new RequestIndexPartialColumnViewModel()
             {
@@ -863,7 +887,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Units", Width = 8, ValueWithError = AppUtility.GetAmountColumn(r) };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn()};
             yield return new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 9, ValueWithError = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 11, ValueWithError = GetStatusColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Invoice Details", Width = 9, ValueWithError = GetInvoiceColumn() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
             yield return new RequestIndexPartialColumnViewModel()
@@ -878,8 +902,8 @@ namespace PrototypeWithAuth.ViewModels
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingPaymentsInstallmentsColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = payments.FirstOrDefault().PaymentID };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = GetImageURL() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 3, ValueWithError = new List<StringWithBool>() { new StringWithBool { String = checkboxString, Bool = false } }, AjaxID = payments.FirstOrDefault().PaymentID };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 6, Image = GetImageURL() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "Item Name",
@@ -892,7 +916,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width = 10, ValueWithError = GetVendorName() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Details", Width = 10, ValueWithError = GetOrderDetails() };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Order Type", Width = 10, ValueWithError = GetOrderTypeColumn() };
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 9, ValueWithError = GetStatusColumn() };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Status", Width = 11, ValueWithError = GetStatusColumn() };
             yield return new RequestIndexPartialColumnViewModel()
             {
                 Title = "Price",

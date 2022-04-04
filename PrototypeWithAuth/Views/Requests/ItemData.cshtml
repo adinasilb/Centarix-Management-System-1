@@ -83,7 +83,7 @@
                 @{await Html.RenderPartialAsync("~/Views/Requests/_PriceTab.cshtml", Model); }
             </div>
         }
-        else if(Model.SectionType == AppUtility.MenuItems.Operations)
+        else if(Model.SectionType == AppUtility.MenuItems.Operations || requestCategoryType == 2)
         {
             <div id="price" class="tab-pane fade @showPrice" value="3">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_PriceTabOperations.cshtml", Model); }

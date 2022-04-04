@@ -20,9 +20,15 @@ export default function GlobalModal(props) {
         <MDBContainer className="modal-open">
             <MDBModal staticBackdrop backdrop={props.backdrop} tabIndex="-1" size={props.size} id="myModal" show={true} >
                 <MDBModalDialog size={props.size} centered>
-                    <MDBModalContent>
-                        <MDBModalHeader className="border-0" ><MDBModalTitle className="heading-1">{props.header}</MDBModalTitle>  <MDBBtn className=' modal-close-padding close modal-close-style btn-link no-box-shadow' color="transparent" onClick={onClick}>   <span aria-hidden="true">&times;</span></MDBBtn> </MDBModalHeader>
-                <MDBModalBody>
+                    <MDBModalContent className="modal-padding">
+                        <MDBModalHeader className="border-0" ><MDBModalTitle className="heading-1">{props.header}</MDBModalTitle><MDBBtn className=' modal-close-padding close modal-close-style btn-link no-box-shadow' color="transparent" onClick={onClick}>   <span aria-hidden="true">&times;</span></MDBBtn> </MDBModalHeader>
+                        <hr
+                            style={{
+                                color: "black",
+                                height: "5px"
+                            }}
+                        />
+                        <MDBModalBody>
                     {props.children}
                 </MDBModalBody>
                 {!props.hideModalFooter?
