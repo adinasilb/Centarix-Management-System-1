@@ -30,6 +30,7 @@ namespace PrototypeWithAuth.CRUD
                 throw new Exception(ElixirStrings.ServerExistingInvoiceNumberVendorErrorMessage);
             }
             _context.Entry(addInvoiceViewModel.Invoice).State = EntityState.Added;
+            //_context.Entry(addInvoiceViewModel.Invoice.Requests).State = EntityState.Detached;
             //_context.Update(addInvoiceViewModel.Invoice);
             await _context.SaveChangesAsync();
             return addInvoiceViewModel.Invoice.InvoiceID;

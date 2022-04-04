@@ -27,6 +27,10 @@ $('.payModalForm').validate({
             required: true,
             number: true
         },
+        "InvoiceInfoViewModel.InvoiceImage": {
+            fileRequired: true,
+            /*extension: "jpg|jpeg|png|pdf|ppt|pptx" */
+        },
         "InvoiceInfoViewModel.Invoice.InvoiceNumber": {
             required: true,
             remote: {
