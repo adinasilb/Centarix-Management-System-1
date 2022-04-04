@@ -80,7 +80,6 @@ namespace PrototypeWithAuth.CRUD
             //var paymentsList =Read(new List<Expression<Func<Payment, bool>>> { p => p.IsPaid == false }).AsEnumerable();
             foreach (Payment vmPayment in paymentsPayModalViewModel.Payments)
             {
-                var changeTracker = _context.ChangeTracker.Entries();
                 //var requestToUpdate = await _requestsProc.ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID });
                 Payment payment = await _paymentsProc.ReadOneAsync(new List<Expression<Func<Payment, bool>>> { p => p.PaymentID == vmPayment.PaymentID });
                 //if (requestToUpdate.PaymentStatusID == 7)
