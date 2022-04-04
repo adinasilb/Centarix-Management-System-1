@@ -23,11 +23,13 @@ function _IndexTableDataByVendor(props) {
         if (currency == "USD") {
             currencyString="$"
             sum = requests.map(r => r.TotalCost / r.ExchangeRate).reduce(function (total, num) {
-                return "$"+(parseFloat(total) + parseFloat(num))?.toFixed(2);
+                console.log("total " + total)
+                console.log("num " + num)
+                return ""+(parseFloat(total) + parseFloat(num))?.toFixed(2);
             });
         }
 
-        return (<span className="text font-weight-bold">{"Total: " + sum}</span>)
+        return (<span className="text font-weight-bold">{"Total: "+currencyString + sum}</span>)
     }
 
 

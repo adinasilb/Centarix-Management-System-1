@@ -935,6 +935,7 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = payments.FirstOrDefault().PaymentID
                 //AjaxID = r.RequestID
             };
+            TotalCost = Math.Round(r.Payments.FirstOrDefault().Sum, 2);
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLabQuotesColumns()
         {
