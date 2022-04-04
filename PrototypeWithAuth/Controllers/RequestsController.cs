@@ -4021,7 +4021,7 @@ namespace PrototypeWithAuth.Controllers
                         return PartialView("_ErrorMessage", addInvoiceViewModel.ErrorMessage);
                     }
 
-                    addInvoiceViewModel = await UpdateRequestsWithInvoiceInfo(addInvoiceViewModel);
+                    addInvoiceViewModel = await UpdateRequestsWithInvoiceInfo(addInvoiceViewModel, true);
                     if (addInvoiceViewModel.ErrorMessage != null)
                     {
                         Response.StatusCode = 500;
@@ -4058,7 +4058,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public async Task<AddInvoiceViewModel> UpdateRequestsWithInvoiceInfo(AddInvoiceViewModel addInvoiceViewModel)
+        public async Task<AddInvoiceViewModel> UpdateRequestsWithInvoiceInfo(AddInvoiceViewModel addInvoiceViewModel, bool UpdateRequest = false)
         {
             foreach (var request in addInvoiceViewModel.Requests)
             {
@@ -4068,6 +4068,9 @@ namespace PrototypeWithAuth.Controllers
                     request.Shipping = 0; //all shipping is saved to first request
                 }
                 await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request);
+                if (UpdateRequest) { 
+                    await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request); 
+                }
                 string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString(),
                     addInvoiceViewModel.Guid.ToString(), AppUtility.FolderNamesEnum.Invoices.ToString());
                 if (!Directory.Exists(uploadFolder) || Directory.GetFiles(uploadFolder).Length == 0)

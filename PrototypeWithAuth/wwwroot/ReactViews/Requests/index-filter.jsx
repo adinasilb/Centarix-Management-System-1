@@ -49,10 +49,11 @@ export default function IndexFilter(props) {
                             <div >
 
                                 <input type="text" placeholder="Search" onChange={updateSearchName} onKeyUp={globalUpdateSearchName} value={state.searchByName ?? ""} className="text filter-and-search  custom-button  section-outline-color mx-3 search-by-name" />
-                                <button type="button" aria-describedby="filterPopover"
+                                {props.showFilter && <button type="button" aria-describedby="filterPopover"
                                     className={"text custom-button " + buttonClass} value="Filter"   {...bindTrigger(popupState)}>
                                     Filter
                                 </button>
+                                }
                                 <Popover
                                     id="filterPopover"
                                     {...bindPopover(popupState)}

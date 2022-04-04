@@ -440,7 +440,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 decimal amount;
                 string currencyFormat;
-                if (currency.Equals(AppUtility.CurrencyEnum.USD.ToString()))
+                if (currency.Equals(AppUtility.CurrencyEnum.USD))
                 {
                     amount = payments.FirstOrDefault().Sum / r.ExchangeRate;
                     currencyFormat = "en-US";
@@ -935,6 +935,7 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = payments.FirstOrDefault().PaymentID
                 //AjaxID = r.RequestID
             };
+            TotalCost = Math.Round(r.Payments.FirstOrDefault().Sum, 2);
         }
         private IEnumerable<RequestIndexPartialColumnViewModel> GetLabQuotesColumns()
         {
