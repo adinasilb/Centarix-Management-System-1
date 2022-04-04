@@ -248,7 +248,6 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.Installments:
                         case AppUtility.SidebarEnum.StandingOrders:
                             //payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
-                            checkboxString = "";
                             iconList.Add(payNowIcon);
 
                             orderbyForPayments = r => r.Request.ParentRequest.OrderDate;
