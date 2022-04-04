@@ -113,7 +113,10 @@ namespace PrototypeWithAuth.CRUD
                 payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
                 payment.IsPaid = true;
                 var changeTracker2 = _context.ChangeTracker.Entries();
-                if (invoiceID != null) { payment.InvoiceID = invoiceID; }
+                if (invoiceID != null) {
+                    payment.InvoiceID = invoiceID;
+                    payment.HasInvoice = true;
+                }
                 if (paymentsPayModalViewModel.PartialPayment == true)
                 {
                     var fullCost = payment.Sum;
@@ -130,7 +133,6 @@ namespace PrototypeWithAuth.CRUD
                     //_context.Add(newPayment);
                     await _requestsProc.UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID, 2);
                 }
-                var changeTracker3 = _context.ChangeTracker.Entries();
                 _context.Update(payment);
             }
 
