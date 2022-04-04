@@ -159,10 +159,20 @@ namespace PrototypeWithAuth.CRUD
         public async Task UpdateRequestInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
         {
             var RequestToSave = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
-            var newCost = request.Cost * addInvoiceViewModel.Invoice.InvoiceDiscount / 100;
+            decimal newCost = (decimal)request.Cost;
             RequestToSave.Cost = newCost;
+            var amtOfPaymentsLeft = RequestToSave.Payments.Where(p => !p.IsPaid).Count();
+            var newPaymentSum = newCost / amtOfPaymentsLeft;
             foreach (var payment in RequestToSave.Payments)
             {
+                if(!payment.IsPaid)
+                {
+                    payment.Sum = newPaymentSum;
+                    if(newPaymentSum < 0)
+                    {
+                        throw new Exception(ElixirStrings.ServerNegativePriceErrorMessage);
+                    }
+                }
                 payment.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
                 payment.HasInvoice = true;
             }

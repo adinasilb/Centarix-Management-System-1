@@ -4007,7 +4007,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    addInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    addInvoiceViewModel.Error = new StringWithBool() { String= AppUtility.GetExceptionMessage(ex), Bool = true };
                     return PartialView("AddInvoiceModal", addInvoiceViewModel);
                 }
             }
