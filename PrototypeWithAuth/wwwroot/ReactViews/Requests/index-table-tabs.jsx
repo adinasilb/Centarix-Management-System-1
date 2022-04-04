@@ -3,6 +3,7 @@ import { useDispatch, connect } from 'react-redux';
 import { ajaxPartialIndexTable } from '../Utility/root-function.jsx'
 import IndexFilter from './index-filter.jsx'
 import * as Actions from '../ReduxRelatedUtils/actions.jsx';
+import { MenuItems } from '../Constants/AppUtility.jsx'
 
 
 function _IndexTableTabs(props) {
@@ -21,7 +22,7 @@ function _IndexTableTabs(props) {
                 }
                     {props.navigationInfo.sideBarType != "Search " ?
                         <li className="list-inline-item m-0">
-                            <IndexFilter key="IndexFilter" viewModel={props.viewModel.InventoryFilterViewModel} />
+                            <IndexFilter key="IndexFilter" showFilter={props.navigationInfo.sectionType != MenuItems.Accounting} viewModel={props.viewModel.InventoryFilterViewModel} />
                         </li>
                         : ""}
                 </ul>
