@@ -36,17 +36,19 @@
         <span class=" large-text text-danger-centarix font-weight-bold" id="price-warning"></span>
     </div>
 </div>
-
-<div class="row d-flex align-content-center">
-    <button class="col-6 custom-button custom-button-font section-bg-color order-type" id="single" style="border-radius: 1.438rem 0rem 0rem 1.438rem; font-size: 1rem; height: 2.2rem">
-        <i class="icon-monetization_on-24px p-1" style="font-size: 1.2rem; vertical-align:middle"></i>
-        <span class="">Single Order</span>
-    </button>
-    <button class="col-6 custom-button section-outline-color order-type" id="recurring" style="border-radius: 0rem 1.438rem 1.438rem 0rem; font-size: 1rem; height: 2.2rem">
-        <i class="icon-monetization_on-24px" style="font-size: 1.2rem; vertical-align:middle"></i>
-        <span class="">Recurring Order</span>
-    </button>
-</div>
+@if (modalType != AppUtility.RequestModalType.Summary)
+{
+    <div class="row d-flex align-content-center">
+        <button class="col-6 custom-button custom-button-font section-bg-color order-type" id="single" style="border-radius: 1.438rem 0rem 0rem 1.438rem; font-size: 1rem; height: 2.2rem">
+            <i class="icon-monetization_on-24px p-1" style="font-size: 1.2rem; vertical-align:middle"></i>
+            <span class="">Single Order</span>
+        </button>
+        <button class="col-6 custom-button section-outline-color order-type" id="recurring" style="border-radius: 0rem 1.438rem 1.438rem 0rem; font-size: 1rem; height: 2.2rem">
+            <i class="icon-monetization_on-24px" style="font-size: 1.2rem; vertical-align:middle"></i>
+            <span class="">Recurring Order</span>
+        </button>
+    </div>
+}
 <div>
     <div class="col-md-4">
         <div class="row @hideNoQuote">

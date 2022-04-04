@@ -48,7 +48,8 @@
                 new SelectList(
                 Model.ParentCategories,
                 "ID",
-                "Description"
+                "Description",
+                Model.Requests[0].Product.ProductSubcategory.ParentCategoryID
                 ), "Select Category",
                 new
                     {
@@ -69,7 +70,8 @@
                     new SelectList(
                     Model.ProductSubcategories,
                     "ID",
-                    "Description"
+                    "Description",
+                Model.Requests[0].Product.ProductSubcategoryID
                     ), "Select Sub Category",
                     new
                          {
@@ -179,7 +181,7 @@
                     <label class="radio-button custom-control-label pt-1 pl-2 received-radio " for="ExpectedSupply">Expected Supply</label>
                 </div>
             }
-            @if (Model.Requests[0].ApplicationUserReceiver == null)
+            @if (modalType == AppUtility.RequestModalType.Create || Model.Requests[0].ExpectedSupplyDays!= 0)
             {
                 <div class="col-md-3 @hiddenSummaryClass expected-supply-info">
                     <label asp-for="Requests[0].ExpectedSupplyDays" class="control-label"></label>
@@ -209,7 +211,7 @@
             }
             @if (Model.Requests[0].ApplicationUserReceiver != null)
             {
-        <div class="col-md-3 received-info d-none ">
+        <div class="col-md-3 received-info ">
             <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
             @if (modalType == AppUtility.RequestModalType.Create)
             {
@@ -220,7 +222,7 @@
                 <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext datepicker border-bottom" disabled asp-format="@AppUtility.AspDateFormatString"  type="text" />
             }
         </div>
-        <div class="col-4 received-info d-none">
+        <div class="col-4 received-info">
             <label class="control-label">Received By</label>
             @Html.DropDownListFor(vm => vm.Requests[0].ApplicationUserReceiverID,
                             Model.ApplicationUsers,
