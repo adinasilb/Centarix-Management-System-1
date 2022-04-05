@@ -41,8 +41,6 @@ namespace PrototypeWithAuth.Models
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
         public double Taxes { get; set; }
         public double Credit { get; set; }
-        public double Shipping { get; set; }
-        public bool IsShippingPaid { get; set; }
         public string QuartzyOrderNumber {get; set;}
 
         public string? NoteToSupplier { get; set; }

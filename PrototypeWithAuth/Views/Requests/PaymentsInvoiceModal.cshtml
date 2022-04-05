@@ -42,8 +42,8 @@
                                 var ShippingTotalDollar = TotalDollar;
                                 foreach (var shipping in Model.ShippingToPay)
                                 {
-                                    ShippingTotalDollar += shipping.CostDollar;
-                                    ShippingTotalShekel += shipping.CostShekel;
+                                    ShippingTotalDollar += (double)shipping.CostDollar;
+                                    ShippingTotalShekel += (double)shipping.CostShekel;
                                 }
                             }
                         </div>

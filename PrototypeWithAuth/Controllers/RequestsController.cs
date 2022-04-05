@@ -925,26 +925,14 @@ namespace PrototypeWithAuth.Controllers
 
                 termsViewModel.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                 termsViewModel.ParentRequest.OrderDate = DateTime.Now;
-                bool hasShippingOnPayment;
-                if (termsViewModel.ParentRequest.Shipping == 0)
-                {
-                    termsViewModel.ParentRequest.IsShippingPaid = true;
-                    hasShippingOnPayment = true;
-                }
-                else
-                {
-                    termsViewModel.ParentRequest.IsShippingPaid = false;
-                    hasShippingOnPayment = false;
-                }
                 using (var transaction = _applicationDbContextTransaction.Transaction)
                 {
                     try
                     {
-
+                        int counter = 0;
                         foreach (var tempRequest in tempRequestListViewModel.TempRequestViewModels)
                         {
 
-                            int counter = 0;
                             //throw new Exception();
                             tempRequest.Request.PaymentStatusID = termsViewModel.SelectedTerm;
                             tempRequest.Request.Installments = (uint)termsViewModel.Installments != 0 ? (uint)termsViewModel.Installments : 1;
@@ -1005,7 +993,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             for (int i = 0; i < tempRequest.Request.Installments; i++)
                             {
-                                Payment payment = UpdatePaymentFields(termsViewModel, ref hasShippingOnPayment, tempRequest, i);
+                                Payment payment = UpdatePaymentFields(termsViewModel, tempRequest, i);
                                 if (SaveUsingTempRequest)
                                 {
                                     tempRequest.Payments.Add(payment);
@@ -1046,14 +1034,12 @@ namespace PrototypeWithAuth.Controllers
             return termsViewModel;
         }
 
-        private static Payment UpdatePaymentFields(TermsViewModel termsViewModel, ref bool hasShippingOnPayment, TempRequestViewModel tempRequest, int i)
+        private static Payment UpdatePaymentFields(TermsViewModel termsViewModel, TempRequestViewModel tempRequest, int i)
         {
             var payment = new Payment()
             {
-                InstallmentNumber = i + 1,
-                ShippingPaidHere = hasShippingOnPayment ? false : true
+                InstallmentNumber = i + 1
             };
-            hasShippingOnPayment = true;
             if (tempRequest.Request.PaymentStatusID == 5)
             {
                 payment.PaymentDate = termsViewModel.InstallmentDate.AddMonths(i);
@@ -3788,7 +3774,7 @@ namespace PrototypeWithAuth.Controllers
             List<CheckboxViewModel> shippings = new List<CheckboxViewModel>();
             foreach (var p in payments)
             {
-                if (p.ShippingPaidHere && !p.Request.ParentRequest.IsShippingPaid && p.Request.ParentRequest.Shipping > 0)
+                if (p.Request.Shipping > 0)
                 {
                     var r = p.Request;
                     shippings.Add(new CheckboxViewModel()
@@ -3796,8 +3782,8 @@ namespace PrototypeWithAuth.Controllers
                         ID = Convert.ToInt32(r.ParentRequestID),
                         Name = r.Product.ProductName,
                         Value = false,
-                        CostDollar = r.Currency == "USD" ? r.ParentRequest.Shipping : r.ParentRequest.Shipping / Convert.ToDouble(r.ExchangeRate),
-                        CostShekel = r.Currency == "NIS" ? r.ParentRequest.Shipping : r.ParentRequest.Shipping * Convert.ToDouble(r.ExchangeRate),
+                        CostDollar = r.Currency == "USD" ? r.Shipping : r.Shipping / r.ExchangeRate,
+                        CostShekel = r.Currency == "NIS" ? r.Shipping : r.Shipping * r.ExchangeRate,
                         Currency = r.Currency
                     });
                 }
@@ -4076,6 +4062,12 @@ namespace PrototypeWithAuth.Controllers
         {
             foreach (var request in addInvoiceViewModel.Requests)
             {
+                int counter = 1;
+                if(counter > 1)
+                {
+                    request.Shipping = 0; //all shipping is saved to first request
+                }
+                await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request);
                 if (UpdateRequest) { 
                     await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request); 
                 }
@@ -4087,6 +4079,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
+                counter++;
             }
             return addInvoiceViewModel;
         }

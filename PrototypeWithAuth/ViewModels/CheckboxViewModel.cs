@@ -10,8 +10,8 @@ namespace PrototypeWithAuth.ViewModels
         public string Name { get; set; }
         public int ID { get; set; }
         public bool Value { get; set; }
-        public double CostShekel { get; set; }
-        public double CostDollar { get; set; }
+        public decimal CostShekel { get; set; }
+        public decimal CostDollar { get; set; }
         public string Currency { get; set; }
         //public bool Required { get; set; }
     }

@@ -38,7 +38,7 @@ $('.addInvoiceForm').validate({
 			required: true,
 			min: 0
 		},
-		"Shipping": {
+		"Requests[0].Shipping": {
 			number: true,
 			min: 0
 		},

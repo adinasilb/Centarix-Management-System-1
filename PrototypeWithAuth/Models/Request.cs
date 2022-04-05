@@ -194,5 +194,6 @@ namespace PrototypeWithAuth.Models
         public bool IsRemoved { get; set; } //for "deleted" recurring order occurrence
         public int OccurenceNumber { get; set; } = 1;
         public DateTime Timestamp { get; set; }
+        public decimal Shipping { get; set; }
     }
 }

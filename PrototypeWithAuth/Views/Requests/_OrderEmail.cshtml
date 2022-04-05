@@ -133,7 +133,7 @@
                             <td class="@showPrice">@currency @cost?.ToString("N2")</td>
                         </tr>
                     }
-                    var shipping = Model.Requests[0].ParentRequest?.Shipping ?? 0;
+                    var shipping = Model.Requests[0].Shipping;
                     total = total + (decimal)shipping;
                     if (vat != 0)
                     {
