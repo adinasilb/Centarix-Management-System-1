@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Controllers;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
@@ -69,6 +70,7 @@ namespace PrototypeWithAuth.CRUD
             //        throw new Exception("Something went wrong while updating shipping paid - " + AppUtility.GetExceptionMessage(ex));
             //    }
             //}
+            UpdatePaymentStatusInfo updatePaymentStatusInfo = null;
 
             int? invoiceID = null;
             if (addInvoiceViewModel != null)
@@ -111,7 +113,8 @@ namespace PrototypeWithAuth.CRUD
                 payment.CreditCardID = paymentsPayModalViewModel.Payment.CreditCardID;
                 payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
                 payment.IsPaid = true;
-                if (invoiceID != null) {
+                if (invoiceID != null)
+                {
                     payment.InvoiceID = invoiceID;
                     payment.HasInvoice = true;
                 }
@@ -128,9 +131,18 @@ namespace PrototypeWithAuth.CRUD
                         InstallmentNumber = newInstallmentNum,
                         RequestID = payment.RequestID
                     };
+                    //THIS WILL ONLY WORK FOR NOW
+                    if (invoiceID != null)
+                    {
+                        payment.InvoiceID = invoiceID;
+                        payment.HasInvoice = true;
+                    }
                     _context.Entry(newPayment).State = EntityState.Added;
                     //_context.Add(newPayment);
-                    await _requestsProc.UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID, newInstallmentNum);
+                    //var request = invoiceInfoViewModel != null ?? InvoiceInfoViewModel.
+                   
+                        await _requestsProc.UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID, newInstallmentNum);
+                    
                 }
                 _context.Update(payment);
             }

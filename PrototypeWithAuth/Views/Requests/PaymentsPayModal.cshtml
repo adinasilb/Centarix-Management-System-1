@@ -273,8 +273,8 @@
                                 <div class="row @addInvoicePropsDnone">
                                     <div class="col-4">
                                         <div class="upload-btn-wrapper between-button-margin w-100">
-                                            <button type="button" class="custom-button custom-button-font section-bg-color addInvoicePropsDisabled @addInvoicePropsDisabled" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()" >Select Invoice</button>
-                                            <input type="file" asp-for="InvoiceInfoViewModel.InvoiceImage" class="/*file-select*/ h-100" />
+                                            <button type="button" class="custom-button custom-button-font section-bg-color" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()" >Select Invoice</button>
+                                            <input type="file" asp-for="InvoiceInfoViewModel.InvoiceImage" disabled="@addInvoicePropsDisabled" class="/*file-select*/ h-100 addInvoicePropsDisabled" />
                                         </div>
                                         <span class="invoice-image-name document-name pl-2" id="invoice-image"></span>
                                         @*<a href="" target="_blank" class="mx-1  view-img disabled-link">

@@ -156,7 +156,12 @@ namespace PrototypeWithAuth.CRUD
             return serialLetter + (lastSerialNumberInt + 1);
         }
 
-        public async Task UpdateRequestInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
+        //public Request UpdateRequestInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
+        //{
+        //    return request;
+        //}
+
+        public async Task UpdateRequestsInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
         {
             var RequestToSave = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
             var amtOfPaymentsLeft = RequestToSave.Payments.Where(p => !p.IsPaid).Count();
@@ -319,14 +324,20 @@ namespace PrototypeWithAuth.CRUD
             return ReturnVal;
 
         }
-        public async Task UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
+
+        public Request UpdatePaymentStatusWithoutSaving(AppUtility.PaymentsPopoverEnum newStatus, Request request, int? newInstallmentAmt = null)
         {
-            var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
             request.PaymentStatusID = (int)newStatus;
-            if(newInstallmentAmt != null)
+            if (newInstallmentAmt != null)
             {
                 request.Installments = (uint)newInstallmentAmt;
             }
+            return request;
+        }
+        public async Task UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
+        {
+            var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
+            request = UpdatePaymentStatusWithoutSaving(newStatus, request, newInstallmentAmt);
             _context.Update(request);
             await _context.SaveChangesAsync();
         }

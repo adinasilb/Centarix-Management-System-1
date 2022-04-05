@@ -3820,7 +3820,7 @@ namespace PrototypeWithAuth.Controllers
                             Requests = _requestsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Request, bool>>>() { r => RequestIDs.Contains(r.RequestID) }).ToList()
                         };
                         await _paymentsProc.UpdateAsync(paymentsPayModalViewModel, addInvoiceViewModel);
-                        addInvoiceViewModel = await UpdateRequestsWithInvoiceInfo(addInvoiceViewModel);
+                        addInvoiceViewModel = await UpdateRequestsWithInvoiceInfo(addInvoiceViewModel, false);
                         if (addInvoiceViewModel.ErrorMessage != null)
                         {
                             Response.StatusCode = 500;
@@ -4058,7 +4058,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public async Task<AddInvoiceViewModel> UpdateRequestsWithInvoiceInfo(AddInvoiceViewModel addInvoiceViewModel, bool UpdateRequest = false)
+        public async Task<AddInvoiceViewModel> UpdateRequestsWithInvoiceInfo(AddInvoiceViewModel addInvoiceViewModel, bool UpdateRequest = false, UpdatePaymentStatusInfo updatePaymentStatusInfo = null)
         {
             foreach (var request in addInvoiceViewModel.Requests)
             {
@@ -4067,10 +4067,15 @@ namespace PrototypeWithAuth.Controllers
                 {
                     request.Shipping = 0; //all shipping is saved to first request
                 }
-                await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request);
-                if (UpdateRequest) { 
-                    await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request); 
-                }
+                var newRequest = request;
+                //if (updatePaymentStatusInfo != null)
+                //{
+                //    newRequest = _requestsProc.UpdatePaymentStatusWithoutSaving(updatePaymentStatusInfo.NewStatus, request, updatePaymentStatusInfo.NewInstallmentAmount);
+                //}
+                if (UpdateRequest) { await _requestsProc.UpdateRequestsInvoiceInfoAsync(addInvoiceViewModel, request); }
+                //if (UpdateRequest) { 
+                //    await _requestsProc.UpdateRequestInvoiceInfoAsync(addInvoiceViewModel, request); 
+                //}
                 string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString(),
                     addInvoiceViewModel.Guid.ToString(), AppUtility.FolderNamesEnum.Invoices.ToString());
                 if (!Directory.Exists(uploadFolder) || Directory.GetFiles(uploadFolder).Length == 0)
@@ -4078,7 +4083,7 @@ namespace PrototypeWithAuth.Controllers
                     addInvoiceViewModel.ErrorMessage = ElixirStrings.ServerMissingFile;
                 }
 
-                MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
+                MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests, AppUtility.FolderNamesEnum.Invoices, true, addInvoiceViewModel.Guid);
                 counter++;
             }
             return addInvoiceViewModel;
