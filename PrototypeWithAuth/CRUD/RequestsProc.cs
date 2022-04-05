@@ -167,6 +167,7 @@ namespace PrototypeWithAuth.CRUD
             var amtOfPaymentsLeft = RequestToSave.Payments.Where(p => !p.IsPaid).Count();
             decimal newCost = (decimal)request.Cost;
             RequestToSave.Cost = newCost;
+            RequestToSave.Shipping = request.Shipping;
             var newPaymentSum = newCost / (amtOfPaymentsLeft == 0 ? 1 : amtOfPaymentsLeft) ;
             foreach (var payment in RequestToSave.Payments)
             {
