@@ -275,13 +275,16 @@
                                         <div class="upload-btn-wrapper between-button-margin">
                                             <button type="button" class="custom-button custom-button-font section-bg-color" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()">Select Invoice</button>
                                             <input type="file" asp-for="InvoiceInfoViewModel.InvoiceImage" class="/*file-select*/ h-100" />
-                                            <span class="invoice-image-name document-name pl-2" id="invoice-image"></span>
-                                            <span asp-validation-for="InvoiceInfoViewModel.InvoiceImage" class="text-danger"></span>
                                         </div>
+                                        <span class="invoice-image-name document-name pl-2" id="invoice-image"></span>
+                                        <a href="" target="_blank" class="mx-1  view-img disabled-link">
+                                            <i class="icon-centarix-icons-09 section-color" style="font-size:1.5rem"></i>
+                                        </a>
+                                        <span asp-validation-for="InvoiceInfoViewModel.InvoiceImage" class="text-danger"></span>
                                     </div>
                                     <div class="col-3">
                                         <label class="control-label">Invoice Number </label>
-                                        <input asp-for="InvoiceInfoViewModel.Invoice.InvoiceNumber" class="form-control-plaintext border-bottom addInvoicePropsDisabled" disabled="@addInvoicePropsDisabled"  />
+                                        <input asp-for="InvoiceInfoViewModel.Invoice.InvoiceNumber" class="form-control-plaintext border-bottom addInvoicePropsDisabled" disabled="@addInvoicePropsDisabled" />
                                         <span asp-validation-for="InvoiceInfoViewModel.Invoice.InvoiceNumber" class="text-danger-centarix" id="invoice-number-validation"></span>
                                     </div>
                                     <div class="col-3">

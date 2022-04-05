@@ -3371,3 +3371,7 @@ input[type=text]#search {
 .css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
     color: var(--opac-87) !important;
 }
+
+.disabled-link {
+    pointer-events: none;
+}
