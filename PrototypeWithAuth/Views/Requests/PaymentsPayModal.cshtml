@@ -175,7 +175,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (Model.AccountingEnum == AppUtility.SidebarEnum.PayNow) //confirm which sections should show in
+                            @if (Model.Payments.Count() == 1) //(Model.AccountingEnum == AppUtility.SidebarEnum.PayNow) //confirm which sections should show in
                             {
                                 <div class="row">
                                     <div class="col-3 pl-0 ">
@@ -271,9 +271,9 @@
                                     </div>
                                 </div>
                                 <div class="row @addInvoicePropsDnone">
-                                    <div class="col-5">
-                                        <div class="upload-btn-wrapper between-button-margin">
-                                            <button type="button" class="custom-button custom-button-font section-bg-color" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()">Select Invoice</button>
+                                    <div class="col-4">
+                                        <div class="upload-btn-wrapper between-button-margin w-100">
+                                            <button type="button" class="custom-button custom-button-font section-bg-color addInvoicePropsDisabled @addInvoicePropsDisabled" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()" >Select Invoice</button>
                                             <input type="file" asp-for="InvoiceInfoViewModel.InvoiceImage" class="/*file-select*/ h-100" />
                                         </div>
                                         <span class="invoice-image-name document-name pl-2" id="invoice-image"></span>

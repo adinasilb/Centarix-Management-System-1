@@ -117,6 +117,7 @@ namespace PrototypeWithAuth.CRUD
                 }
                 if (paymentsPayModalViewModel.PartialPayment == true)
                 {
+                    var newInstallmentNum = payment.InstallmentNumber + 1;
                     var fullCost = payment.Sum;
                     var paymentSum = fullCost * paymentsPayModalViewModel.PercentageToPay;
                     payment.Sum = Math.Round(paymentSum, 2);
@@ -124,12 +125,12 @@ namespace PrototypeWithAuth.CRUD
                     {
                         Sum = fullCost - paymentSum,
                         PaymentDate = DateTime.Today,
-                        InstallmentNumber = 2,
+                        InstallmentNumber = newInstallmentNum,
                         RequestID = payment.RequestID
                     };
                     _context.Entry(newPayment).State = EntityState.Added;
                     //_context.Add(newPayment);
-                    await _requestsProc.UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID, 2);
+                    await _requestsProc.UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum.Installments, payment.RequestID, newInstallmentNum);
                 }
                 _context.Update(payment);
             }
