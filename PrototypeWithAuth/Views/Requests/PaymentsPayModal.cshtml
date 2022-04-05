@@ -247,7 +247,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (!Model.Payments[0].HasInvoice)
+                            @if (!Model.Payments[0].HasInvoice && Model.Payments.Count() == 1)
                             {
                                 <div class="row pt-5">
                                     <div class="col-4">

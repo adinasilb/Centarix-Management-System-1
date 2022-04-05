@@ -4060,9 +4060,9 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<AddInvoiceViewModel> UpdateRequestsWithInvoiceInfo(AddInvoiceViewModel addInvoiceViewModel, bool UpdateRequest = false, UpdatePaymentStatusInfo updatePaymentStatusInfo = null)
         {
+            int counter = 1;
             foreach (var request in addInvoiceViewModel.Requests)
             {
-                int counter = 1;
                 if(counter > 1)
                 {
                     request.Shipping = 0; //all shipping is saved to first request
