@@ -40,13 +40,13 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "Requests",
                 column: "OrderMethodID");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Requests_OrderMethods_OrderMethodID",
-                table: "Requests",
-                column: "OrderMethodID",
-                principalTable: "OrderMethods",
-                principalColumn: "ID",
-                onDelete: ReferentialAction.Restrict);
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_Requests_OrderMethods_OrderMethodID",
+            //    table: "Requests",
+            //    column: "OrderMethodID",
+            //    principalTable: "OrderMethods",
+            //    principalColumn: "ID",
+            //    onDelete: ReferentialAction.Restrict);
             migrationBuilder.DropColumn(
                 name: "OrderType",
                 table: "Requests");
@@ -67,9 +67,9 @@ namespace PrototypeWithAuth.Data.Migrations
             migrationBuilder.Sql("UPDATE Requests SET OrderType='" + AppData.AppUtility.OrderMethod.Save.ToString() + "' WHERE OrderMethodID =5");
             migrationBuilder.Sql("UPDATE Requests SET OrderType='" + AppData.AppUtility.OrderMethod.ExcelUpload.ToString() + "' WHERE OrderMethodID =6");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Requests_OrderMethods_OrderMethodID",
-                table: "Requests");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_Requests_OrderMethods_OrderMethodID",
+            //    table: "Requests");
 
             migrationBuilder.DropIndex(
                 name: "IX_Requests_OrderMethodID",

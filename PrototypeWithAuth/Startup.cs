@@ -82,7 +82,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirTestUpload"), sqlServerOptions => sqlServerOptions.CommandTimeout(120));   
+                    Configuration.GetConnectionString("ElixirTestUpload"), sqlServerOptions => sqlServerOptions.CommandTimeout(400));   
             });
 
             services.AddControllersWithViews();
@@ -205,7 +205,7 @@ namespace PrototypeWithAuth
 
             //ChangePassword(serviceProvider).Wait();
 
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
 
             if (_hostEnvironment.IsDevelopment())
             {
