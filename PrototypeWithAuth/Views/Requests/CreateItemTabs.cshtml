@@ -5,13 +5,14 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
 @{
-    var bcColor = "order-inv-background-color";
+    var bcColor = "section-bg-color";
 
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
 
-        bcColor = "oper-background-color";
+        bcColor = "section-bg-color";
     }
+    var productOrderType = Model.OrderType.ToString();
     Model.bcColor = bcColor;
 }
 <div class="row justify-content-center error-message pt-3">
@@ -55,7 +56,7 @@
                             </a>
                         </li>
                     }
-                    else if (Model.SectionType != AppUtility.MenuItems.Operations)
+                    else
                     {
                         <li class="nav-item icon" id="price-tab">
                             <a data-toggle="tab" href="#price" class="next-tab nav-link request-price">
@@ -73,7 +74,7 @@
                             <i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments
                         </a>
                     </li>
-                    @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary && Model.SectionType != AppUtility.MenuItems.Operations)
+                    @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary)
                     {
                         <li class="nav-item icon order-tab">
                             <a data-toggle="tab" href="#order" class="next-tab nav-link order-tab-link">
@@ -95,77 +96,9 @@
     </div>
 </div>
 <script>
-    $(".submitOrder").off("click").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("submit order from _ordertab");
-        //alert("validate form");
-        $("#myForm").data("validator").settings.ignore = "";
-        var valid = $("#myForm").valid();
-        console.log("valid form: " + valid)
-        $(".submitOrder").prop('disabled', true)
-        if (!valid) {
+   
+   
 
-            if (!$('.activeSubmit').hasClass('disabled-submit')) {
-                $('.activeSubmit').addClass('disabled-submit')
-            }
-
-        }
-        else {
-            $('.activeSubmit').removeClass('disabled-submit')
-            $("#loading").show();
-            var orderType = $(this).attr("value");
-            $.fn.SubmitOrderFromAddItemView(orderType);
-        }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
-    });
-
-    $.fn.SubmitOrderFromAddItemView = function (orderType) {
-        console.log("in submitorderfromadditemview");
-        var formData = new FormData($("#myForm")[0]);
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/AddItemView?OrderType=" + orderType,
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                if (orderType != "Save") {
-                    $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
-                    console.log("in success of ajax call ");
-                    //alert("in success of ajax call");
-                    //if (orderType == "AddToCart") {
-                    //    console.log("in add to cart try 2");
-                    //    $(".save-item").removeClass("save-item");
-                    //    $(".outer-add-item-view").html(data);
-                    //}
-                    //else {
-                    $.fn.OpenModal('modalStep1', 'step-1', data)
-                    $(".submitOrder").prop('disabled', false)
-                    //}
-                    /*$("temprequesthiddenfors").remove();*/
-                    $("#loading").hide();
-                } else {
-                    $("#loading").hide();
-                    $(".submitOrder").prop('disabled', false)
-                    $(".save-item").removeClass("save-item")
-                    $('.render-body').html(data)
-                }
-                return true;
-            },
-            error: function (jqxhr) {
-                console.log("in error of ajax call ");
-                $("#loading").hide();
-                $('.error-message').html(jqxhr.responseText);
-                $(".submitOrder").prop('disabled', false)
-            }
-
-        });
-    };
+    
+    
 </script>

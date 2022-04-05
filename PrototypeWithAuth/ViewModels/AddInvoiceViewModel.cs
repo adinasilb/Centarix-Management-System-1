@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using PrototypeWithAuth.AppData.UtilityModels;
+using System.ComponentModel.DataAnnotations;
+
+namespace PrototypeWithAuth.Models
+{
+    public class AddInvoiceViewModel : ViewModelBase
+    {
+        public List<Request> Requests { get; set; }
+        public Invoice Invoice { get; set; }
+        [Display(Name = "Invoice Image")]
+        public IFormFile InvoiceImage { get; set; }
+        public string InvoiceImageSaved { get; set; }
+        public Guid Guid { get; set; }
+        public StringWithBool Error { get; set; }
+        public Vendor Vendor { get; set; }
+        public bool Paid { get; set; }
+        public Payment Payment { get; set; }
+        public IEnumerable<PaymentType> PaymentTypes { get; set; }
+        public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
+
+    }
+}

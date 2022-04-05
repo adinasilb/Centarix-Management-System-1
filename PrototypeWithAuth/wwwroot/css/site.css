@@ -28,6 +28,13 @@ html.wf-loading * {
     border-radius: 0 !important;
 }
 
+.MuiTooltip-tooltip {
+    background-color: var(--black-87) !important
+}
+
+.MuiTooltip-arrow {
+    color: var(--black-87) !important
+}
 /*#custom-document-indicator {
     border: 0 !important;
     box-shadow: none !important;
@@ -181,22 +188,31 @@ span.choose {
         display: none !important;
     }
 
-.order-inv-form .RequestUnitCard div:first-child, .order-inv-form .RequestSubunitCard div:first-child, .order-inv-form .RequestSubsubunitCard div:first-child {
-    border-radius: 18px;
-    border-color: var(--order-inv-color) !important;
-}
-.supplier-form .RequestUnitCard div:first-child, .supplier-form .RequestSubunitCard div:first-child, .supplier-form .RequestSubsubunitCard div:first-child {
-    border-radius: 18px;
-    border-color: var(--lab-man-color) !important;
-}
-.accounting-form .RequestUnitCard div:first-child, .accounting-form .RequestSubunitCard div:first-child, .accounting-form .RequestSubsubunitCard div:first-child {
-    border-radius: 18px;
-    border-color: var(--acc-color) !important;
-}
-.protocol-form .RequestUnitCard div:first-child, .protocol-form .RequestSubunitCard div:first-child, .protocol-form .RequestSubsubunitCard div:first-child {
-    border-radius: 18px;
-    border-color: var(--protocol-color) !important;
-}
+    .Requests .RequestUnitCard div:first-child, .Requests .RequestSubunitCard div:first-child, .Requests .RequestSubsubunitCard div:first-child {
+        border-radius: 18px;
+        border-color: var(--order-inv-color) !important;
+    }
+
+    .Operations .RequestUnitCard div:first-child, .LabManagement .RequestSubunitCard div:first-child, .LabManagement .RequestSubsubunitCard div:first-child {
+        border-radius: 18px;
+        border-color: var(--oper-color) !important;
+    }
+
+    .LabManagement .RequestUnitCard div:first-child, .LabManagement .RequestSubunitCard div:first-child, .LabManagement .RequestSubsubunitCard div:first-child {
+        border-radius: 18px;
+        border-color: var(--lab-man-color) !important;
+    }
+
+    .Accounting .RequestUnitCard div:first-child, .Accounting .RequestSubunitCard div:first-child, .Accounting .RequestSubsubunitCard div:first-child {
+        border-radius: 18px;
+        border-color: var(--acc-color) !important;
+    }
+
+    .Protocols .RequestUnitCard div:first-child, .Protocols .RequestSubunitCard div:first-child, .Protocols .RequestSubsubunitCard div:first-child {
+        border-radius: 18px;
+        border-color: var(--protocol-color) !important;
+    }
+
 i .fas {
     color: rgba(150, 150, 150, .9) !important;
     background-color: #fff !important;
@@ -226,6 +242,7 @@ i .fas {
     -webkit-box-shadow: 0 1px 0 0 var(--order-inv-color);
     box-shadow: 0 1px 0 0 var(--order-inv-color);
 }
+
 .md-form input[type="text"]:not(.url-shown) {
     border-bottom: 1px solid var(--order-inv-color);
     -webkit-box-shadow: 0 1px 0 0 var(--order-inv-color);
@@ -319,7 +336,7 @@ body {
     border: .31px solid #ebebeb;
 }
 
-input.form-control-plaintext:not(.select-dropdown) {
+input.form-control-plaintext:not(.select-dropdown), .react-mentions__input {
     padding-bottom: .5rem !important;
     padding-top: .5rem !important;
 }
@@ -365,15 +382,16 @@ center-horizontally {
     padding: 0 !important;
 }
 
-.clicked-border-acc {
+.Accounting .clicked-border {
     /*border-color: #A56FF1 !important;*/ /*invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);*/
     border: 2px double var(--acc-color) !important;
 }
 
-.clicked-border-orders-inv {
+.Requests .clicked-border {
     border: 2px double var(--order-inv-color) !important;
 }
-.clicked-border-lab-man {
+
+.LabManagement .clicked-border {
     border: 2px double var(--lab-man-color) !important;
 }
 
@@ -414,6 +432,18 @@ center-horizontally {
     left: 0;
 }
 
+.carousel-container {
+    width: 100%;
+    flex-direction: row;
+}
+
+.carousel-slider {
+    flex-direction: row;
+}
+
+.carouselItem {
+    /*flex-direction: row;*/
+}
 
 /*.order-view .dropdown-content li > a, .order-view .dropdown-content li > span {
     color: #000 !important;
@@ -492,8 +522,13 @@ html {
     border-top: 1px solid #e5e5e5;
 }
 
+
 .border-bottom {
     border-bottom: 1px solid #e5e5e5;
+}
+
+.thick-border-top {
+    border-top: .15rem solid #e5e5e5;
 }
 
 .box-shadow {
@@ -591,7 +626,7 @@ body {
     line-height: 100%;
 }
 
-.form-control-plaintext, .mdb-select {
+.form-control-plaintext, .mdb-select, .react-mentions__input {
     margin-top: 0px;
     padding-top: 0px;
     line-height: 100%;
@@ -683,17 +718,17 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
-.protocol-form .form-control-file::-webkit-file-upload-button {
+.Protocols .form-control-file::-webkit-file-upload-button {
     background-color: var(--protocols-color);
     border: 1px solid var(--protocols-color);
 }
 
-.users-form .form-control-file::-webkit-file-upload-button {
+.Users .form-control-file::-webkit-file-upload-button {
     background-color: var(--user-color);
     border: 1px solid var(--user-color);
 }
 
-.protocol-form .form-control-file::-webkit-file-upload-button:hover {
+.Protocols .form-control-file::-webkit-file-upload-button:hover {
     background-color: var(--protocols-color);
     border: 1px solid var(--protocols-color);
     border-radius: 3rem;
@@ -705,7 +740,7 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
-.accounting-form .form-control-file::-webkit-file-upload-button {
+.Accounting .form-control-file::-webkit-file-upload-button {
     background-color: var(--acc-color);
     border: 1px solid var(--acc-color);
 }
@@ -722,7 +757,7 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
-.accounting-form .form-control-file::-webkit-file-upload-button:hover {
+.Accounting .form-control-file::-webkit-file-upload-button:hover {
     background-color: var(--acc-color);
     border: 1px solid var(--acc-color);
     border-radius: 3rem;
@@ -808,17 +843,18 @@ input.select-dropdown {
         filter: brightness(0) saturate(100%) var(--lab-man-filter);
         text-decoration: none !important;
     }
- .supplier-form  .link-clr:hover {
-        font-weight: bold;
-        filter: brightness(0) saturate(100%) var(--lab-man-filter);
-        text-decoration: none !important;
-    }
 
-    .lab-man-link-clr:active {
-        font-weight: bold;
-        filter: brightness(0) saturate(100%) var(--lab-man-filter);
-        text-decoration: none !important;
-    }
+.LabManagement .link-clr:hover {
+    font-weight: bold;
+    filter: brightness(0) saturate(100%) var(--lab-man-filter);
+    text-decoration: none !important;
+}
+
+.lab-man-link-clr:active {
+    font-weight: bold;
+    filter: brightness(0) saturate(100%) var(--lab-man-filter);
+    text-decoration: none !important;
+}
 
 
 .acc-link-clr {
@@ -832,11 +868,11 @@ input.select-dropdown {
     }
 
 
-  .accounting-form  .link-clr:hover {
-        font-weight: bold;
-        filter: var(--acc-filter);
-        text-decoration: none;
-    }
+.Accounting .link-clr:hover {
+    font-weight: bold;
+    filter: var(--acc-filter);
+    text-decoration: none;
+}
 
 .hover-bold:hover {
     font-weight: 600;
@@ -909,59 +945,49 @@ ul li button.bold-hover-effects::before {
     font-weight: bold;
 }
 /*.ourNavBar li a { color: #333 }*/
-.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
-    opacity: 1;
+.Requests .ourNavBar li.activeNavLink a, .Requests .ourNavBar a.activeNavLink, .Requests .ourNavBar li button.activeNavLink, .Requests .container li a.activeNavLink {
     filter: var(--order-inv-filter);
-    font-weight: 500;
 }
 
-.ourNavBar li.activeNavOperLink a, .ourNavBar a.activeNavOperLink, .ourNavBar li button.activeNavOperLink, .container li a.activeNavOperLink {
+.Biomarkers .ourNavBar li.activeNavLink a, .Biomarkers .ourNavBar a.activeNavLink, .Biomarkers .ourNavBar li button.activeNavLink, .Biomarkers .container li a.activeNavLink {
+    filter: var(--biomarkers-filter);
+}
+
+.Protocols .ourNavBar li.activeNavLink a, .Protocols .ourNavBar a.activeNavLink, .Protocols .ourNavBar li button.activeNavLink, .Protocols .container li a.activeNavLink {
+    filter: var(--protocol-filter);
+}
+
+
+.Reports .ourNavBar li.activeNavLink a, .Reports .ourNavBar a.activeNavLink, .Reports .ourNavBar li button.activeNavLink, .Reports .container li a.activeNavLink {
+    filter: var(--expenses-filter);
+}
+
+
+.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink, a.activeNavLink {
     opacity: 1;
+    font-weight: 500;
+    color: black;
+}
+
+.Operations .ourNavBar li.activeNavLink a, .Operations .ourNavBar a.activeNavLink, .Operations .ourNavBar li button.activeNavLink, .Operations .container li a.activeNavLink {
     filter: var(--operations-filter);
-    font-weight: 500;
 }
 
-.ourNavBar li button.add-item-btn.active {
-    opacity: 1;
-    color: var(--order-inv-color);
-}
 
-.ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
+.Accounting .ourNavBar li.activeNavLink a, .Accounting .ourNavBar a.activeNavLink {
     filter: var(--acc-filter);
-    color: black;
-    font-weight: 500;
 }
 
-.ourNavBar li.activeNavLinkLabMan a, .ourNavBar a.activeNavLabMan {
+.LabManagement .ourNavBar li.activeNavLink a, .LabManagement .ourNavBar a.activeNavLink, .LabManagement a.activeNavLink {
     filter: var(--lab-man-filter);
-    color: black;
-    font-weight: 500;
 }
 
-a.activeNavLabMan {
-    filter: var(--lab-man-filter);
-    color: black;
-    font-weight: 500;
-}
-
-.ourNavBar .activeUserClass {
-    opacity: 1;
+.Users .ourNavBar li.activeNavLink a, .Users .ourNavBar a.activeNavLink, .Users a.activeNavLink {
     filter: var(--users-filter);
-    text-decoration: none;
-    -webkit-text-stroke-width: 0px;
-    -webkit-text-stroke-color: black;
-    color: black;
-    font-weight: 500;
 }
 
-.ourNavBar .activeTimekeeperClass {
-    opacity: 1;
+.TimeKeeper .ourNavBar li.activeNavLink a, .TimeKeeper .ourNavBar a.activeNavLink, .TimeKeeper a.activeNavLink {
     filter: var(--timekeeper-filter);
-    text-decoration: none;
-    -webkit-text-stroke-width: 0px;
-    -webkit-text-stroke-color: black;
-    color: black;
-    font-weight: 500;
 }
 
 ul li.acc-sidebar.active {
@@ -1078,7 +1104,7 @@ a.nav-link {
     color: inherit
 }
 
-.order-inv-form .container-fluid ul li a.nav-link.active {
+.Requests .container-fluid ul li a.nav-link.active {
     color: var(--order-inv-color);
 }
 
@@ -1087,8 +1113,8 @@ a.nav-link {
     color: inherit;
 }
 
-.order-inv-form .container-fluid ul li a.nav-link.active,
-.order-inv-form .container-fluid ul li a.nav-link:hover {
+.Requests .container-fluid ul li a.nav-link.active,
+.Requests .container-fluid ul li a.nav-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--order-inv-color);
@@ -1110,11 +1136,18 @@ a.nav-link {
     border-bottom: 4px solid var(--order-inv-color);
 }*/
 
-.oper-form .container-fluid ul li a.active, .oper-form .container-fluid ul li a:hover {
+.Operations .container-fluid ul li a.active, .Operations .container-fluid ul li a:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--operations-color);
     color: var(--operations-color);
+}
+
+.lab-man-form .container-fluid ul li a.active, .oper-form .container-fluid ul li a:hover {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--lab-man-color);
+    color: var(--lab-man-color);
 }
 
 .container-fluid ul li a.user-nav-link.active, .container-fluid ul li a.user-nav-link:hover {
@@ -1137,6 +1170,7 @@ a.nav-link {
     border-bottom: 4px solid var(--lab-man-color);
     color: var(--lab-man-color);
 }
+
 .container-fluid ul li a.protocol-nav-link.active, .container-fluid ul li a.nav-link.protocol-nav-link:hover {
     background-color: transparent;
     border-width: 0px;
@@ -1145,7 +1179,7 @@ a.nav-link {
 }
 /*<<<< Modal Side Slide >>>>*/
 
-.modal.right .modal-dialog {
+.modal.right .edit-modal {
     position: fixed;
     margin: auto;
     /*width: 1200em;*/
@@ -1156,17 +1190,17 @@ a.nav-link {
     transform: translate3d(0%, 0, 0);
 }
 
-.modal.right .modal-content {
-    height: 100%;
-    overflow-y: auto;
-}
+    .modal.right .edit-modal .modal-content {
+        height: 100%;
+        overflow-y: auto;
+    }
 
-.modal.right .modal-body {
-    padding: 15px 15px 80px;
-}
+    .modal.right .edit-modal .modal-body {
+        padding: 15px 15px 80px;
+    }
 
 /*Right*/
-.modal.right.fader .modal-dialog {
+.modal.right.fader .edit-modal {
     right: 0;
     -webkit-transition: opacity 0.5s linear, right 0.5s ease-out;
     -moz-transition: opacity 0.5s linear, right 0.5s ease-out;
@@ -1190,13 +1224,57 @@ a.nav-link {
     height: 100%;
     transition: opacity 0.5s linear, right 0.5s ease-out;
 }
+
 .modal.left .modal-content {
     height: 100%;
     overflow-y: auto;
 }
 
+.lab-man-form .new-button {
+    margin: 0 2rem 0 0 !important;
+    font-size: 1.5rem !important;
+}
+
+    .lab-man-form .new-button:hover {
+        color: var(--lab-man-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+    .lab-man-form .new-button.active {
+        /*color: var(--lab-man-form) !important;*/
+        border-bottom: .188rem solid var(--lab-man-color);
+    }
+
+.Requests .new-button {
+    margin: 0 4rem 0 0 !important;
+}
+
+    .Requests .new-button:hover {
+        color: var(--order-inv-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+    .Requests .new-button.active {
+        color: var(--order-inv-color) !important;
+        border-bottom: .188rem solid var(--order-inv-color);
+    }
+
+.Operations .new-button {
+    margin: 0 4rem 0 0 !important;
+}
+
+    .Operations .new-button:hover {
+        color: var(--order-inv-color);
+        background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
+    }
+
+    .Operations .new-button.active {
+        color: var(--order-inv-color) !important;
+        border-bottom: .188rem solid var(--order-inv-color);
+    }
+
+
 .new-button {
-    margin: 0 4rem 0 0;
     background-color: transparent;
     color: var(--black-87);
     font-size: 1.25rem;
@@ -1206,16 +1284,13 @@ a.nav-link {
     .new-button:hover {
         /*background-color: #338f84;*/
         opacity: 1;
-        color: var(--order-inv-color);
         background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
         border-radius: 3px;
         text-decoration: none;
     }
 
     .new-button.active {
-        color: var(--order-inv-color) !important;
         font-weight: var(--bold-regular);
-        border-bottom: .188rem solid var(--order-inv-color);
     }
 
 .new-button-text {
@@ -1225,7 +1300,7 @@ a.nav-link {
     margin: 0px;
 }
 
-.expenses-form .new-button:hover {
+.Reports .new-button:hover {
     opacity: 1;
     color: var(--expense-color) !important;
 }
@@ -1235,48 +1310,48 @@ a.nav-link {
     margin-right: .75rem;
 }
 
-/*.expenses-form .new-button-text:hover {
+/*.Reports .new-button-text:hover {
     color: var(--expense-color);
 }*/
 
-.expenses-form .new-button.active {
+.Reports .new-button.active {
     color: var(--expense-color);
     border-bottom: 4px solid var(--expense-color);
 }
 
-.new-oper-button:hover {
+.Operations .new-button:hover {
     color: var(--operations-color);
 }
 
-.new-oper-button.active {
+.Operations .new-button.active {
     color: var(--operations-color) !important;
     border-bottom: 4px solid var(--operations-color);
 }
 
-.new-protocols-button.active {
+.Protocols .new-button.active {
     color: var(--protocol-color) !important;
     border-bottom: 4px solid var(--protocol-color);
 }
 
-.new-protocols-button:hover {
+.Protocols .new-button:hover {
     color: var(--protocol-color);
 }
 
-.bio-form .new-button-text {
+.Biomarkers .new-button-text {
     padding-left: .5rem !important;
     padding-right: .5rem !important;
 }
 
-.bio-form .new-button.active {
+.Biomarkers .new-button.active {
     color: var(--biomarkers-color) !important;
     border-bottom: 3px solid var(--biomarkers-color);
 }
 
-.bio-form .new-button:hover {
+.Biomarkers .new-button:hover {
     color: var(--biomarkers-color);
 }
 
-.bio-form .item-table a{
+.Biomarkers .item-table a {
     padding: 0;
     margin-right: 2rem !important;
 }
@@ -1372,8 +1447,8 @@ a.nav-link {
 }
 
 /*.orders-and-inv .sublocation-index {*/
-    /*padding-right: 2.8125rem !important;*/
-    /*padding-left: 2.8125rem !important;
+/*padding-right: 2.8125rem !important;*/
+/*padding-left: 2.8125rem !important;
     border-right: 1px solid var(--black87)
 }*/
 
@@ -1552,34 +1627,34 @@ table.table.visualzoom tr td {
         width: 0;
     }
 /* Create a custom checkbox */
-.checkmark {
+/*.checkmark {
     position: absolute;
     top: 0;
     left: 0;
     height: 25px;
     width: 25px;
     background-color: #eee;
-}
+}*/
 /* On mouse-over, add a grey background color */
-.checktainer:hover input ~ .checkmark {
+/*.checktainer:hover input ~ .checkmark {
     background-color: #ccc;
-}
+}*/
 /* When the checkbox is checked, add a blue background */
-.checktainer input:checked ~ .checkmark {
+/*.checktainer input:checked ~ .checkmark {
     background-color: var(--order-inv-color);
-}
+}*/
 /* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
+/*.checkmark:after {
     content: "";
     position: absolute;
     display: none;
-}
+}*/
 /* Show the checkmark when checked */
-.checktainer input:checked ~ .checkmark:after {
+/*.checktainer input:checked ~ .checkmark:after {
     display: block;
-}
+}*/
 /* Style the checkmark/indicator */
-.checktainer .checkmark:after {
+/*.checktainer .checkmark:after {
     left: 9px;
     top: 5px;
     width: 5px;
@@ -1589,7 +1664,7 @@ table.table.visualzoom tr td {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-}
+}*/
 
 input[type=checkbox].css-checkbox {
     display: none;
@@ -1678,7 +1753,6 @@ input.bigger-box {
 
 .notification-line {
     MAX-WIDTH: 99%;
-    */ display: inline-block;
     float: left;
     width: 9%;
     MARGIN-LEFT: 1.4%;
@@ -1760,7 +1834,7 @@ td .btn {
 
 .upload-btn-wrapper {
     position: relative;
-/*    overflow: hidden;*/
+    /*    overflow: hidden;*/
     display: inline-block;
 }
 
@@ -1912,37 +1986,39 @@ td .btn {
     padding-bottom: 0px !important;
 }
 
-.order-inv-form .on-form-modal-border {
+.Requests .on-form-modal-border {
     border: 0.125rem solid var(--order-inv-color);
 }
 
-.order-inv-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.Requests .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: 0.125rem solid var(--order-inv-color) !important;
 }
 
-.oper-form .on-form-modal-border {
+.Operations .on-form-modal-border {
     border: 0.125rem solid var(--operations-color);
 }
 
-.oper-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.Operations .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: 0.125rem solid var(--operations-color) !important;
 }
-.protocol-form .on-form-modal-border {
+
+.Protocols .on-form-modal-border {
     border: 0.125rem solid var(--protocol-color);
 }
 
-.protocol-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.Protocols .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: 0.125rem solid var(--protocol-color) !important;
 }
-  .accounting-form .on-form-modal-border {
+
+.Accounting .on-form-modal-border {
     border: 0.125rem solid var(--acc-color);
 }
 
-.accounting-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.Accounting .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: 0.125rem solid var(--acc-color) !important;
 }
 
-.users-form .on-form-modal-border {
+.Users .on-form-modal-border {
     border: 0.125rem solid var(--user-color);
 }
 
@@ -1950,15 +2026,15 @@ td .btn {
     border-radius: 1.25rem;
 }
 
-.users-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.Users .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: 0.125rem solid var(--user-color) !important;
 }
 
-.supplier-form .on-form-modal-border {
+.LabManagement .on-form-modal-border {
     border: .031rem solid var(--lab-man-color);
 }
 
-.supplier-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.LabManagement .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: .031rem solid var(--lab-man-color) !important;
 }
 
@@ -2025,29 +2101,30 @@ td .btn {
     padding: 0 !important;
 }
 
-.order-inv-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
+.Requests .select-wrapper.active span.caret, .Requests .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
-.bio-form .select-wrapper.active span.caret, .order-inv-form .select-wrapper.active label.mdb-main-label {
+
+.Biomarkers .select-wrapper.active span.caret, .Requests .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:read-write:not(.danger-box-shadow):not(.url-shown):focus,
-.order-inv-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.order-inv-form button[type="button"].form-control-plaintext:read-write:not(.danger-box-shadow):focus-within {
+.Requests .form-control-plaintext:read-write:not(.danger-box-shadow):not(.url-shown):focus,
+.Requests input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.Requests button[type="button"].form-control-plaintext:read-write:not(.danger-box-shadow):focus-within {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
 
-    .order-inv-form .form-control-plaintext:read-write.danger-box-shadow:focus {
-        outline-width: 0px !important;
-        outline-color: none !important;
-        box-shadow: 0 2px 0 0 var(--danger-color) !important;
-    }
+.Requests .form-control-plaintext:read-write.danger-box-shadow:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
+}
 
-.order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Requests .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--order-inv-color) !important;
 }
@@ -2057,47 +2134,51 @@ td .btn {
     box-shadow: none !important;
 }
 
-.order-inv-form .input-group:focus-within > .input-group-text {
+.Requests .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
-.bio-form .input-group:focus-within > .input-group-text {
+.Biomarkers .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
 }
 
-.bio-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.bio-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.bio-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.Biomarkers input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.Biomarkers button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.Biomarkers .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.Biomarkers .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--biomarkers-color) !important;
 }
 
-.bio-form .form-control-plaintext.danger-box-shadow:focus {
+.Biomarkers .form-control-plaintext.danger-box-shadow:focus, .Biomarkers .react-mentions__input.danger-box-shadow:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--danger-color) !important;
 }
 
-.bio-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Biomarkers .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--biomarkers-color) !important;
 }
 
-.users-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.users-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.users-form .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.Users input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.Users button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.Users .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus, .Users .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--user-color) !important;
 }
 
-.supplier-form span.caret, .supplier-form .select-wrapper.active label.mdb-main-label {
+.LabManagement span.caret, .LabManagement .select-wrapper.active label.mdb-main-label {
     color: var(--lab-man-color) !important;
 }
-.protocol-form span.caret, .supplier-form .select-wrapper.active label.mdb-main-label {
+
+.Protocols span.caret, .LabManagement .select-wrapper.active label.mdb-main-label {
     color: var(--protocol-color) !important;
-}.select-wrapper span.caret {
+}
+
+.select-wrapper span.caret {
     padding-right: .625rem;
 }
 
@@ -2114,21 +2195,23 @@ span.caret {
     color: #495057;
 }
 
-.supplier-form input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
-.supplier-form button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
-.supplier-form.form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus {
+.LabManagement input[type="text"]:not(.danger-box-shadow):not(.url-shown):focus,
+.LabManagement button[type="button"].form-control-plaintext:not(.danger-box-shadow):focus-within,
+.LabManagement .form-control-plaintext:not(.danger-box-shadow):not(.url-shown):focus,
+.LabManagement .react-mentions__input:not(.danger-box-shadow):not(.url-shown):focus {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
 }
 
-.form-control-plaintext:focus, input[type="text"]:focus {
+.form-control-plaintext:focus, input[type="text"]:focus, .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
 }
 
-.protocol-form .form-control-plaintext:focus, .protocol-form input[type="text"]:focus {
+.Protocols .form-control-plaintext:focus, .Protocols input[type="text"]:focus {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
 }
-.protocol-form.createReportForm .form-control-plaintext:focus {
+
+.Protocols .createReportForm .form-control-plaintext:focus, .Protocols .createReportForm .react-mentions__input:focus {
     box-shadow: none !important;
 }
 
@@ -2146,104 +2229,112 @@ span.caret {
     line-height: 2.9rem;
 }
 
-.supplier-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.LabManagement .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
 
 
-.supplier-form .select.form-control-plaintext:focus, .supplier-form input[type="text"]:not(.url-shown):focus {
+.LabManagement .select.form-control-plaintext:focus, .LabManagement input[type="text"]:not(.url-shown):focus, .LabManagement .select.react-mentions__input:focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
+
 .dropdown-multiple:focus, .dropdown:focus {
     outline: none;
     border-bottom: none !important;
     border-radius: .25rem !important
 }
-.order-inv-form .dropdown:focus, .order-inv-form .dropdown-multiple:focus {
+
+.Requests .dropdown:focus, .Requests .dropdown-multiple:focus {
     border: 2px solid var(--order-inv-color) !important;
 }
-.accounting-form .dropdown:focus, .accounting-form .dropdown-multiple:focus {
+
+.Accounting .dropdown:focus, .Accounting .dropdown-multiple:focus {
     border: 2px solid var(--acc-color) !important;
 }
-.supplier-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
+
+.LabManagement .dropdown:focus, .LabManagement .dropdown-multiple:focus {
     border: 2px solid var(--lab-man-color) !important;
 }
 
-.protocol-form .dropdown:focus, .protocol-form .dropdown-multiple:focus {
+.Protocols .dropdown:focus, .Protocols .dropdown-multiple:focus {
     border: 2px solid var(--protocol-color) !important;
 }
 
-.protocol-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Protocols .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--protocol-color) !important;
 }
 
-.protocol-form .select.form-control-plaintext:focus, .protocol-form  input[type="text"]:focus {
+.Protocols .select.form-control-plaintext:focus, .Protocols input[type="text"]:focus {
     border-bottom: none !important;
     border: 2px solid var(--protocol-color) !important;
 }
 
-.supplier-form .input-group:focus-within > .input-group-text {
+.LabManagement .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
 }
-.protocol-form .input-group:focus-within > .input-group-text {
+
+.Protocols .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
-}.accounting-form .select-wrapper.active span.caret, .accounting-form .select-wrapper.active label.mdb-main-label {
+}
+
+.Accounting .select-wrapper.active span.caret, .Accounting .select-wrapper.active label.mdb-main-label {
     color: var(--acc-color) !important;
 }
 
-.accounting-form .form-control-plaintext:focus, .accounting-form input[type="text"]:focus {
+.Accounting .form-control-plaintext:focus, .Accounting input[type="text"]:not(.custom-input-gray):not(.section-custom-input):focus,
+.Accounting .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
 }
 
-.accounting-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Accounting .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--acc-color) !important;
 }
 
-.accounting-form .input-group:focus-within > .input-group-text {
+.Accounting .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--acc-color) !important;
 }
 
-.oper-form .form-control-plaintext:focus, .oper-form input[type="text"]:focus {
+.Operations .form-control-plaintext:focus, .Operations input[type="text"]:focus, .Operations .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --operations-color) !important;
 }
 
-.oper-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Operations .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--operations-color) !important;
 }
 
-.oper-form .input-group:focus-within > .input-group-text {
+.Operations .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var( --operations-color) !important;
 }
 
-.oper-form .select-wrapper.active span.caret, .oper-form .select-wrapper.active label.mdb-main-label {
+.Operations .select-wrapper.active span.caret, .Operations .select-wrapper.active label.mdb-main-label {
     color: var( --operations-color) !important;
 }
 
-.users-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.Users .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--user-color) !important;
 }
 
-.users-form .form-control-plaintext:focus,  .users-form input[type="text"]:focus {
+.Users .form-control-plaintext:focus, .Users input[type="text"]:focus, .Users .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --user-color) !important;
 }
 
-.users-form .input-group:focus-within > .input-group-text {
+.Users .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--user-color) !important;
 }
 
-.users-form .select-wrapper.active span.caret, .users-form .select-wrapper.active label.mdb-main-label {
+.Users .select-wrapper.active span.caret, .Users .select-wrapper.active label.mdb-main-label {
     color: var( --user-color) !important;
 }
 
@@ -2263,25 +2354,25 @@ span.caret {
     border-radius: .25rem;
 }
 
-.timekeeper-form .form-control-plaintext:focus, .timekeeper input[type="text"]:focus {
+.TimeKeeper .form-control-plaintext:focus, .timekeeper input[type="text"]:focus, .TimeKeeper .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --timekeeper-color) !important;
 }
 
-.timekeeper.select-wrapper input.select-dropdown:active, .timekeeper-form .select-wrapper input.select-dropdown:active {
+.timekeeper.select-wrapper input.select-dropdown:active, .TimeKeeper .select-wrapper input.select-dropdown:active {
     border: 0.063rem solid var(--timekeeper-color);
 }
 
-.timekeeper.select-wrapper input.select-dropdown:focus .timekeeper-form .select-wrapper input.select-dropdown:focus {
+.timekeeper.select-wrapper input.select-dropdown:focus .TimeKeeper .select-wrapper input.select-dropdown:focus {
     border: 0.063rem solid var(--timekeeper-color);
 }
 
-.timekeeper.select-wrapper.active span.caret, .timekeeper.select-wrapper.active label.mdb-main-label, .timekeeper-form .select-wrapper.active label.mdb-main-label, .timekeeper-form .select-wrapper.active span.caret {
+.timekeeper.select-wrapper.active span.caret, .timekeeper.select-wrapper.active label.mdb-main-label, .TimeKeeper .select-wrapper.active label.mdb-main-label, .TimeKeeper .select-wrapper.active span.caret {
     color: var( --timekeeper-color) !important;
 }
 
-.timekeeper-form .input-group:focus-within > .input-group-text {
+.TimeKeeper .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var( --timekeeper-color) !important;
 }
 
@@ -2293,34 +2384,34 @@ span.caret {
     border: 0.063rem solid var(--timekeeper-color);
 }
 
-.timekeeper.select-wrapper:not(.md-outline) .select-dropdown:focus, .timekeeper-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.timekeeper.select-wrapper:not(.md-outline) .select-dropdown:focus, .TimeKeeper .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--timekeeper-color) !important;
 }
 /*begin change to reports*/
-.expenses-form .form-control-plaintext:focus, .expenses-form input[type="text"]:focus {
+.Reports .form-control-plaintext:focus, .Reports input[type="text"]:focus, .Reports .react-mentions__input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var( --expense-color) !important;
 }
 
-.expenses.select-wrapper input.select-dropdown, .expenses-form .select-wrapper input.select-dropdown {
+.expenses.select-wrapper input.select-dropdown, .Reports .select-wrapper input.select-dropdown {
     border: 0.094rem solid var(--black-87);
 }
 
-    .expenses.select-wrapper input.select-dropdown:active, .expenses-form .select-wrapper input.select-dropdown:active {
+    .expenses.select-wrapper input.select-dropdown:active, .Reports .select-wrapper input.select-dropdown:active {
         border: 0.063rem solid var(--expense-color);
     }
 
-    .expenses.select-wrapper input.select-dropdown:focus .expenses-form .select-wrapper input.select-dropdown:focus {
+    .expenses.select-wrapper input.select-dropdown:focus .Reports .select-wrapper input.select-dropdown:focus {
         border: 0.063rem solid var(--expense-color);
     }
 
-.expenses.select-wrapper.active span.caret, .expenses.select-wrapper.active label.mdb-main-label, .expenses-form .select-wrapper.active label.mdb-main-label, .expenses-form .select-wrapper.active span.caret {
+.expenses.select-wrapper.active span.caret, .expenses.select-wrapper.active label.mdb-main-label, .Reports .select-wrapper.active label.mdb-main-label, .Reports .select-wrapper.active span.caret {
     color: var( --expense-color) !important;
 }
 
-.expenses-form .input-group:focus-within > .input-group-text {
+.Reports .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var( --expense-color) !important;
 }
 
@@ -2332,7 +2423,7 @@ span.caret {
     border: 0.063rem solid var(--expense-color);
 }
 
-.expenses.select-wrapper:not(.md-outline) .select-dropdown:focus, .expenses-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+.expenses.select-wrapper:not(.md-outline) .select-dropdown:focus, .Reports .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--expense-color) !important;
 }
@@ -2485,7 +2576,7 @@ span.caret {
     margin: auto !important;
     width: 100% !important;
 }
-/*.order-inv-form .datepicker {
+/*.Requests .datepicker {
     position: relative !important;
     opacity: 100 !important;
     left: 0 !important;
@@ -2528,75 +2619,76 @@ span.caret {
     box-shadow: 0px 3px 6px #00000026;
 }
 
-.order-inv-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Requests .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--order-inv-color) !important;
 }
 
-.order-inv-form .switch label input[type="checkbox"]:checked + .lever {
+.Requests .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--order-inv-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
 
-.oper-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Operations .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--operations-color) !important;
 }
 
-.oper-form .switch label input[type="checkbox"]:checked + .lever {
+.Operations .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--operations-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
 
-.supplier-form .switch label input[type="checkbox"]:checked + .lever:after {
+.LabManagement .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--lab-man-color) !important;
 }
 
-.supplier-form .switch label input[type="checkbox"]:checked + .lever {
+.LabManagement .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--lab-man-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
 
-.accounting-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Accounting .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--acc-color) !important;
 }
 
-.accounting-form .switch label input[type="checkbox"]:checked + .lever {
+.Accounting .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--accounting-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
 
-.users-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Users .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--user-color) !important;
 }
 
-.users-form .switch label input[type="checkbox"]:checked + .lever {
+.Users .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--users-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
 
-.protocol-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Protocols .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--protocol-color) !important;
 }
 
-.protocol-form .switch label input[type="checkbox"]:checked + .lever {
+.Protocols .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--protocols-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
 
-.bio-form .switch label input[type="checkbox"]:checked + .lever:after {
+.Biomarkers .switch label input[type="checkbox"]:checked + .lever:after {
     background-color: var(--biomarkers-color) !important;
 }
 
-.bio-form .switch label input[type="checkbox"]:checked + .lever {
+.Biomarkers .switch label input[type="checkbox"]:checked + .lever {
     background-color: var(--biomarkers-25) !important;
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
+
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;
 }
@@ -2610,15 +2702,13 @@ span.caret {
     background: #F6F7F8;
 }
 
-.modal-dialog {
-    box-shadow: 6px 0px 10px #0000008C;
-}
+
 
 .elixir-modal-xl {
     width: 93.31rem;
 }
 
-.elixir-modal-lg{
+.elixir-modal-lg {
     width: 70rem;
 }
 
@@ -2627,7 +2717,7 @@ span.caret {
 }
 
 .elixir-modal-xs {
-    width:32rem;
+    width: 32rem;
 }
 
 .add-resource-modal .modal-dialog {
@@ -2688,7 +2778,7 @@ span.caret {
     border-bottom: 0px !important;
 }
 
-.order-inv-form .custom-control-input:checked ~ .custom-control-label::before {
+.Requests .custom-control-input:checked ~ .custom-control-label::before {
     border-color: var(--order-inv-color);
     background-color: var(--order-inv-color);
 }
@@ -2698,17 +2788,17 @@ span.caret {
     background-color: var(--black-87);
 }
 
-.oper-form .custom-control-input:checked ~ .custom-control-label::before {
+.Operations .custom-control-input:checked ~ .custom-control-label::before {
     border-color: var(--operations-color);
     background-color: var(--operations-color);
 }
 
-.supplier-form .custom-control-input:checked ~ .custom-control-label::before {
+.LabManagement .custom-control-input:checked ~ .custom-control-label::before {
     border-color: var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
 
-.users-form .custom-control-input:checked ~ .custom-control-label::before {
+.Users .custom-control-input:checked ~ .custom-control-label::before {
     border-color: var(--user-color);
     background-color: var(--user-color);
 }
@@ -2769,47 +2859,47 @@ a {
 }
 
 /*Login*/
-.login .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+.login .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .Requests .form-check-input[type="checkbox"].filled-in:checked + label:after, .Requests label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid black;
     background-color: black;
 }
 /*Orders & Inventory*/
-.orders-and-inv .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+.orders-and-inv .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .Requests .form-check-input[type="checkbox"].filled-in:checked + label:after, .Requests label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--order-inv-color);
     background-color: var(--order-inv-color);
 }
 /*Protocols*/
-.protocols .form-check-input[type="checkbox"].filled-in:checked + label:after, .protocols label.btn input[type="checkbox"].filled-in:checked + label:after, .protocol-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .protocol-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+.protocols .form-check-input[type="checkbox"].filled-in:checked + label:after, .protocols label.btn input[type="checkbox"].filled-in:checked + label:after, .Protocols .form-check-input[type="checkbox"].filled-in:checked + label:after, .Protocols label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--protocol-color);
     background-color: var(--protocol-color);
 }
 /*Operations*/
-.oper-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .oper-form label.btn input[type="checkbox"].filled-in:checked + label:after, .operations .form-check-input[type="checkbox"].filled-in:checked + label:after, .operations label.btn input[type="checkbox"].filled-in:checked + label:after {
+.Operations .form-check-input[type="checkbox"].filled-in:checked + label:after, .Operations label.btn input[type="checkbox"].filled-in:checked + label:after, .operations .form-check-input[type="checkbox"].filled-in:checked + label:after, .operations label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--operations-color);
     background-color: var(--operations-color);
 }
 /*Biomarkers*/
-.bio-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .bio-form label.btn input[type="checkbox"].filled-in:checked + label:after, .biomarkers .form-check-input[type="checkbox"].filled-in:checked + label:after, .biomarkers label.btn input[type="checkbox"].filled-in:checked + label:after {
+.Biomarkers .form-check-input[type="checkbox"].filled-in:checked + label:after, .Biomarkers label.btn input[type="checkbox"].filled-in:checked + label:after, .biomarkers .form-check-input[type="checkbox"].filled-in:checked + label:after, .biomarkers label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--biomarkers-color);
     background-color: var(--biomarkers-color);
 }
 /*Timekeeper*/
-.timekeeper-form .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper-form label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after {
+.TimeKeeper .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .TimeKeeper label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after, .timekeeper label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after {
     border: 2px solid var(--timekeeper-color);
     background-color: var(--timekeeper-color);
 }
 /*LabManagements*/
-.supplier-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .supplier-form label.btn input[type="checkbox"].filled-in:checked + label:after, .labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after {
+.LabManagement .form-check-input[type="checkbox"].filled-in:checked + label:after, .LabManagement label.btn input[type="checkbox"].filled-in:checked + label:after, .labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after, .labmanage label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
 /*Accounting*/
-.accounting-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .accounting-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+.Accounting .form-check-input[type="checkbox"].filled-in:checked + label:after, .Accounting label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--acc-color);
     background-color: var(--acc-color);
 }
 /*Expenses*/
-.expenses .form-check-input[type="checkbox"].filled-in:checked + label:after, .expenses label.btn input[type="checkbox"].filled-in:checked + label:after, .expenses-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .expenses-form label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after {
+.expenses .form-check-input[type="checkbox"].filled-in:checked + label:after, .expenses label.btn input[type="checkbox"].filled-in:checked + label:after, .Reports .form-check-input[type="checkbox"].filled-in:checked + label:after, .Reports label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after {
     border: 2px solid var(--expense-color);
     background-color: var(--expense-color);
 }
@@ -2819,17 +2909,19 @@ a {
     background-color: var(--income-color);
 }
 /*Users*/
-.users-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .users-form label.btn input[type="checkbox"].filled-in:checked + label:after, .users .form-check-input[type="checkbox"].filled-in:checked + label:after, .users label.btn input[type="checkbox"].filled-in:checked + label:after {
+.Users .form-check-input[type="checkbox"].filled-in:checked + label:after, .Users label.btn input[type="checkbox"].filled-in:checked + label:after, .users .form-check-input[type="checkbox"].filled-in:checked + label:after, .users label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--user-color);
     background-color: var(--user-color);
 }
 
-.order-inv-form .addSubSubUnit, .order-inv-form .addSubUnit {
+.Requests .addSubSubUnit, .Requests .addSubUnit {
     filter: var(--order-inv-filter);
 }
-.protocol-form .addSubSubUnit, .protocol-form .addSubUnit {
+
+.Protocols .addSubSubUnit, .Protocols .addSubUnit {
     filter: var(--protocol-filter);
 }
+
 table.visual-locations, table.visual-locations-table {
     width: 100% !important;
 }
@@ -2870,15 +2962,15 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     padding-top: .2rem;
 }
 
-.order-inv-form .location-selected {
+.Requests .location-selected {
     background-color: var(--order-inv-color);
 }
 
-.supplier-form .location-selected {
+.LabManagement .location-selected {
     background-color: var(--lab-man-color);
 }
 
-.accounting-form .location-selected {
+.Accounting .location-selected {
     background-color: var(--acc-color);
 }
 
@@ -2906,7 +2998,7 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     background-color: var(--lab-man-color)
 }
 
-.select-dropdown.form-control:not(.expenses-form .select-dropdown.form-control) {
+.select-dropdown.form-control:not(.Reports .select-dropdown.form-control) {
     border-radius: 0 !important;
 }
 
@@ -2925,9 +3017,9 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     border: 0 !important;
 }
 
-.list-name.selected {
-    background-color: var(--order-inv-25);
-}
+    .list-name.selected {
+        background-color: var(--order-inv-25);
+    }
 
 /*
     MULTIPLE EMAIL CSS
@@ -2999,12 +3091,12 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     -webkit-box-orient: vertical;
 }
 
-.order-inv-form .filter-btn-select {
+.Requests .inventory-filter-col.selected .btn-filter-style {
     background-color: var(--order-inv-color) !important;
     color: white;
 }
 
-.protocol-form .filter-btn-select {
+.Protocols .inventory-filter-col.selected .btn-filter-style {
     background-color: var(--protocol-color) !important;
     color: white;
 }
@@ -3014,12 +3106,12 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     padding-left: 1rem;
 }
 
-.order-inv-form .custom-small-filter-button {
+.Requests .custom-small-filter-button {
     color: var(--order-inv-color);
     border-color: var(--order-inv-color) !important;
 }
 
-.oper-form .custom-small-filter-button {
+.Operations .custom-small-filter-button {
     color: var(--operations-color);
     border-color: var(--operations-color) !important;
 }
@@ -3036,6 +3128,10 @@ body.modal-open .popover {
     padding: .34rem 1.25rem !important;
     border: 1px solid transparent;
     margin: .375rem;
+}
+
+.form-element-border-xsmall {
+    border: .1rem solid #E5E5E5;
 }
 
 .form-element-border-right {
@@ -3057,6 +3153,7 @@ body.modal-open .popover {
 .form-element-border-top-small {
     border-top: .1rem solid #E5E5E5;
 }
+
 .material-cards {
     padding-top: 1rem;
     padding-bottom: .5rem;
@@ -3068,24 +3165,27 @@ body.modal-open .popover {
 .card-border {
     border: solid 2px #CBCBCB;
     border-radius: .75rem;
+}
 
-}
 .link-color {
-    color:#0275d8 !important;
+    color: #0275d8 !important;
 }
+
 .link-underline {
     border-bottom: solid 2px #0275d8;
 }
+
 }
 
 .full-file-btn {
     width: 100%;
 }
-.no-resize{
+
+.no-resize {
     resize: none;
 }
 
-.textarea-border-radius{
+.textarea-border-radius {
     border-radius: .75rem;
 }
 
@@ -3096,45 +3196,51 @@ body.modal-open .popover {
     height: 3.875rem;
     padding-right: 2rem;
     padding-left: 2rem;
-    display:flex;
+    display: flex;
 }
-.function-bar i{
-    font-size: 2rem;
-    vertical-align: middle;
-}
-.function-bar button {
-    border:none;
-    box-shadow:none;
-    background: none;
-    vertical-align: middle;
 
-}
+    .function-bar i {
+        font-size: 2rem;
+        vertical-align: middle;
+    }
+
+    .function-bar button {
+        border: none;
+        box-shadow: none;
+        background: none;
+        vertical-align: middle;
+    }
+
 .line-input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
-  
 }
+
 .line-header {
     font-size: 1.60rem;
     font-weight: var(--bold-medium);
-   /* padding-bottom: 1rem !important;*/
+    /* padding-bottom: 1rem !important;*/
     padding-top: 1.5rem !important;
 }
+
 .line-subheader {
     font-size: 1.30rem;
     font-weight: var(--bold-medium);
 }
-.line-step{
-    font-size:1.30rem
+
+.line-step {
+    font-size: 1.30rem
 }
+
 .line-input {
-   /* min-width: 10%;*/
+    /* min-width: 10%;*/
     align-items: center;
     display: flex;
     padding-right: 1rem;
 }
-.line-div{
-    margin-top:1.25rem;
+
+.line-div {
+    margin-top: 1.25rem;
 }
 
     .line-div .line-function {
@@ -3142,15 +3248,17 @@ body.modal-open .popover {
         font-size: 2rem;
         justify-content: center;
         align-items: center;
-        display:flex;
+        display: flex;
     }
 
-.page-num-size{
+.page-num-size {
     font-size: 1.5rem;
 }
+
 .gray-background {
     background-color: rgba(0, 0, 0, 0.075) !important;
 }
+
 .focused-line {
     border-bottom: 2px solid var(--protocol-color) !important;
 }
@@ -3189,6 +3297,7 @@ body.modal-open .popover {
 }
 
 /*Category Settings*/
+
 .category-field {
     overflow: hidden;
     display: -webkit-box;
@@ -3199,9 +3308,11 @@ body.modal-open .popover {
     text-align: left;
     color: var(--black-87);
 }
-.search-by-category{
+
+.search-by-category {
     border-color: var(--light-gray) !important;
 }
+
 .category-cols .col-input {
     text-overflow: ellipsis;
     width: 100%;
@@ -3214,9 +3325,10 @@ body.modal-open .popover {
     background-color: var(--lab-man-50-color) !important;
 }
 
-.category-cols{
+.category-cols {
     border-color: var(--light-gray) !important;
 }
+
 .settings-form .top-bar {
     background-color: var(--lab-man-50-color) !important;
     border-bottom-color: var(--light-gray);
@@ -3224,9 +3336,42 @@ body.modal-open .popover {
 }
 
 .category-height {
-    height: 45rem;
+    height: 53rem;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.settings.new-modal-body {
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .ch-scrollable {
-    overflow-y: auto;
+}
+
+.ch-overflow {
+}
+/*.settings-form select[disabled] > option{
+    color: var(--black-87) !important;
+}*/
+.settings-form input[disabled], .settings-form select[disabled] > option {
+    color: var(--black-50) !important;
+}
+/*#search:focus {
+    background-image: none;
+}*/
+input[type=text]#search {
+    background-image: url('../images/css/accounting/icons/search_selected.png');
+    background-repeat: no-repeat;
+    /*text-indent: 20px;*/
+    background-position: 95%;
+    filter: grayscale(100%)
+}
+
+.css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+    color: var(--opac-87) !important;
+}
+
+.disabled-link {
+    pointer-events: none;
 }

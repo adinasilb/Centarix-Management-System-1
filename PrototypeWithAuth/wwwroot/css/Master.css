@@ -1,4 +1,4 @@
-﻿u;nithtml {
+﻿unithtml {
     overflow: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
@@ -52,6 +52,7 @@
     --notifications-approved-color: #00CA72;
     --notifications-received-color: #5F79E2;
     --danger-color: #E95252;
+    --danger-filter: brightness(0) saturate(100%) invert(35%) sepia(14%) saturate(3840%) hue-rotate(320deg) brightness(122%) contrast(88%);
     --success-color: #00ca72;
     --bold-regular: 400;
     --bold-medium: 500;
@@ -67,6 +68,8 @@
     --disabled-filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
     --light-gray: #E5E5E5;
     --warning-color: #EED202;
+    --rounded-border: 0.5rem;
+    --height: 2.375rem;
 }
 .black-87{
     color: var(--black-87);
@@ -99,6 +102,10 @@
     background-color: var(--light-gray);
 }
 
+.danger-filter{
+    filter: var(--danger-filter);
+}
+
 .danger-color {
     background-color: var(--danger-color);
 }
@@ -115,11 +122,8 @@
     box-shadow: 0 2px 0 0 var(--danger-color) !important;
 }
 
-.operations-filter {
-    filter: var(--operations-filter);
-}
 
-.timekeeper-color {
+.TimeKeeper .section-bg-color {
     background-color: var(--timekeeper-color);
 }
 
@@ -135,7 +139,7 @@
     color: var(--timekeeper-color);
 }
 
-.timekeeper-filter {
+.TimeKeeper .section-filter {
     filter: var(--timekeeper-filter);
 }
 
@@ -147,7 +151,7 @@
     background-color: var(--user-color);
 }
 
-.users-filter {
+.Users .section-filter {
     filter: var(--users-filter);
 }
 
@@ -179,19 +183,21 @@
     color: var(--order-inv-color);
 }
 
-.order-inv-filter {
+.Requests .section-filter {
     filter: var(--order-inv-filter);
 }
 
-.oper-filter {
+.Operations .section-filter {
     filter: var(--operations-filter);
 }
 
-.order-inv-background-color {
+.Requests .section-bg-color {
     background-color: var(--order-inv-color) !important;
 }
-
-.users-background-color {
+.LabManagement .section-bg-color {
+    background-color: var(--lab-man-color) !important;
+}
+.Users .section-bg-color {
     background-color: var(--user-color) !important;
 }
 
@@ -203,11 +209,11 @@
     color: var(--biomarkers-color) !important;
 }
 
-.biomarkers-background-color{
+.Biomarkers .section-bg-color {
     background-color: var(--biomarkers-color) !important;
 }
 
-.biomarkers-filter{
+.Biomarkers .section-filter {
     filter: var(--biomarkers-filter) !important;
 }
 
@@ -221,7 +227,7 @@
 }
 
 
-.lab-man-filter {
+.LabManagement .section-filter {
     filter: var(--lab-man-filter) !important;
 }
 
@@ -229,11 +235,7 @@
     color: var(--lab-man-color) !important;
 }
 
-.lab-man-background-color {
-    background-color: var(--lab-man-color) !important;
-}
-
-.oper-background-color {
+.Operations .section-bg-color {
     background-color: var(--operations-color) !important;
 }
 
@@ -245,15 +247,15 @@
     color: var(--expense-color) !important;
 }
 
-.expenses-background-color-25 {
+.Reports .section-bg-color-25 {
     background-color: var(--expenses-25) !important;
 }
 
-.expenses-filter {
+.Reports .section-filter {
     filter: var(--expense-filter) !important;
 }
 
-.expenses-background-color {
+.Reports .section-bg-color {
     background-color: var(--expense-color) !important;
 }
 
@@ -261,11 +263,11 @@
     color: var(--protocol-color) !important;
 }
 
-.protocols-filter {
+.Protocols .section-filter {
     filter: var(--protocol-filter) !important;
 }
 
-.protocols-background-color {
+.Protocols .section-bg-color {
     background-color: var(--protocol-color) !important;
 }
 
@@ -285,11 +287,11 @@ a.yearly-monthly, input[type=button].yearly-monthly {
     color: var(--acc-color);
 }
 
-.accounting-background-color {
+.Accounting .section-bg-color {
     background-color: var(--acc-color);
 }
 
-.accounting-filter {
+.Accounting .section-filter {
     filter: var(--acc-filter);
 }
 
@@ -445,16 +447,11 @@ input:not(input[type=button], input[type=submit], .heading-1) {
 }
 
 .custom-button-font {
-    font-size: 1.563rem;
-    font-weight: var(--bold-regular);
-    color: var(--white);
+    font-size: 1.25rem !important;
+    font-weight: var(--bold-regular) !important;
+    color: var(--white) !important;
 }
 
-.order-inv-custom-button-font {
-    font-size: 1.563rem;
-    font-weight: var(--bold-regular);
-    color: var(--order-inv-color);
-}
 
 .custom-button-small-font {
     font-size: .8rem;
@@ -467,19 +464,25 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     font-weight: var(--bold-medium);
     color: var(--white);
 }
-
+.custom-button {
+    padding: 0 3.75rem !important;
+    height: 2.375rem;
+    border-radius: var(--rounded-border) !important;
+    border: none !important;
+    text-transform: capitalize !important;
+}
 .custom-cancel {
-    border: .0625rem solid #000000DB !important;
-    background-color: transparent;
-    font-weight: var(--bold-light);
-    font-size: 1.438rem;
+    border: .063rem solid var(--black-87) !important;
+    background-color: transparent !important;
+    font-weight: var(--bold-light) !important;
+    font-size: 1.125rem !important;
 }
 
 .create-modal-submit {
     width: 17.375rem !important;
 }
 
-.custom-order-inv {
+.Requests .section-outline-color {
     border: .125rem solid var(--order-inv-color) !important;
     background-color: transparent;
     font-weight: var(--bold-light);
@@ -487,7 +490,8 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--order-inv-color) !important;
 }
 
-.custom-oper {
+
+.Operations  .section-outline-color{
     border: .125rem solid var(--operations-color) !important;
     background-color: transparent;
     font-weight: var(--bold-light);
@@ -495,7 +499,15 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--operations-color) !important;
 }
 
-.custom-protocols {
+.Accounting .section-outline-color {
+    border: .125rem solid var(--acc-color) !important;
+    background-color: transparent;
+    font-weight: var(--bold-light);
+    font-size: 1.438rem;
+    color: var(--acc-color) !important;
+}
+
+.Protocols .section-outline-color {
     border: .125rem solid var(--protocols-color) !important;
     background-color: transparent;
     font-weight: var(--bold-light);
@@ -562,7 +574,7 @@ table td, table td .btn, .text, table th {
 }
 
 .between-button-margin {
-    margin-right: 3.125rem;
+    margin-right: 3.125rem !important; 
 }
 
 /*body shadows*/
@@ -584,15 +596,9 @@ table td, table td .btn, .text, table th {
 }
 
 /**custom submits*/
-.custom-button {
-    padding-left: 3.125rem;
-    padding-right: 3.125rem;
-    height: 2.875rem;
-    border-radius: 1.438rem;
-    border: none;
-}
 
-.bio-form .clear-custom-button{
+
+.Biomarkers .clear-custom-button{
     background-color: white !important;
     border: solid 2px var(--biomarkers-color) !important;
 }
@@ -613,6 +619,85 @@ table td, table td .btn, .text, table th {
     border-width: .1rem;
     text-align: center !important;
 }
+.custom-input-gray, .section-custom-input, .section-custom-select {
+    border-radius: var(--rounded-border);
+    background-color: white;
+    padding-left: 1rem;
+    height: var(--height) !important;
+}
+.custom-input-gray {
+    border: .125rem solid var(--disabled-color) !important
+}
+.Accounting .section-custom-input, .Accounting .section-custom-select {
+    border: .125rem solid var(--acc-color) !important;
+    color: var(--acc-color)
+}
+.Requests .section-custom-input, .Requests .section-custom-select {
+    border: .125rem solid var(--order-inv-color) !important;
+    color: var(--order-inv-color)
+}
+.Operations .section-custom-input, .Operations .section-custom-select {
+    border: .125rem solid var(--operations-color) !important;
+    color: var(--operations-color)
+}
+.LabManagement .section-custom-input, .LabManagement .section-custom-select {
+    border: .125rem solid var(--lab-man-color) !important;
+    color: var(--lab-man-color)
+}
+.Reports .section-custom-input, .Reports .section-custom-select {
+    border: .125rem solid var(--expense-color) !important;
+    color: var(--expense-color)
+}
+.TimeKeeper .section-custom-input, .TimeKeeper .section-custom-select {
+    border: .125rem solid var(--timekeeper-color) !important;
+    color: var(--timekeeper-color)
+}
+.Protocols .section-custom-input, .Protocols .section-custom-select {
+    border: .125rem solid var(--protocols-color) !important;
+    color: var(--protocols-color)
+}
+.Biomarkers .section-custom-input, .Biomarkers .section-custom-select {
+    border: .125rem solid var(--biomarkers-color) !important;
+    color: var(--biomarkers-color)
+}
+.Users .section-custom-input, .Users .section-custom-select {
+    border: .125rem solid var(--user-color) !important;
+    color: var(--user-color)
+}
+.Income .section-custom-input, .Income .section-custom-select {
+    border: .125rem solid var(--income-color) !important;
+    color: var(--income-color)
+}
+.Requests .section-font-color {
+    color: var(--order-inv-color)
+}
+.TimeKeeper .section-font-color {
+    color: var(--timekeeper-color)
+}
+.Accounting .section-font-color {
+    color: var(--acc-color)
+}
+.Operations .section-font-color {
+    color: var(--operations-color)
+}
+.Biomarkers .section-font-color {
+    color: var(--biomarkers-color)
+}
+.Users .section-font-color {
+    color: var(--user-color)
+}
+.Protocols .section-font-color {
+    color: var(--protocols-color)
+}
+.Income .section-font-color {
+    color: var(--income-color)
+}
+.Reports .section-font-color {
+    color: var(--expense-color)
+}
+.LabManagement .section-font-color {
+    color: var(--lab-man-color)
+}
 
 .new-modal-body .row,
 .modal-body .row,
@@ -622,8 +707,10 @@ table td, table td .btn, .text, table th {
     margin-bottom: 2.063rem;
 }
 
+
+
 .under-td-padding,
-.under-row-padding{
+.under-row-padding {
     padding-bottom: 2.063rem !important;
 }
 
@@ -700,15 +787,12 @@ table td, table td .btn, .text, table th {
 }
 
 .modal-border-radius {
-    border-radius: 2.8125rem !important;
+    border-radius: .25rem !important;
     border: none !important;
 }
 
 .modal-padding {
-    margin-top: 5rem;
-    margin-left: 5rem;
-    margin-right: 5rem;
-    margin-bottom: 3.5rem;
+    padding: 4.625rem;
 }
 
 .small-modal-padding {
@@ -718,14 +802,27 @@ table td, table td .btn, .text, table th {
     margin-bottom: 1.5rem;
 }
 
-.modal-close-padding {
-    margin-top: 1.375rem;
-    margin-right: 2rem;
+.LabManagement .modal-content {
+    border-left: solid .438rem var(--lab-man-color) !important;
 }
 
-.modal-close-style {
-    font-size: 2.5rem !important;
-    font-weight: 400 !important;
+
+
+/*.Accounting .modal-content {
+    border-left: solid .438rem var(--acc-color) !important;
+}*/
+
+
+.modal-header {
+    font-size: 1.75rem !important;
+}
+
+.close {
+    font-size:1.75rem !important;
+    font-weight: 200 !important;
+    position: absolute;
+    right: 3%;
+    top: 3%;
 }
 
 .modal-box-shadow {
@@ -778,38 +875,38 @@ table td, table td .btn, .text, table th {
             border-bottom: 0 !important;
         }
 
-.order-inv-form .document-border:hover, .order-inv-form .document-border.hasFile {
+.Requests .document-border:hover, .Requests .document-border.hasFile {
     border: 1px solid var(--order-inv-color) !important;
 }
 
-.oper-form .document-border:hover, .oper-form .document-border.hasFile {
+.Operations  .document-border:hover, .Operations  .document-border.hasFile {
     border: 1px solid var(--operations-color) !important;
 }
 
-.supplier-form .document-border:hover, .supplier-form .document-border.hasFile {
+.LabManagement .document-border:hover, .LabManagement .document-border.hasFile {
     border: 1px solid var(--lab-man-color) !important;
 }
 
-.bio-form .document-border.hasFile {
+.Biomarkers .document-border.hasFile {
     border: 2px solid var(--biomarkers-color) !important;
 }
-.accounting-form .document-border:hover, .accounting-form .document-border.hasFile {
+.Accounting .document-border:hover, .Accounting .document-border.hasFile {
     border: 1px solid var(--acc-color) !important;
 }
 
-    .accounting-form .document-border:hover i {
+    .Accounting .document-border:hover i {
         color: var(--acc-color)
     }
 
-.order-inv-form .document-border:hover i {
+.Requests .document-border:hover i {
     color: var(--order-inv-color)
 }
 
-.oper-form .document-border:hover i {
+.Operations  .document-border:hover i {
     color: var(--operations-color)
 }
 
-.supplier-form .document-border:hover i {
+.LabManagement .document-border:hover i {
     color: var(--lab-man-color)
 }
 
@@ -830,21 +927,25 @@ body.modal-open, body.popover-open {
     overflow: hidden !important;
 }
 
-.filter-and-search.orders ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+.Requests .filter-and-search::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
     color: var(--order-inv-color) !important;
     opacity: 1;
 }
-.filter-and-search.operations ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+.Operations .filter-and-search::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
     color: var(--operations-color) !important;
     opacity: 1;
 }
 
-.filter-and-search.orders ::-ms-input-placeholder { /*works for Edge*/
+.Requests .filter-and-search::-ms-input-placeholder { /*works for Edge*/
     color: var(--order-inv-color) !important;
 }
 
-.filter-and-search.operations ::-ms-input-placeholder { /*works for Edge*/
+.Operations .filter-and-search::-ms-input-placeholder { /*works for Edge*/
     color: var(--operations-color) !important;
+}
+
+.Accounting .filter-and-search::-ms-input-placeholder { /*works for Edge*/
+    color: var(--acc-color) !important;
 }
 .filter-and-search :focus {
     outline: none;
@@ -916,3 +1017,6 @@ body .icon-more-popover {
     background-color: var(--biomarkers-25);
 }
 
+.btn-filter-style {
+    border-radius: 0.5rem;
+}

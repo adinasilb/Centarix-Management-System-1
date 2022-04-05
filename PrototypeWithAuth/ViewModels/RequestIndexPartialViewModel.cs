@@ -12,25 +12,21 @@ namespace PrototypeWithAuth.ViewModels
     {
         public string ControllerName { get; set; }
         public List<RequestIndexPartialRowViewModel> PagedList { get; set; }
+        public List<IndexTab> Tabs { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
-        public AppUtility.SidebarEnum SideBarType  { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
+        public AppUtility.SidebarEnum SidebarType  { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public CategoryPopoverViewModel CategoryPopoverViewModel{ get; set;}
         public int? PageNumber { get; set; }
         public LinkedList<PageNumbers> PageNumbersToShow { get; set; }
-        public int RequestStatusID { get; set; }
-        public int NewCount { get; set; }
-        public int ApprovedCount { get; set; }
-        public int OrderedCount { get; set; }
-        public int ReceivedCount { get; set; }
-        public int NonProprietaryCount { get; set; }
-        public int ProprietaryCount { get; set; }
         public string SidebarFilterID { get; set; }
         public string? SidebarFilterName { get; set; }
         public InventoryFilterViewModel InventoryFilterViewModel { get; set; }
         public RequestsSearchViewModel RequestsSearchViewModel { get; set; }
         public List<int> Months { get; set; }
         public List<int> Years { get; set; }
+        public string TabValue { get; set; }
 
     }
 }

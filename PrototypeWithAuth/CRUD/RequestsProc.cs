@@ -26,7 +26,11 @@ namespace PrototypeWithAuth.CRUD
                 base.InstantiateProcs();
             }
         }
-
+        public override IQueryable<Request> Read(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            wheres.Add(r => !r.IsRemoved);
+            return base.Read(wheres, includes);
+        }
         public override IQueryable<Request> ReadWithIgnoreQueryFilters(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
         {
             wheres.Add(r => !r.IsDeleted);
@@ -53,6 +57,10 @@ namespace PrototypeWithAuth.CRUD
             await _context.SaveChangesAsync();
         }
 
+        public IQueryable<Request> ReadWithIncludeRemovedRecurrences(List<Expression<Func<Request, bool>>> wheres = null, List<ComplexIncludes<Request, ModelBase>> includes = null)
+        {
+            return base.Read(wheres, includes);
+        }
 
         public async Task<StringWithBool> DeleteAsync(int requestID)
         {
@@ -140,20 +148,41 @@ namespace PrototypeWithAuth.CRUD
                 categoryType = 2;
                 serialLetter = "P";
             }
-            var serialnumberList = _productsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType })
+            var serialnumberList = _productsProc.ReadWithIgnoreQueryFilters(new List<Expression<Func<Product, bool>>> { p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType })?
                 .Select(p => int.Parse(p.SerialNumber.Substring(1))).ToList();
-
+           
             lastSerialNumberInt = serialnumberList.OrderBy(s => s).LastOrDefault();
 
             return serialLetter + (lastSerialNumberInt + 1);
         }
 
-        public async Task UpdateRequestInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
+        //public Request UpdateRequestInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
+        //{
+        //    return request;
+        //}
+
+        public async Task UpdateRequestsInvoiceInfoAsync(AddInvoiceViewModel addInvoiceViewModel, Request request)
         {
             var RequestToSave = await ReadOneAsync(new List<Expression<Func<Request, bool>>> { r => r.RequestID == request.RequestID }, new List<ComplexIncludes<Request, ModelBase>> { new ComplexIncludes<Request, ModelBase> { Include = r => r.Payments } });
-            RequestToSave.Cost = request.Cost;
-            RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-            RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
+            var amtOfPaymentsLeft = RequestToSave.Payments.Where(p => !p.IsPaid).Count();
+            decimal newCost = (decimal)request.Cost;
+            RequestToSave.Cost = newCost;
+            RequestToSave.Shipping = request.Shipping;
+            var newPaymentSum = newCost / (amtOfPaymentsLeft == 0 ? 1 : amtOfPaymentsLeft) ;
+            foreach (var payment in RequestToSave.Payments)
+            {
+                if (!payment.IsPaid)
+                {
+                    if (newPaymentSum < 0)
+                    {
+                        throw new Exception(ElixirStrings.ServerNegativePriceErrorMessage);
+                    }
+                    payment.Sum = newPaymentSum;
+                }
+                payment.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+                payment.HasInvoice = true;
+            }
+            
             _context.Update(RequestToSave);
         }
 
@@ -260,7 +289,7 @@ namespace PrototypeWithAuth.CRUD
         }
 
 
-        public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID)
+        public async Task<StringWithBool> UpdatePaymentStatusAsync(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
         {
             StringWithBool ReturnVal = new StringWithBool();
             try
@@ -273,6 +302,10 @@ namespace PrototypeWithAuth.CRUD
                         var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
 
                         request.PaymentStatusID = (int)newStatus;
+                        if(newInstallmentAmt != null)
+                        {
+                            request.Installments = (uint)newInstallmentAmt;
+                        }
                         _context.Update(request);
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
@@ -291,6 +324,23 @@ namespace PrototypeWithAuth.CRUD
             }
             return ReturnVal;
 
+        }
+
+        public Request UpdatePaymentStatusWithoutSaving(AppUtility.PaymentsPopoverEnum newStatus, Request request, int? newInstallmentAmt = null)
+        {
+            request.PaymentStatusID = (int)newStatus;
+            if (newInstallmentAmt != null)
+            {
+                request.Installments = (uint)newInstallmentAmt;
+            }
+            return request;
+        }
+        public async Task UpdatePaymentStatusAsyncWithoutTransaction(AppUtility.PaymentsPopoverEnum newStatus, int requestID, int? newInstallmentAmt = null)
+        {
+            var request = await ReadOneAsync( new List<Expression<Func<Request, bool>>> { r => r.RequestID == requestID });
+            request = UpdatePaymentStatusWithoutSaving(newStatus, request, newInstallmentAmt);
+            _context.Update(request);
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveFromInventoryAsync(int requestId)
@@ -395,7 +445,7 @@ namespace PrototypeWithAuth.CRUD
                 {
                     try
                     {
-                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderType == AppUtility.OrderTypeEnum.ExcelUpload.ToString() })
+                        await Read(new List<Expression<Func<Request, bool>>> { r => r.OrderMethod.DescriptionEnum.ToString() == AppUtility.OrderMethod.ExcelUpload.ToString() })
                             .ForEachAsync(r => { 
                                 var rate = AppUtility.GetExchangeRateByDate(r.CreationDate);
                                 r.ExchangeRate = rate;

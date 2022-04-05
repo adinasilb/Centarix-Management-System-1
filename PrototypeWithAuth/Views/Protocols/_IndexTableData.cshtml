@@ -20,7 +20,7 @@
             {
                 <tr class="text-center ">
                     @*<td width="7%">
-                        <div class="form-check order-inv-form">
+                        <div class="form-check ">
                             <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
                             <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
                         </div>
@@ -61,7 +61,7 @@
                                                                             <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
                                                                             <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                                         </a>*@
-                                                                    <a class="btn-link text no-hover Protocols @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
+                                                                    <a class="btn-link text no-hover Protocols @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-share-resource-id="@col.AjaxID"
                                                                        data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
                                                                         <i class="@iconpopover.Icon @*@iconpopover.AjaxCall*@" style="color: @iconpopover.Color"></i>
                                                                         <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>

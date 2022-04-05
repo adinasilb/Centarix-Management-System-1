@@ -5,9 +5,9 @@
     $(this).addClass("active")
     //reset page number
     $('.page-number').val(1);
-    var requestStatusId = $(this).attr("value");
-    console.log(requestStatusId)
-    var isProprietary = requestStatusId == 7 ? true : false;
+    var tabName = $(this).attr("value");
+    console.log(tabName)
+    var isProprietary = tabName == "Samples" ? true : false;
     var sectionType = $('#masterSectionType').val();
     //alert(sectionType);
     if ($(this).hasClass('reload-filter')) {
@@ -16,11 +16,12 @@
     }
     //alert('after clear filter');
     var pageType = $('#masterPageType').val();
+    var requestStatusId = $(this).data("val")
     //var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
     var viewClass = '_IndexTable'; //don't use counts now anyways so just reload data so search button doesn't get messed up
     console.log("viewclass: " + viewClass);
     var searchFormdata = new FormData($("#searchHiddenForsForm")[0]);
-    $.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, 'GET', searchFormdata)
+    $.fn.ajaxPartialIndexTable("/Requests/" + viewClass, "." + viewClass, 'GET', searchFormdata, "", tabName, requestStatusId)
 });
 
 /*$('.view-archived-requests').off('click').on('click', function () {

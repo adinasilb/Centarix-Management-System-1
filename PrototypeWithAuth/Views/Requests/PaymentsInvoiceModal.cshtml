@@ -8,7 +8,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-invoice')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
+            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm " id="myForm">
                 <input type="hidden" asp-for="AccountingEnum" />
                 <input type="text" class="d-none" id="currency" value="@Model.Request.Currency.ToString()" />
 @*                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />*@
@@ -42,8 +42,8 @@
                                 var ShippingTotalDollar = TotalDollar;
                                 foreach (var shipping in Model.ShippingToPay)
                                 {
-                                    ShippingTotalDollar += shipping.CostDollar;
-                                    ShippingTotalShekel += shipping.CostShekel;
+                                    ShippingTotalDollar += (double)shipping.CostDollar;
+                                    ShippingTotalShekel += (double)shipping.CostShekel;
                                 }
                             }
                         </div>
@@ -304,7 +304,7 @@
                         <div class="row">
                             <div class="modal-footer-mt mx-auto">
                                 @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                                <input type="button" class="  custom-button custom-button-font accounting-background-color between-button-margin" id="payInvoice" value="Paid" />
+                                <input type="button" class="  custom-button custom-button-font section-bg-color between-button-margin" id="payInvoice" value="Paid" />
                                 <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('payments-invoice')">Cancel</button>
                             </div>
                         </div>
@@ -325,7 +325,7 @@
     $('#price-in-dollars').change(function (e) {
         console.log("change price")
         var cost = $(this).val() * $('.exchange-rate').val();
-        $('.installment-sum').val(cost)
+        $('.installment-sum').val(parseFloat(cost).toFixed(2))
         $.fn.SetTotals();
     });
     $(".installment-sum").change(function (e) {

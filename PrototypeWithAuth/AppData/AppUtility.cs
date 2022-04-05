@@ -1,4 +1,5 @@
 ﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,10 +18,12 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 //using System.Web.Script.Serialization;
 
 namespace PrototypeWithAuth.AppData
@@ -35,6 +38,8 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat = 4
         }
+        public enum RecurrenceEndStatuses { NoEnd, EndDate, LimitedOccurrences }
+        public enum TimePeriods { Days, Weeks, Months }
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum RoleEnum { ApproveOrders }
         public enum PageTypeEnum
@@ -44,7 +49,7 @@ namespace PrototypeWithAuth.AppData
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch, LabManagementSettings,
             TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
-            OperationsRequest, OperationsInventory, OperationsSearch,
+            OperationsRequest, OperationsInventory, OperationsCart,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
             ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask,
             BiomarkersExperiments
@@ -66,6 +71,8 @@ namespace PrototypeWithAuth.AppData
             StandingOrders,
             [Display(Name = "No Invoice")]
             NoInvoice,
+            [Display(Name = "Missing Payment Details")]
+            MissingPaymentDetails,
             [Display(Name = "Didn't Arrive")]
             DidntArrive,
             [Display(Name = "Partial Delivery")]
@@ -82,7 +89,11 @@ namespace PrototypeWithAuth.AppData
         }
         public enum IndexTableTypes
         {
-            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
+            Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations,
+            OrderedOperations,
+            RecurringExpensesOperations,
+            Cart,
+            CartOperations,
             AccountingNotifications,
             AccountingPaymentsDefault,
             AccountingPaymentsInstallments,
@@ -101,6 +112,7 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
+        public enum IndexTabs { None, Requests, Ordered, Received, RecurringExpenses, Main, Samples }
         public enum FolderNamesEnum { Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, Custom } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { None, Protocols, Requests, Materials, FunctionLine, Reports, ParentQuote, ExperimentEntries, ParentRequest, FunctionResults }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
@@ -205,7 +217,12 @@ namespace PrototypeWithAuth.AppData
         }
 
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { None, NIS, USD }
+        public enum CurrencyEnum
+        {
+            None,
+            NIS,
+            USD
+        }
         public enum PaymentsPopoverEnum
         {
             //Share,
@@ -226,9 +243,18 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary, Reorder }
         public enum ProtocolModalType { None, Create, CheckListMode, Summary, Edit, SummaryFloat, CreateNewVersion }
         public enum VendorModalType { Create, Edit, SummaryFloat }
-        public enum OrderTypeEnum { None, RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations, ExcelUpload }
+        public enum OrderMethod { None, RequestPriceQuote, OrderNow, AddToCart, AlreadyPurchased, Save, ExcelUpload }
+        public enum CartStatus { None, InCart, Ordered }
+        public enum OrderType { SingleOrder, RecurringOrder, StandingOrder }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList }
+        public enum PopoverDescription
+        {
+            More, Share, Delete, Reorder, RemoveShare, Start, Continue, AddToList, MoveToList, DeleteFromList, MonthlyPayment,
+            PayNow,
+            PayLater,
+            Installments,
+            SpecifyPayment
+        }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
@@ -446,6 +472,7 @@ namespace PrototypeWithAuth.AppData
             return false;
         }
 
+
         public static string GetLastFiles(string longFileName, int amountOfFiles)
         {
             bool lastfound = false;
@@ -484,9 +511,9 @@ namespace PrototypeWithAuth.AppData
               value.Hour, value.Minute, 0);
         }
 
-        public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
+        public static List<IconPopoverViewModel> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
         {
-            List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
+            List<IconPopoverViewModel> list = new List<IconPopoverViewModel>();
             //List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
             List<PaymentsPopoverEnum> enums = new List<PaymentsPopoverEnum> { PaymentsPopoverEnum.PayLater };
             if (!CurrentEnum.Equals(AppUtility.SidebarEnum.StandingOrders.ToString()))
@@ -496,9 +523,7 @@ namespace PrototypeWithAuth.AppData
 
                     if (CurrentEnum.ToString() != e.ToString() && CurrentEnum != AppUtility.SidebarEnum.None)
                     {
-                        AccountingPopoverLink accountingPopoverLink = new AccountingPopoverLink();
-                        accountingPopoverLink.CurrentLocation = (PaymentsPopoverEnum)Enum.Parse(typeof(PaymentsPopoverEnum), CurrentEnum.ToString());
-                        accountingPopoverLink.Description = e;
+                        IconPopoverViewModel accountingPopoverLink = null;
                         switch (e)
                         {
                             //case PaymentsPopoverEnum.Share:
@@ -511,7 +536,7 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Action = "ChangePaymentStatus";
                             //    accountingPopoverLink.Controller = "Requests";
                             //    accountingPopoverLink.Color = "#00CA72";
-                            //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px1";
+                            //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px-1";
                             //    break;
                             //case PaymentsPopoverEnum.MonthlyPayment:
                             //    accountingPopoverLink.Action = "ChangePaymentStatus";
@@ -526,10 +551,7 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Icon = "icon-credit_card-24px";
                             //    break;
                             case PaymentsPopoverEnum.PayLater:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#5F79E2";
-                                accountingPopoverLink.Icon = "icon-centarix-icons-19";
+                                accountingPopoverLink = new IconPopoverViewModel(description: Enum.Parse<PopoverDescription>(e.ToString()), color: "#5F79E2", action: "ChangePaymentStatus", controller: "Requests", icon: "icon-centarix-icons-19", ajaxcall: "change-payment-status");
                                 break;
                                 //case PaymentsPopoverEnum.Installments:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";
@@ -554,7 +576,7 @@ namespace PrototypeWithAuth.AppData
             return list;
         }
 
-        public static List<StringWithBool> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency)
+        public static List<StringWithBool> GetPriceColumn(List<AppUtility.PriceSortEnum> priceFilterEnums, Request request, CurrencyEnum currency, bool recurringExpensesTab = false)
         {
             try
             {
@@ -577,7 +599,7 @@ namespace PrototypeWithAuth.AppData
                 }
                 foreach (var p in priceFilterEnums)
                 {
-                    switch (Enum.Parse(typeof(PriceSortEnum), p))
+                    switch (p)
                     {
                         case PriceSortEnum.Unit:
                             priceColumn.Add(new StringWithBool { String = "U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit), Bool = false });
@@ -598,24 +620,33 @@ namespace PrototypeWithAuth.AppData
 
             catch (Exception ex)
             {
+                if (recurringExpensesTab)
+                { 
+                    return new List<StringWithBool>() { new StringWithBool { String = "N/A"} }; }
                 return new List<StringWithBool>() { new StringWithBool { String = "price has an error", Bool = true } };
             }
         }
 
-        public static List<StringWithBool> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p)
+        public static List<StringWithBool> GetCategoryColumn(bool categorySelected, bool subcategorySelected, Product p, bool sourceSelected = false)
         {
             try
             {
 
                 List<StringWithBool> categoryColumn = new List<StringWithBool>();
-                var category = p.ProductSubcategory.ParentCategory.Description;
-                var subcategory = p.ProductSubcategory.Description;
+                                
+                if (sourceSelected)
+                {
+                    var source = p.ProductSubcategory.ParentCategory.CategoryType.CategoryTypeDescription;
+                    categoryColumn.Add(new StringWithBool { String = source, Bool = false });
+                }
                 if (categorySelected)
                 {
+                    var category = p.ProductSubcategory.ParentCategory.Description;
                     categoryColumn.Add(new StringWithBool { String = category, Bool = false });
                 }
                 if (subcategorySelected)
                 {
+                    var subcategory = p.ProductSubcategory.Description;
                     categoryColumn.Add(new StringWithBool { String = subcategory, Bool = false });
                 }
                 return categoryColumn;
@@ -640,12 +671,12 @@ namespace PrototypeWithAuth.AppData
             return newCopy;
         }
 
-        public static List<StringWithBool> GetAmountColumn(Request request)
+        public static List<StringWithBool> GetAmountColumn(Request request, bool recurringExpensesTab = false)
         {
             try
             {
                 List<StringWithBool> amountColumn = new List<StringWithBool>();
-                if (request.Unit != null)
+                if (request.Unit != 0)
                 {
                     amountColumn.Add(new StringWithBool { String = TrimZeros(request.Unit) + " " + request.Product.UnitType.UnitTypeDescription, Bool = false });
                     if (request.Product.SubUnit != null)
@@ -659,6 +690,8 @@ namespace PrototypeWithAuth.AppData
                     }
 
                 }
+                else if (recurringExpensesTab)
+                { amountColumn.Add(new StringWithBool { String = "N/A" }); }
                 return amountColumn;
             }
             catch (Exception ex)
@@ -1021,13 +1054,53 @@ namespace PrototypeWithAuth.AppData
         public static bool GetPermissionsForPriceTabMarkReadonly(List<String> UserRoles, Request Request)
         {
             bool ReturnVal = false;
-            if(Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
+            if (Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
             {
                 ReturnVal = true;
             }
             return ReturnVal;
         }
 
+        internal static List<StringWithBool> GetTimePeriodColumn(Request r, TimePeriod timePeriod)
+        {
+            var ReturnVal = new StringWithBool() { Bool = true };
+            switch (Enum.Parse(typeof(TimePeriods), timePeriod.DescriptionEnum))
+            {
+                case TimePeriods.Days:
+                    ReturnVal.String = r.CreationDate.ToString("MMM d");
+                    break;
+                case TimePeriods.Weeks:
+                    ReturnVal.String = GetWeekStartEndDates(r.CreationDate);
+                    break;
+                case TimePeriods.Months:
+                    ReturnVal.String = r.CreationDate.Month.ToString();
+                    break;
+
+            }
+            return new List<StringWithBool> { ReturnVal };
+        }
+
+        internal static List<StringWithBool> GetTimePeriodTypeColumn(TimePeriod timePeriod)
+        {
+            var ReturnVal = new StringWithBool() { Bool = true };
+            switch (Enum.Parse(typeof(TimePeriods), timePeriod.DescriptionEnum))
+            {
+                case TimePeriods.Days:
+                    ReturnVal.String = "Daily";
+                    break;
+                case TimePeriods.Weeks:
+                    ReturnVal.String = "Weekly";
+                    break;
+                case TimePeriods.Months:
+                    ReturnVal.String = "Monthly";
+                    break;
+
+            }
+            ReturnVal.String += " Expenses";
+            return new List<StringWithBool> { ReturnVal };
+        }
+
+        
     }
 
 }

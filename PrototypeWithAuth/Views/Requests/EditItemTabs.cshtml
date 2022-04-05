@@ -1,13 +1,14 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
-@{var tabClass = "";
+@{
+    var tabClass = "";
     switch (Model.SectionType)
     {
         case AppUtility.MenuItems.Requests:
             tabClass = "nav-link";
             break;
         case AppUtility.MenuItems.Operations:
-
+            tabClass = "oper-nav-link";
             break;
         case AppUtility.MenuItems.Accounting:
             tabClass = "supplier-nav-link";
@@ -33,11 +34,11 @@
         <div class="container-fluid div-tabs  text-center pl-0">
             <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
                 <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass current-tab next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 7) && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
+                @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 7) && Model.SectionType != AppUtility.MenuItems.Protocols && requestCategoryType != 2)
                 {
                     <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab request-location"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
                 }
-                @if (Model.Requests[0].RequestStatusID != 7 && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType != 2)
+                @if (Model.Requests[0].RequestStatusID != 7)
                 {
                     <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link @tabClass request-price next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
                 }

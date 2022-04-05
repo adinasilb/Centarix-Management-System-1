@@ -2,8 +2,10 @@
 @using PrototypeWithAuth.AppData;
 @using PrototypeWithAuth.Data;
 @using Microsoft.AspNetCore.Identity
+@using React.AspNet
 @inject SignInManager<ApplicationUser> SignInManager
 
+<script src="~/js/IndexTablePartial.js"></script>
 @{
     TempData.Keep();
     ViewData["Title"] = "Index";
@@ -23,7 +25,7 @@
         <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
     </div>
 }
+@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTable" })
 
-<div class="_IndexTableWithCounts">
-    @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
-</div>
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()

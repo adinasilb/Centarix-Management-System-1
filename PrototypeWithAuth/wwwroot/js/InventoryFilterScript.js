@@ -3,21 +3,9 @@
     $('.filter-col').focus();
 });
 
-$('#invFilterPopover').on('shown.bs.popover', function () {
-    $('body').addClass('popover-open');
-})
-
-       $('body').off('click').on('click', '.btn-filter', function () {
-            $.fn.ButtonFilterClick($(this).val(), $(this).parent().parent(), $(this).parent())
-        });
-
-    $('body').on('click', "#applyFilter", function (e) {
-            e.stopImmediatePropagation();
-            $.fn.ApplyFilterClick();
-        });
 
 
-$('.search-by-name').on('change', function (e) {
+$('.filter-and-search.search-by-name').on('change', function (e) {
 	e.stopImmediatePropagation();
 	var searchText = $(this).val().toLowerCase();
 	console.log(searchText);
@@ -102,8 +90,8 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 	//alert('x button')
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
-	$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
-	$('#invFilterPopover').addClass('custom-order-inv');
+	$('#invFilterPopover').removeClass('section-bg-color custom-button-font');
+	//$('#invFilterPopover').addClass('section-outline-color');
 }); 
 
 $('body').on('click', '.clear-filters', function () {

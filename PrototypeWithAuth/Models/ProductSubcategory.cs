@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.Models
         //public string Description { get; set; }
 
         public IEnumerable<Product> Products { get; set; }
-        public string ImageURL { get; set; }
+        //public string ImageURL { get; set; }
 
         public bool IsOldSubCategory {get; set;}
         //public override CategoryJson CategoryJson { get; set; }

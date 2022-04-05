@@ -4,20 +4,16 @@
     Layout = null;
     var markDisabled = "details";
 
-    var bcColor = "order-inv-background-color";
     var color = "order-inv-color";
-    var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
 
     //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     //{
 
-    //    form = "supplier-form";
-    //    bcColor = "lab-man-background-color";
-    //    color = "lab-man-filter";
-    //    sectionType = AppUtility.MenuItems.LabManagement.ToString();
-    //}
+   //    color = "lab-man-filter";
+         //    sectionType = AppUtility.MenuItems.LabManagement.ToString();
+         //}
 }
 
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
@@ -25,7 +21,7 @@
 <script src="~/js/site.js"></script>
 
 <script src="~/js/WarantySupplyDateCalc.js"></script>
-<div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9000">
+<div class="modal modal-document fader modalStep1 on-form-modal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style cancel-quote" @*data-dismiss="modal"*@ aria-label="Close">
@@ -47,7 +43,7 @@
                         </div>
                     </div>
                 </div>
-                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
+                @*@{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}*@
 
                 <div class="modal-body mt-5 ">
 
@@ -55,8 +51,8 @@
                     <div class=" _UploadQuoteModal ">
                         @{ await Html.RenderPartialAsync("_UploadQuoteModal", Model);}
                     </div>
-                    @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
-                    {
+                    @*@if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
+                    {*@
                         <input type="hidden" class="for-supply-date-calc" value="@DateTime.Now.GetElixirDateFormat()" />
 
 
@@ -91,12 +87,12 @@
                             </div>
 
                             </div>
-                    }
+                    @*}*@
 
                     <div class="modal-footer border-0 p-0">
                         <div class="mx-auto modal-footer-mt">
-                            <input type="hidden" asp-for="OrderTypeEnum" />
-                            <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
+                            <input type="hidden" asp-for="OrderMethodEnum" />
+                            <input type="submit" class="custom-button custom-button-font section-bg-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
                             <button type="button" class="custom-button custom-cancel cancel-quote">Cancel</button>
                         </div>
                     </div>
@@ -175,7 +171,7 @@
                     //console.log(data)
                     console.log("status code" + jqxhr.status)
                     $('.modal .temprequesthiddenfors').html('');
-                    console.log($("#OrderTypeEnum").val())
+                    console.log($("#OrderMethodEnum").val())
                     $('.submitQuote').prop('disabled', false);
                     var sidebarType = $('#masterSidebarType').val();
                     var viewClass = "_IndexTableData";
@@ -187,7 +183,7 @@
                             window.location.href = "/Requests/?PageType=RequestRequest&SectionType=Requests&SidebarType=List"
                         }
                         else {
-                            $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
+                            $.fn.ajaxPartialIndexTable("/Requests/" + viewClass, "." + viewClass, "POST", formData, "step-1, reorder-item");
                         }
                         $(".save-item").removeClass("save-item").off('click')
                     }

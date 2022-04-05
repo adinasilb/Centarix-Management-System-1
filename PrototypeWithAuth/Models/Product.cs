@@ -5,10 +5,14 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using JsonKnownTypes;
+using Newtonsoft.Json;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Product : ModelBase
+    [JsonConverter(typeof(JsonKnownTypesConverter<Product>))]
+    [JsonDiscriminator(Name = "Discriminator")]
+    public abstract class Product : ModelBase
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
         //Rollback favorites and shares
@@ -62,7 +66,7 @@ namespace PrototypeWithAuth.Models
 
         [Display(Name = "Catalog Number")]
         public string CatalogNumber { get; set; }
-        public string ProductHebrewName { get; set; }
+        public string ProductSecondaryName { get; set; }
 
         [Display(Name = "Serial Number")]
         public string SerialNumber { get; set; }

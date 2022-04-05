@@ -1,0 +1,55 @@
+﻿@model PrototypeWithAuth.ViewModels.CustomField;
+@*@{
+//var customMDBSelect = "mdb-select-" + Model.CustomFieldCounter;
+//var customClass = "custom-fields-" + Model.CustomFieldCounter;
+//var requiredName = "RequiredName-" + Model.CustomFieldCounter;
+//var requiredID = "RequiredID-" + Model.CustomFieldCounter;
+}
+<div class="custom-fields @customClass row">
+    <div class="col-4">
+        <div class="form-group">
+            <label class="control-label" asp-for="FieldName"></label>
+            <input asp-for="FieldName" class="form-control-plaintext border-bottom" />
+            <span asp-validation-for="FieldName" class="centarix-error-style"></span>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            <label class="control-label">Data Type</label>
+            @Html.DropDownListFor(
+                m => m.CustomDataTypeID,
+                new SelectList(
+            Model.CustomDataTypes,
+            dataValueField: "CustomDataTypeID",
+            dataTextField: "Name"),
+                "Select A Data Type",
+                new { @class = "mdb-select custom select-dropdown form-control-plaintext " + customMDBSelect, @searchable = "default value" }
+            )
+            <span asp-validation-for="FieldName" class="centarix-error-style"></span>
+        </div>
+    </div>
+    <div class="col-2 d-flex ml-5" style="height:auto;">
+        <div class="form-check d-flex align-items-end pb-2" style="height:auto;">
+            <input type="checkbox" class="form-check-input filled-in" asp-for="Required[0]" name="@requiredName" id="@requiredID" />
+            <label class="form-check-label align-items-end" asp-for="Required[0]" for="@requiredID" >Required</label>
+        </div>
+    </div>
+    <div class="col-1 d-flex" style="height:auto;">
+        <a href="" class="remove-custom-field danger-filter align-items-end pb-2 d-flex" divclass="@Model.DivClass" cf="@Model.CustomFieldCounter" style="height:auto; font-size:1.75rem;">
+            <i class="icon-delete-24px align-items-end"></i>
+        </a>
+    </div>
+</div>
+
+<script>
+    $(".remove-custom-field").off("click").on("click", function (e) {
+        e.preventDefault();
+        var divName = $(this).attr("divclass");
+        var CustomFieldCounter = $(this).attr("cf");
+        $("." + divName + " .custom-fields-" + CustomFieldCounter).remove();
+        if ($("." + divName + " .custom-fields").length == 0) {
+            $("." + divName + " .cf_header").addClass("hidden");
+        }
+    });
+
+</script>*@

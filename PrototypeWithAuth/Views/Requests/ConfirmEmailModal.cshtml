@@ -1,20 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.ConfirmEmailViewModel
 @using PrototypeWithAuth.AppData
-@{
-    var bcColor = "order-inv-background-color";
-    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-    {
-        bcColor = "oper-background-color";
-    }
-    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
-    {
-        bcColor = "lab-man-background-color";
-    }
-    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-    {
-        bcColor = "order-inv-background-color";
-    }
-}
 
 
 <div class="modal modal-view overflow-auto emailModal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9200">
@@ -40,9 +25,9 @@
 
                 <div class="modal-footer p-4">
                     <div class="m-auto">
-                        <input type="button" class="custom-button custom-button-font @bcColor between-button-margin complete-order submitConfirmEmail" value="Confirm & Send Email" />
+                        <input type="button" class="custom-button custom-button-font section-bg-color between-button-margin complete-order submitConfirmEmail" value="Confirm & Send Email" />
 
-                        <input type="button" class="custom-cancel custom-button cancel-email cancelEmail" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
+                        <input type="button" class="custom-cancel custom-button cancel-email cancelEmail" value="Cancel Email" />
                     </div>
                 </div>
                 @*<script> //not sure why setting with js ????
@@ -96,7 +81,7 @@
                 
                 else {
                     var url = "/Requests/" + viewClass + "?" + $.fn.getRequestIndexString($(".request-status-id").val());
-                    $.fn.ajaxPartialIndexTable($(".request-status-id").val(),url, "." + viewClass, "POST", undefined, "terms, step-1, reorder-item, confirm-email");
+                    $.fn.ajaxPartialIndexTable(url, "." + viewClass, "POST", undefined, "terms, step-1, reorder-item, confirm-email");
 
                 }
                                          

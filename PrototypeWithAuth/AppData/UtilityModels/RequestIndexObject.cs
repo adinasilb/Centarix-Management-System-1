@@ -12,10 +12,11 @@ namespace PrototypeWithAuth.AppData
         //do not put any extra complex objects into this class
         public string ErrorMessage { get; set; }
         private int _PageNumber;
-        private int _RequestStatusID;
-        private List<string> _SelectedPriceSort;
+        private string _TabValue;
+        private List<AppUtility.PriceSortEnum> _SelectedPriceSort;
         private AppUtility.PageTypeEnum _PageType;
-        public int PageNumber {
+        public int PageNumber
+        {
             get
             {
                 if (_PageNumber == 0)
@@ -28,29 +29,6 @@ namespace PrototypeWithAuth.AppData
                 }
             }
             set { _PageNumber = value; }
-        }
-        public int RequestStatusID
-        {
-            get
-            {
-                if (_RequestStatusID == 0 && (PageType == AppUtility.PageTypeEnum.RequestSummary || PageType == AppUtility.PageTypeEnum.OperationsInventory))
-                {
-                    return 3;
-                }
-                else if (_RequestStatusID == 0 && PageType == AppUtility.PageTypeEnum.OperationsRequest)
-                {
-                    return 2;
-                }
-                else if (_RequestStatusID == 0)
-                {
-                    return 6;
-                }
-                else
-                {
-                    return _RequestStatusID;
-                }
-            }
-            set { _RequestStatusID = value; }
         }
         private AppUtility.SidebarEnum _SidebarType;
         public AppUtility.SidebarEnum SidebarType
@@ -85,19 +63,19 @@ namespace PrototypeWithAuth.AppData
             set { _PageType = value; }
         }
         public AppUtility.MenuItems SectionType { get; set; }
-        public List<String> SelectedPriceSort
+        public List<AppUtility.PriceSortEnum> SelectedPriceSort
         {
             get
             {
                 if (_SelectedPriceSort == null)
                 {
-                    return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+                    return new List<AppUtility.PriceSortEnum>() { AppUtility.PriceSortEnum.TotalVat };
                 }
                 else
                 {
-                    if (_SelectedPriceSort[0]==null)
+                    if (_SelectedPriceSort[0] == null)
                     {
-                        return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+                        return new List<AppUtility.PriceSortEnum>() { AppUtility.PriceSortEnum.TotalVat };
                     }
                     return _SelectedPriceSort;
                 }
@@ -105,9 +83,10 @@ namespace PrototypeWithAuth.AppData
             set { _SelectedPriceSort = value; }
         }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
-        public AppUtility.OrderTypeEnum OrderType { get; set; }
+        public AppUtility.OrderMethod OrderMethod { get; set; }
         public bool CategorySelected { get; set; }
         public bool SubcategorySelected { get; set; }
+        public bool SourceSelected { get; set; }
         public bool IsReorder { get; set; }
         public bool IsArchive { get; set; }
         public Guid GUID { get; set; } //THIS IS ONLY FOR PASSING BETWEEN CONTROLLERS ---> NOT FOR USE IN REMEMBERING DATA/REFERENCING ETC.
@@ -115,6 +94,24 @@ namespace PrototypeWithAuth.AppData
         //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
         public AppUtility.ModalType ModalType { get; set; }
 
-        public int ListID { get; set; }
+        public string TabValue
+        {
+            get
+            {
+                if (_TabValue ==null && PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    return AppUtility.IndexTabs.Main.ToString();
+                }
+                else if (_TabValue == null)
+                {
+                    return AppUtility.IndexTabs.Requests.ToString();
+                }
+                else
+                {
+                    return _TabValue;
+                }
+            }
+            set { _TabValue = value; }
+        }
     }
 }

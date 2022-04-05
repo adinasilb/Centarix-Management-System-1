@@ -1,6 +1,9 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
-<div class="error-message"   >
+
+
+
+<div class="error-message">
     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}
 </div>
 @if (Model.RequestsByVendor.Count() > 0)

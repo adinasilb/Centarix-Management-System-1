@@ -95,8 +95,8 @@ $("body").on("click", "#protocolFilterContentDiv .popover-close", function (e) {
 	//alert('x button')
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
-	$('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
-	$('#protocolFilterPopover').addClass('custom-protocols');
+	$('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
+	$('#protocolFilterPopover').addClass('section-outline-color');
 }); 
 
 $('body').on('click', '.clear-filters', function () {

@@ -2,10 +2,12 @@
 @using PrototypeWithAuth.AppData;
 @using PrototypeWithAuth.Data;
 @using Microsoft.AspNetCore.Identity
+@using React.AspNet
+
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Accounting General";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if (AppUtility.IsAjaxRequest(this.Context.Request))
@@ -15,10 +17,10 @@
 
 }
 
-<div class="container-fluid">
-    <div class="row">
+@*<div class="container-fluid">*@
+    @*<div class="row">
         <div class="col-8"></div>
-        <div class="col-2  accounting-form ">
+        <div class="col-2   ">
 
             @{
                 var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
@@ -41,7 +43,7 @@
                  @searchable = "Search here.."
              })
         </div>
-        <div class="col-2 pr-0 accounting-form">
+        <div class="col-2 pr-0 ">
             @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
             @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
                 new SelectListItem
@@ -54,11 +56,18 @@
             @*</div>
                 <div class="col-1 p-0 monthsHours">*@
 
-        </div>
+        @*</div>*@
+    @*</div>*@
+@*</div>*@
+@if (Model.ErrorMessage != null)
+{
+    <div class="row p-4">
+        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
     </div>
-</div>
-<div class="_IndexTable">
-    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
-</div>
+}
+@Html.React("RootComponent", new { viewModel = Model, viewEnum = "/_IndexTable" })
+
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
 
 <script src="~/js/PricePopoverScript.js"></script>

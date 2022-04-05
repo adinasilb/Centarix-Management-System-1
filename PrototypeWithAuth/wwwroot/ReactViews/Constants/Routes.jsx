@@ -1,0 +1,16 @@
+﻿export const DELETE_ITEM = '/DeleteModal';
+export const INDEX_TABLE = '/_IndexTable';
+export const INDEX_TABLE_BY_VENDOR = '/_IndexTableByVendor';
+export const SETTINGS_INVENTORY = 'SettingsInventory';
+export const REORDER = '/Reorder';
+export const SHARE = '/ShareModal';
+export const NEW_LIST = '/NewListModal';
+export const MOVE_TO_LIST = '/MoveToListModal';
+export const DOCUMENTS = '/DocumentsModal';
+export const ORDER_TAB = '/OrderTab'
+export const DELETE_DOCUMENTS = '/DeleteDocumentModal';
+export const UPLOAD_QUOTE = '/UploadQuoteModal';
+export const TERMS = '/TermsModal';
+export const ORDER_OPERATIONS_MODAL = '/OrderOperationsModal';
+export const CONFIRM_EMAIL_MODAL = '/ConfirmEmailModal';
+export const ORDER_EMAIL = '/OrderEmail';

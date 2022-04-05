@@ -13,15 +13,12 @@ namespace PrototypeWithAuth.ViewModels
     {
         public ParentRequest ParentRequest { get; set; }
         public int SelectedTerm { get; set; }
-        public List<SelectListItem> TermsList { get; set; }
+        public List<PaymentStatus> TermsList { get; set; }
         public int Installments { get; set; }
         public DateTime InstallmentDate { get; set; }
         public DateTime InstallmentDate_submit { get { return InstallmentDate; } set { InstallmentDate = value; } }
-        public AppUtility.MenuItems SectionType { get; set; }
-        //public RequestIndexObject RequestIndexObject { get; set; }
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
         public string RedirectAction { get; set; }
         public List<String> EmailAddresses { get; set; }
-        public StringWithBool Error { get; set; }
     }
 }

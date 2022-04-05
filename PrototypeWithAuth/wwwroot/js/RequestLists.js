@@ -44,7 +44,7 @@
     $(".change-list").off("click").on("click",function (e) {
         $("#ListID").val($(this).attr("value"))
         var url = "/Requests/_IndexTableWithListTabs/?" + $.fn.getRequestIndexString()
-        $.fn.ajaxPartialIndexTable(-1,url, "._IndexTableListTabs", "GET")
+        $.fn.ajaxPartialIndexTable(url, "._IndexTableListTabs", "GET")
     })
 
     $(".save-list").off("click").on("click", function (e) {
@@ -56,7 +56,7 @@
             var formData = new FormData($(".listSettingsForm")[0]);
             formData.append('selectedIndexListID', $("#ListID").val())
             var viewClass = "._IndexTableListTabs"
-            $.fn.ajaxPartialIndexTable(-1, "/Requests/ListSettingsModal", viewClass, "POST", formData, "list-settings");
+            $.fn.ajaxPartialIndexTable("/Requests/ListSettingsModal", viewClass, "POST", formData, "list-settings");
         }
     });
 
@@ -135,7 +135,7 @@
             var url = "/Requests/NewListModal";
             var formData = new FormData($(".newListForm")[0]);
             var viewClass = "._IndexTableListTabs"
-            $.fn.ajaxPartialIndexTable(-1, "/Requests/NewListModal", viewClass, "POST", formData, "new-list, move-list");
+            $.fn.ajaxPartialIndexTable("/Requests/NewListModal", viewClass, "POST", formData, "new-list, move-list");
         }
     });
     $("#ListTitle").on('input', function (e) {
@@ -146,7 +146,7 @@
         console.log("close settings")
         var viewClass = "._IndexTableListTabs"
         var url = "/Requests/_IndexTableWithListTabs/?"+ $.fn.getRequestIndexString()
-        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
+        $.fn.ajaxPartialIndexTable( url, viewClass, "GET", null, "list-settings");
     })
 
     $(".cancel-save").on("click", function (e) {
@@ -228,7 +228,7 @@
         $("#NewListID").val($(this).attr("listId"));
         var formData = new FormData($(".moveListItemForm")[0]);
         var viewClass = "._IndexTableListTabs"
-        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "POST", formData, "move-list");
+        $.fn.ajaxPartialIndexTable( url, viewClass, "POST", formData, "move-list");
     });
 
     $(".delete-request").off('click').on("click", function (e) {
@@ -236,7 +236,7 @@
         console.log("delete list request");
         var formData = new FormData($(".deleteListRequestForm")[0])
         var viewClass = "._IndexTableListTabs"
-        $.fn.ajaxPartialIndexTable(-1, "/Requests/DeleteListRequestModal", viewClass, "POST", formData, "delete-list-request");
+        $.fn.ajaxPartialIndexTable("/Requests/DeleteListRequestModal", viewClass, "POST", formData, "delete-list-request");
         return false;
     });
 
@@ -298,6 +298,6 @@
         console.log("close settings")
         var viewClass = "._IndexTableListTabs"
         var url = "/Requests/_IndexTableWithListTabs/?" + $.fn.getRequestIndexString()
-        $.fn.ajaxPartialIndexTable(-1, url, viewClass, "GET", null, "list-settings");
+        $.fn.ajaxPartialIndexTable( url, viewClass, "GET", null, "list-settings");
     })
 })

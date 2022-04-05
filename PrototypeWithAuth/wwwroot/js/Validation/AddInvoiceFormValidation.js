@@ -9,7 +9,8 @@ $('.addInvoiceForm').validate({
 	},
 	rules: {
 		"InvoiceImage": {
-			fileRequired: true
+			fileRequired: true,
+			/*extension: "jpg|jpeg|png|pdf|ppt|pptx" */
 		},
 		"Invoice.InvoiceNumber": {
 			required: true,
@@ -26,12 +27,35 @@ $('.addInvoiceForm').validate({
 		"Invoice.InvoiceDate": {
 			required: true,
 			IsTodayOrEarlier: true
+		},
+		"Sum": {
+			number: true,
+			required: true,
+			min: 1
+		},
+		"VAT": {
+			number: true,
+			required: true,
+			min: 0
+		},
+		"Requests[0].Shipping": {
+			number: true,
+			min: 0
+		},
+		"VATShipping": {
+			number: true,
+			min: 0
+        },
+		"Invoice.InvoiceDiscount": {
+			number: true,
+			min: 0
+        },
+		"DiscountAmount": {
+			number: true,
+			min: 0
         }
 	},
 	messages: {
-		/*		"subLocationSelected": "Please choose a location before submitting",
-				"locationVisualSelected": "Please choose a location before submitting",
-				"locationTypeSelected": "Please choose a location before submitting",*/
 		"Invoice.InvoiceNumber": {
 			remote: "This invoice number already exists for the chosen vendor"
 		}

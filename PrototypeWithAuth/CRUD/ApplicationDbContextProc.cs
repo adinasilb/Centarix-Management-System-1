@@ -66,6 +66,9 @@ namespace PrototypeWithAuth.CRUD
         protected RequestNotificationsProc _requestNotificationsProc;
         protected EmployeeInfoNotificationsProc _employeeInfoNotificationsProc;
         protected TemporaryLocationInstancesProc _temporaryLocationInstancesProc;
+        protected TimePeriodsProc _timePeriodsProc;
+        protected CustomDataTypesProc _customDataTypesProc;
+        protected InvoicesProc _invoicesProc;
 
         public ApplicationDbContextProc(ApplicationDbContext context)
         {
@@ -118,6 +121,9 @@ namespace PrototypeWithAuth.CRUD
             _requestNotificationsProc  = new RequestNotificationsProc(_context, true);
             _employeeInfoNotificationsProc = new EmployeeInfoNotificationsProc(_context, true);
             _temporaryLocationInstancesProc = new TemporaryLocationInstancesProc(_context, true);
+            _customDataTypesProc = new CustomDataTypesProc(_context, true);
+            _timePeriodsProc = new TimePeriodsProc(_context, true);
+            _invoicesProc = new InvoicesProc(_context, true);
         }
 
         //protected void InstantiateProcs(List<String> Types)

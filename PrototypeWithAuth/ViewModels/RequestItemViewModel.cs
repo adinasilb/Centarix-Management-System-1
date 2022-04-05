@@ -28,9 +28,11 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
-        public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }
+        public IEnumerable<UnitType> UnitTypes { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
+        public List<SelectListItem> ApplicationUsers { get; set; }
+        public IEnumerable<TimePeriod> TimePeriods { get; set; }
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }
@@ -72,6 +74,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> EmailAddresses { get; set; } //to pass back the email addresses in the create modal view
         public int RequestStatusID { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
+        public AppUtility.SidebarEnum SidebarType { get; set; }
         public ReceivedLocationViewModel ReceivedLocationViewModel { get; set; }
         public ReceivedModalSublocationsViewModel ReceivedModalSublocationsViewModel { get; set; }
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
@@ -89,5 +92,10 @@ namespace PrototypeWithAuth.ViewModels
         public List<string> LastUrls { get; set; }
         public bool HasQuote { get; set; }
         public bool HasWarnings { get; set; }
+        public AppUtility.OrderType OrderType { get; set; }
+        public bool AdditionalRequests { get; set; }
+
+        public List<UploadDocumentInfoViewModel> UploadDocuments { get; set; }
+        public Guid GUID { get; set; }
     }
 }

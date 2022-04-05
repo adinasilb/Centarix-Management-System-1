@@ -9,7 +9,7 @@
                 <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('material-info');">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding on-form-modal protocol-form materialForm">
+                <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding on-form-modal  materialForm">
                     @Html.HiddenFor(r => r.Material.MaterialID)
                     <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                         <div class="container p-0">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="modal-footer border-0 p-0">
                         <div class="mx-auto modal-footer-mt">
-                            <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin save-material-info" value="Save" />
+                            <input type="submit" class="custom-button custom-button-font section-bg-color between-button-margin save-material-info" value="Save" />
                             <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('material-info');">Cancel</button>
                         </div>
                     </div>

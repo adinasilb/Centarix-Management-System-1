@@ -1152,6 +1152,48 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.CustomDataType", b =>
+                {
+                    b.Property<int>("CustomDataTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CustomDataTypeID");
+
+                    b.ToTable("CustomDataTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            CustomDataTypeID = 1,
+                            Name = "String"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 2,
+                            Name = "Double"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 3,
+                            Name = "Bool"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 4,
+                            Name = "DateTime"
+                        },
+                        new
+                        {
+                            CustomDataTypeID = 5,
+                            Name = "File"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Degree", b =>
                 {
                     b.Property<int>("DegreeID")
@@ -1853,7 +1895,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             FunctionTypeID = 1,
                             DescriptionEnum = "AddImage",
                             FunctionDescription = "Add Image",
-                            Icon = "icon-account_box-24px1",
+                            Icon = "icon-account_box-24px-1",
                             IconActionClass = "add-image-to-line"
                         },
                         new
@@ -1893,7 +1935,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             FunctionTypeID = 6,
                             DescriptionEnum = "AddTable",
                             FunctionDescription = "Add Table",
-                            Icon = "icon-table_chart-24px1",
+                            Icon = "icon-table_chart-24px-1",
                             IconActionClass = "add-table-to-line"
                         },
                         new
@@ -1995,6 +2037,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("InvoiceDiscount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("InvoiceNumber")
                         .HasColumnType("nvarchar(max)");
@@ -3321,6 +3366,68 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("OldVendorCountries");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.OrderMethod", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("OrderMethods");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = -1,
+                            Description = "None",
+                            DescriptionEnum = "None"
+                        },
+                        new
+                        {
+                            ID = 1,
+                            Description = "Add To Cart",
+                            DescriptionEnum = "AddToCart"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Order Now",
+                            DescriptionEnum = "OrderNow"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Already Purchased",
+                            DescriptionEnum = "AlreadyPurchased"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Description = "Request Price Quote",
+                            DescriptionEnum = "RequestPriceQuote"
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Description = "Save",
+                            DescriptionEnum = "Save"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Description = "Excel Upload",
+                            DescriptionEnum = "ExcelUpload"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
                 {
                     b.Property<int>("ID")
@@ -3339,6 +3446,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsProprietary")
@@ -3515,9 +3625,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsShippingPaid")
-                        .HasColumnType("bit");
-
                     b.Property<string>("NoteToSupplier")
                         .HasColumnType("nvarchar(max)");
 
@@ -3529,9 +3636,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("QuartzyOrderNumber")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Shipping")
-                        .HasColumnType("float");
 
                     b.Property<string>("SupplierOrderNumber")
                         .HasColumnType("nvarchar(max)");
@@ -3672,9 +3776,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("ShippingPaidHere")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("Sum")
                         .HasColumnType("decimal(18,2)");
 
@@ -3807,6 +3908,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CatalogNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3818,14 +3923,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<string>("ProductHebrewName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ProductMedia")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductSecondaryName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductSubcategoryID")
@@ -3873,6 +3978,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[SerialNumber] IS NOT NULL AND [VendorID] IS NOT NULL");
 
                     b.ToTable("Products");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Product");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProductComment", b =>
@@ -5230,6 +5337,44 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.RecurrenceEndStatus", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("RecurringOrderEndStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "No End",
+                            DescriptionEnum = "NoEnd"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "End Date",
+                            DescriptionEnum = "EndDate"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Limited Occurrences",
+                            DescriptionEnum = "LimitedOccurrences"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Report", b =>
                 {
                     b.Property<int>("ReportID")
@@ -5372,11 +5517,17 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsPartial")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
                     b.Property<string>("NoteForClarifyDelivery")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OrderType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("OccurenceNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderMethodID")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ParentQuoteID")
                         .HasColumnType("int");
@@ -5404,11 +5555,19 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasDefaultValueSql("NEXT VALUE FOR dbo.SerialNumberHelper");
 
+                    b.Property<decimal>("Shipping")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("SubProjectID")
                         .HasColumnType("int");
 
                     b.Property<int?>("Terms")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("URL")
                         .HasColumnType("nvarchar(max)");
@@ -5426,6 +5585,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserReceiverID");
 
                     b.HasIndex("InvoiceID");
+
+                    b.HasIndex("OrderMethodID");
 
                     b.HasIndex("ParentQuoteID");
 
@@ -5711,7 +5872,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsMain")
@@ -5733,7 +5894,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 1,
                             CategoryJsonID = 0,
                             Description = "Rejuvenation",
-                            ImageUrl = "rejuvenation_image.svg",
+                            ImageURL = "rejuvenation_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
                             IsResourceType = false
@@ -5743,7 +5904,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 2,
                             CategoryJsonID = 0,
                             Description = "Biomarkers",
-                            ImageUrl = "biomarkers_image.svg",
+                            ImageURL = "biomarkers_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
                             IsResourceType = false
@@ -5753,7 +5914,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 3,
                             CategoryJsonID = 0,
                             Description = "Delivery Systems",
-                            ImageUrl = "delivery_systems_image.svg",
+                            ImageURL = "delivery_systems_image.svg",
                             IsMain = true,
                             IsReportsCategory = true,
                             IsResourceType = false
@@ -5763,7 +5924,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 4,
                             CategoryJsonID = 0,
                             Description = "Clinical Trials",
-                            ImageUrl = "clinical_trials_image.svg",
+                            ImageURL = "clinical_trials_image.svg",
                             IsMain = true,
                             IsReportsCategory = false,
                             IsResourceType = false
@@ -5854,7 +6015,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 14,
                             CategoryJsonID = 0,
                             Description = "Software",
-                            ImageUrl = "software_image.svg",
+                            ImageURL = "software_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true
@@ -5864,7 +6025,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 15,
                             CategoryJsonID = 0,
                             Description = "Learning",
-                            ImageUrl = "learning_image.svg",
+                            ImageURL = "learning_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true
@@ -5874,7 +6035,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 16,
                             CategoryJsonID = 0,
                             Description = "Companies",
-                            ImageUrl = "companies_image.svg",
+                            ImageURL = "companies_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true
@@ -5884,7 +6045,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ID = 17,
                             CategoryJsonID = 0,
                             Description = "News",
-                            ImageUrl = "news_image.svg",
+                            ImageURL = "news_image.svg",
                             IsMain = false,
                             IsReportsCategory = false,
                             IsResourceType = true
@@ -6493,6 +6654,44 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("TestHeaderID");
 
                     b.ToTable("TestValues");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TimePeriod", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("TimePeriods");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "Days",
+                            DescriptionEnum = "Days"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Weeks",
+                            DescriptionEnum = "Weeks"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Months",
+                            DescriptionEnum = "Months"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
@@ -7495,6 +7694,49 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.RecurringOrder", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.Product");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Occurrences")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecurrenceEndStatusID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TimePeriodAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimePeriodID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("RecurrenceEndStatusID");
+
+                    b.HasIndex("TimePeriodID");
+
+                    b.HasDiscriminator().HasValue("RecurringOrder");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.SingleOrder", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.Product");
+
+                    b.HasDiscriminator().HasValue("SingleOrder");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.StandingOrder", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.RecurringOrder");
+
+                    b.HasDiscriminator().HasValue("StandingOrder");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -8273,6 +8515,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("InvoiceID")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("PrototypeWithAuth.Models.OrderMethod", "OrderMethod")
+                        .WithMany()
+                        .HasForeignKey("OrderMethodID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
                         .WithMany("Requests")
                         .HasForeignKey("ParentQuoteID")
@@ -8755,6 +9003,21 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("MaritalStatusID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RecurringOrder", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.RecurrenceEndStatus", "RecurrenceEndStatus")
+                        .WithMany()
+                        .HasForeignKey("RecurrenceEndStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.TimePeriod", "TimePeriod")
+                        .WithMany()
+                        .HasForeignKey("TimePeriodID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

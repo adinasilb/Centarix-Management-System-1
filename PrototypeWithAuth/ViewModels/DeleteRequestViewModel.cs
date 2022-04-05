@@ -11,7 +11,5 @@ namespace PrototypeWithAuth.ViewModels
     public class DeleteRequestViewModel : ViewModelBase
     {
         public Request Request { get; set; } 
-
-        public RequestIndexObject RequestIndexObject { get; set; }
     }
 }

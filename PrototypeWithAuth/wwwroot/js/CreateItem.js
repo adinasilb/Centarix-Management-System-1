@@ -8,13 +8,14 @@
             var sectionType = $("#masterSectionType").val()
             var modalType = $("#modalType").val();
             var requestID = $("#Requests_0__RequestID").val()
+            var guid  = $(".hidden-guid").val()
             if (modalType == "Create") {
                 var itemName = $("#Requests_0__Product_ProductName").val()
                 console.log("name " + itemName);
                 var isRequestQuote = false; //always false until put back in //$(".isRequest").is(":checked")
                 console.log(isRequestQuote)
                 console.log("subcategory " + subcategoryID)
-                var url = "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote;
+                var url = "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&guid=" + guid + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote;
                 console.log(url);
                 if (subcategoryID != "") {
                     $.ajax({
@@ -44,6 +45,7 @@
                                 $(".requestPriceQuote").attr("disabled", true)
                             }
                             else {
+                                console.log("hide request price quote")
                                 $('.requestQuoteHide').addClass("d-none");
                             }
                         }
@@ -191,7 +193,7 @@
                 processData: false,
                 contentType: false,
                 async: true,
-                url: "/Requests/AddItemView?OrderType=SaveOperations",
+                url: "/Requests/AddItemView?OrderMethod=SaveOperations",
                 type: 'POST',
                 data: formData,
                 cache: false,
@@ -297,4 +299,82 @@
     $(".url-shown").on("click", function (e) {
         $("#url-click").click();
     });
+
+    $.fn.SubmitOrderFromAddItemView = function (orderMethod) {
+        console.log("in submitorderfromadditemview");
+        var formData = new FormData($("#myForm")[0]);
+        console.log("...formData")
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/AddItemView?OrderMethod=" + orderMethod,
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                if (orderMethod != "Save") {
+                    $(".temprequesthiddenfors").html(''); //remove hidden fors so don't conflict further down the line
+                    console.log("in success of ajax call ");
+                    //alert("in success of ajax call");
+                    //if (orderMethod == "AddToCart") {
+                    //    console.log("in add to cart try 2");
+                    //    $(".save-item").removeClass("save-item");
+                    //    $(".outer-add-item-view").html(data);
+                    //}
+                    //else {
+                    $.fn.OpenModal('modalStep1', 'step-1', data)
+                    $(".submitOrder").prop('disabled', false)
+                    //}
+                    /*$("temprequesthiddenfors").remove();*/
+                    $("#loading").hide();
+                } else {
+                    $("#loading").hide();
+                    $(".submitOrder").prop('disabled', false)
+                    $(".save-item").removeClass("save-item")
+                    $('.render-body').html(data)
+                }
+                return true;
+            },
+            error: function (jqxhr) {
+                console.log("in error of ajax call ");
+                $("#loading").hide();
+                $('.error-message').html(jqxhr.responseText);
+                $(".submitOrder").prop('disabled', false)
+            }
+
+        });
+    };
+    //$('.ordersItemForm').on('click', "#alreadyPaid", function (e) {
+    //    console.log("pay")
+    //    if ($("#alreadyPaid:checkbox").is(":checked")) {
+    //        $(".paid-info").addClass("d-none")
+    //        $("#alreadyPaid:checkbox").prop("checked", false)
+    //        $("#Paid").val(false)
+    //    }
+    //    else {
+    //        $(".paid-info").removeClass("d-none")
+    //        $("#alreadyPaid:checkbox").prop("checked", true)
+    //        $("#Paid").val(true)
+    //    }
+
+    //});
+    //$('.ordersItemForm').on('click', "#standingOrder", function (e) {
+    //    console.log("standing order")
+    //    if ($("#standingOrder:checkbox").is(":checked")) {
+    //        $("#standingOrder:checkbox").prop("checked", false)
+    //        $("#OrderType").val("StandingOrder")
+    //    }
+    //    else {
+    //        $("#standingOrder:checkbox").prop("checked", true)
+    //        $("#OrderType").val("StandingOrder")
+    //    }
+
+    //});
+
+    
 })

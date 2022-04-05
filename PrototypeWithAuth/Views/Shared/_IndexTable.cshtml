@@ -1,6 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
 @using PrototypeWithAuth.AppData
-<input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
 <input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
 <div class="error-message text-danger-centarix">
     @{ await Html.RenderPartialAsync("_ErrorMessage", Model.ErrorMessage);}

@@ -2,8 +2,6 @@
 @model PrototypeWithAuth.ViewModels.ConfirmArchiveViewModel
 @{
     Layout = null;
-    var bcColor = "order-inv-background-color";
-    
 }
 <script src="~/js/site.js"></script>
 <div class="modal modal-view confirm-archive-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999;display:block">
@@ -27,7 +25,7 @@
                     </div>
                     <div class="row text-center">
 
-                        <button class="text custom-button custom-button-font @bcColor archive-request between-button-margin">Save</button>
+                        <button class="text custom-button custom-button-font section-bg-color archive-request between-button-margin">Save</button>
                         <button class="custom-button custom-cancel text" onclick="$.fn.CloseModal('confirm-archive')">Cancel</button>
 
                     </div>
@@ -57,7 +55,7 @@
                 $("#loading").hide();
                 $.fn.CloseModal('confirm-archive');
                 $('#location').html(data);
-                $.fn.ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
+                $.fn.ajaxPartialIndexTable('/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
             },
             error: function (xhr) {
                 $("#location").html(xhr.responseText);

@@ -48,7 +48,7 @@
                                     var folderPerMaterial = Model.Folders.Where(m => m.Key.MaterialID == material.MaterialID).SelectMany(f => f).FirstOrDefault();
                                     if (folderPerMaterial[0].FileStrings != null && folderPerMaterial[0].FileStrings.Count > 0)
                                     {
-                                        updateImageColor = "protocols-filter";
+                                        updateImageColor = "section-filter";
                                     }
                                     var deleteMaterialColor = color;
                                     var materialName = material.Name ?? material.Product.ProductName;
@@ -66,7 +66,7 @@
                                                 <button class="  @seeProductDetailsClasses btn btn-link no-box-shadow p-0 m-0" value="@material.ProductID" materialID="@material.MaterialID">                                                    <i class=" icon-broken-link " style="font-size:1.55rem"></i>
                                                 </button>
                                                 <button class=" delete-material  btn btn-link no-box-shadow p-0 m-0" value="@material.MaterialID">
-                                                    <i class=" icon-delete-24px1  " style="font-size:1.55rem"></i>
+                                                    <i class=" icon-delete-24px-1  " style="font-size:1.55rem"></i>
                                                 </button>
                                             </div>
 
@@ -89,7 +89,7 @@
             {
                 <div class="col text-center">
                     <button value="@material.MaterialCategoryID" type="button" class="no-box-shadow btn p-0 m-0 addMaterial button-mark-readonly mark-readonly ">
-                        <i class="protocols-color icon-add_circle_outline-24px1" style="font-size: 3rem;"></i>
+                        <i class="protocols-color icon-add_circle_outline-24px-1" style="font-size: 3rem;"></i>
                     </button>
                 </div>
             }

@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization; //in order to allow for authirization policy builder
-using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize filter
+using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize 
 using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
@@ -26,15 +26,23 @@ using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using JavaScriptEngineSwitcher.V8;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using React.AspNet;
+using Newtonsoft.Json.Converters;
+using System.Reflection;
+using System.IO;
 
 namespace PrototypeWithAuth
 {
     public class Startup
     {
         private const String ConfirmEmailProvider = "CustomEmailConfirmation";
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             Configuration = configuration;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
@@ -78,7 +86,10 @@ namespace PrototypeWithAuth
             });
 
             services.AddControllersWithViews();
-
+            services.AddReact();
+            
+            services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+            .AddV8();
 
             // Add framework services.
             services.AddMvc();
@@ -160,6 +171,21 @@ namespace PrototypeWithAuth
             app.UseHttpsRedirection();
 
             app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
+
+
+
+            app.UseReact(config =>
+            {
+                config.SetLoadBabel(true)
+                  .SetLoadReact(false)
+                  .SetReactAppBuildPath("~/dist");
+                config.UseServerSideRendering = false;
+                config.JsonSerializerSettings = new JsonSerializerSettings
+                {
+                    Converters= new List<JsonConverter> { new StringEnumConverter() },
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+            });
             app.UseRouting();
 
             app.UseAuthentication();
@@ -179,6 +205,13 @@ namespace PrototypeWithAuth
 
             //ChangePassword(serviceProvider).Wait();
 
+            CreateRoles(serviceProvider).Wait();
+
+            if (_hostEnvironment.IsDevelopment())
+            {
+                WriteAppUtilityJsx();
+                WriteElixirStringsJsx();
+            }
             //CreateRoles(serviceProvider).Wait();
             //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
@@ -242,6 +275,8 @@ namespace PrototypeWithAuth
                 }
             }
 
+            await CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
+
             //string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             //string[] roleNames2 = Enum.GetNames(typeof(AppUtility.RoleItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             //string[] roleNames = new string[roleNames1.Length + roleNames2.Length];
@@ -267,7 +302,7 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            
+
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
             ////{
@@ -311,8 +346,50 @@ namespace PrototypeWithAuth
             {
                 await UserManager.AddToRoleAsync(adminuser, "Users");
             }
+        } 
+
+        private void WriteAppUtilityJsx()
+        {
+            var type = Type.GetType("PrototypeWithAuth.AppData.AppUtility");
+            var enums = Assembly.Load("PrototypeWithAuth").GetTypes().Where(t => t.IsEnum && t.DeclaringType == type);
+            string uploadFolder = Path.Combine(_hostEnvironment.WebRootPath, "ReactViews\\Constants");
+
+            string fileName = Path.Combine(uploadFolder, "AppUtility.jsx");
+
+            using (StreamWriter writer = new StreamWriter(fileName, false))
+            {
+                foreach (var e in enums)
+                {
+                    writer.WriteLine("export const " + e.Name + " = {");
+                    foreach (var value in e.GetEnumValues())
+                    {
+                        writer.WriteLine(Enum.GetName(e, value) + " : '" + Enum.GetName(e, value) + "',");
+                    }
+                    writer.WriteLine("}");
+                    writer.WriteLine();
+                }
+            }
+
         }
 
+        private void WriteElixirStringsJsx()
+        {
+            var type = Type.GetType("PrototypeWithAuth.AppData.UtilityModels.ElixirStrings");
+            var elixirStrings = Assembly.Load("PrototypeWithAuth").GetTypes().Where(t => t.FullName == type.FullName).FirstOrDefault().GetMembers().Where(e => e.MemberType == MemberTypes.Field);
+
+            string uploadFolder = Path.Combine(_hostEnvironment.WebRootPath, "ReactViews\\Constants");
+
+            string fileName = Path.Combine(uploadFolder, "ElixirStrings.jsx");
+
+            using (StreamWriter writer = new StreamWriter(fileName, false))
+            {
+                foreach (var es in elixirStrings)
+                {
+                    writer.WriteLine("export const " + es.Name + " = '" + ((FieldInfo)es).GetValue(typeof(String)) + "';");
+                }
+            }
+
+        }
         //
 
         // var poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");

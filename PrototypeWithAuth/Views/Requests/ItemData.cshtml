@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
+@using React.AspNet
 @inject UserManager<ApplicationUser> _userManager
 
 @{ string showItem = "";
@@ -69,7 +70,7 @@
                 @{await Html.RenderPartialAsync("~/Views/Requests/_ItemTab.cshtml", Model); }
             </div>
         }
-        @if ((Model.Requests[0].RequestStatusID == 3 && Model.SectionType != AppUtility.MenuItems.Protocols && Model.Requests[0].OrderType != AppUtility.OrderTypeEnum.SaveOperations.ToString())
+        @if ((Model.Requests[0].RequestStatusID == 3 && Model.SectionType != AppUtility.MenuItems.Protocols && requestCategoryType != 2)
            || Model.IsProprietary)
         {
             <div id="location" class="tab-pane fade @showLocation" value="2">
@@ -80,6 +81,12 @@
         {
             <div id="price" class="tab-pane fade @showPrice" value="3">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_PriceTab.cshtml", Model); }
+            </div>
+        }
+        else if(Model.SectionType == AppUtility.MenuItems.Operations || requestCategoryType == 2)
+        {
+            <div id="price" class="tab-pane fade @showPrice" value="3">
+                @{await Html.RenderPartialAsync("~/Views/Requests/_PriceTabOperations.cshtml", Model); }
             </div>
         }
         <div id="documents" class="tab-pane fade @showDocuments" value="4">
@@ -93,14 +100,16 @@
                 @{await Html.RenderPartialAsync("~/Views/Requests/_HistoryTab.cshtml", Model); }
             </div>
         }
-        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create) && Model.SectionType != AppUtility.MenuItems.Operations)
+        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
         {
-            <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
-                @{await Html.RenderPartialAsync("~/Views/Requests/_OrderTab.cshtml", Model); }
-            </div>
+                <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
+                    @Html.React("RootComponent", new { viewModel = Model, viewEnum = "/OrderTab" })       
+                </div>
         }
     </div>
 </div>
+@Html.ReactGetScriptPaths()
+@Html.ReactInitJavaScript()
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/site.js"></script>

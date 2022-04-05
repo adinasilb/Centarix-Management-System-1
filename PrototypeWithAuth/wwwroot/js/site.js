@@ -45,17 +45,7 @@ $(function () {
         console.log("in parent list");
         var parentCategoryId = $(this).val();
         var sublistSelector = "#sublist";
-        var requestIndex = "";
-        if ($("#masterSectionType").val() == "Operations") {
-            console.log("operations")
-            parentCategoryId = $(this).val();
-            requestIndex = $(this).attr("request-index");
-            sublistSelector = "select.mdb-select" + requestIndex;
-            console.log("requestIndex " + requestIndex)
-        }
-        else {
-            //parentCategoryId = $("#parentlist").val();
-        }
+        console.log($(sublistSelector))
         console.log("parentcategoryid: " + parentCategoryId);
         var url = "/Requests/GetSubCategoryList";
         console.log("url: " + url);
@@ -65,15 +55,15 @@ $(function () {
             $(sublistSelector).children("option").each(function (i, option) {
                 option.remove();
             });
-            var firstitem1 = '<option value=""> Select Subcategory</option>';
+            var firstitem1 = '<option value=""> Select Sub Category</option>';
 
             $(sublistSelector).append(firstitem1);
 
-            console.log(data);
+            //console.log(data);
             $.each(data, function (i, subCategory) {
-                console.log(subCategory.description)
+                //console.log(subCategory.description)
                 var newitem1 = '<option value="' + subCategory.id + '">' + subCategory.description + '</option>';
-                console.log("newitem1: " + newitem1);
+                //console.log("newitem1: " + newitem1);
                 $(sublistSelector).append(newitem1);
             });
             $(sublistSelector).materialSelect();
@@ -251,7 +241,7 @@ $(function () {
     $.fn.CheckVendorAndCatalogNumbers = function () {
         //var vendorID = $("#vendorList").val();
         //var catalogNumber = $("#Request_Catalog").val();
-        //alert("vendor id: " + vendorID + " && catalog number: " + catalogNumber);
+
     }
 
     //view documents on modal view
@@ -329,42 +319,40 @@ $(function () {
         //});
     });
 
-    $("body, .modal").off("click", ".open-document-modal").on("click", ".open-document-modal", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("clicked open doc modal 2");
-        $(".open-document-modal").removeClass("active-document-modal");
-        var section = $("#masterSectionType").val();
-        $(this).addClass("active-document-modal");
-        var enumString = $(this).data("string");
-        console.log("enumString: " + enumString);
-        var requestId = $(this).data("id");
-        console.log("requestId: " + requestId);
-        var guid = $(".hidden-guid").val();
-        console.log("guid: " + guid);
-        var isEdittable = $(".active-document-modal").attr("data-val");
-        console.log($("#masterSidebarType").val())
-        var showSwitch = $(".active-document-modal").attr("showSwitch");
-        console.log("showSwitch: " + showSwitch);
-        var parentFolder = $(".active-document-modal").attr("parentfolder");
-        console.log('parentfolder' + parentFolder)
-        var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
-        console.log(dontAllowMultipleFiles)
-        var $CustomMainObjectID = $("#CustomMainObjectID").val();
-        console.log("CustomMainObjectID " + $("#CustomMainObjectID").val());
-        //alert("before open doc modal");
-        $.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
-        return true;
-    });
+    //$("body, .modal").off("click", ".open-document-modal").on("click", ".open-document-modal", function (e) {
+    //    e.preventDefault();
+    //    e.stopPropagation();
+    //    console.log("clicked open doc modal 2");
+    //    var section = $("#masterSectionType").val();
+    //    $(this).closest(".open-document-modal").addClass("active-document-modal");
+    //    var enumString = $(".active-document-modal").data("string");
+    //    console.log("enumString: " + enumString);
+    //    var requestId = $(".active-document-modal").data("id");
+    //    console.log("requestId: " + requestId);
+    //    var guid = $(".hidden-guid").val();
+    //    console.log("guid: " + guid);
+    //    var isEdittable = $(".active-document-modal").attr("data-val");
+    //    console.log($("#masterSidebarType").val())
+    //    var showSwitch = $(".active-document-modal").attr("showSwitch");
+    //    console.log("showSwitch: " + showSwitch);
+    //    var parentFolder = $(".active-document-modal").attr("parentfolder");
+    //    console.log('parentfolder' + parentFolder)
+    //    var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+    //    console.log(dontAllowMultipleFiles)
+    //    var $CustomMainObjectID = $("#CustomMainObjectID").val();
+    //    console.log("CustomMainObjectID " + $("#CustomMainObjectID").val());
+    //    $.fn.OpenDocumentsModal(false, enumString, requestId, guid, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles, $CustomMainObjectID);
+    //    return true;
+    //});
 
 
-    $(".file-select").on("change", function (e) {
-        console.log("file was changed");
-        $cardDiv = $(this).closest("div.card");
-        console.log("cardDiv: " + JSON.stringify($cardDiv));
-        $cardDiv.addClass("document-border");
-        return true;
-    });
+    //$(".file-select").on("change", function (e) {
+    //    console.log("file was changed");
+    //    $cardDiv = $(this).closest("div.card");
+    //    console.log("cardDiv: " + JSON.stringify($cardDiv));
+    //    $cardDiv.addClass("document-border");
+    //    return true;
+    //});
 
     $(".load-location-index-view").off("click").on("click", function (e) {
         //clear the div to restart filling with new children
@@ -613,7 +601,6 @@ $(function () {
                 console.log("result: " + result);
                 if (result) {
                     if (/*( extn == "png" || extn == "jpg" || extn == "jpeg") && */result > '') {
-                        //alert("empty string");
                         console.log("inside the if statement");
                         if (typeof (FileReader) != "undefined") {
                             console.log("file reader does not equal undefined");
@@ -653,21 +640,26 @@ $(function () {
         var imgPath = $("#UserImagePath").val();
         //$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
         $("#user-image").attr("src", "/" + imgPath);
-        //alert("img path: " + imgPath);
         $(".userImage i").hide();
 
         $.fn.CloseModal('user-picture');
     });
 
+    
+
     $("#InvoiceImage").on("change", function () {
-        var imgPath = $("#InvoiceImage")[0].value;
+        $.fn.InvoiceImageClick("InvoiceImage", "InvoiceImage", "addInvoiceForm");
+    });
+
+    $.fn.InvoiceImageClick = function (buttonID, buttonClass, form) {
+        var imgPath = $("#" + buttonID)[0].value;
         console.log("imgPath: " + imgPath);
         var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
         console.log("extn: " + extn);
-        var imageHolder = $("#invoice-image");
-        imageHolder.empty();
+        //var imageHolder = $("#invoice-image");
+        //imageHolder.empty();
 
-        if (extn == "pdf" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+        /*if (extn == "pdf" || extn == "png" || extn == "jpg" || extn == "jpeg") {
             console.log("inside the if statement");
             if (typeof (FileReader) != "undefined") {
                 console.log("file reader does not equal undefined");
@@ -683,9 +675,26 @@ $(function () {
                 imageHolder.show();
                 reader.readAsDataURL($(this)[0].files[0]);
             }
-        }
+        }*/
+        var fileName = imgPath.split("\\")[2]
+        $(".invoice-image-name").text(fileName)
+        var guid = $("#Guid").val()
 
-    });
+        var targetFile = new FormData($("." + form)[0]).getAll(buttonClass).filter(f => f.size > 0)
+        console.log("targetFile")
+        console.log(targetFile)
+
+        var uploadFileFormData = new FormData();
+        $.fn.AddObjectToFormdata(uploadFileFormData, {
+            ObjectID: 0,
+            ParentFolderName: 'Requests',
+            FolderName: 'Invoices',
+            Guid: guid
+        })
+        $('#' + buttonID).addClass("contains-file");
+        UploadFile(targetFile[0], uploadFileFormData);
+
+    };
 
 
     $.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
@@ -1296,7 +1305,6 @@ $(function () {
         var formData = new FormData($("#myForm")[0]);
         //console.log(...formData)
         console.log(dateFrom + "-" + dateTo);
-        //alert("about to go into ajax, url: " + url);
         $.ajax({
             processData: false,
             contentType: false,
@@ -1313,7 +1321,6 @@ $(function () {
                     $(".report-days-off-partial").html(data);
                 }
                 else {
-                    //	alert("else")
                     $(".render-body").html(data);
                 }
                 $(this).prop('disabled', false)
@@ -1333,8 +1340,6 @@ $(function () {
 
     $(".modal").on("click", "#saveOffDayConfirmation", function (e) {
         e.preventDefault();
-        //alert("save sick confirmation");
-        //alert($('#SelectedDate').val())
         $("#FromDate").val($('#SelectedDate').val());
         $("#Month").val($("#months").val());
         //var dd = parseInt(date[2]);
@@ -1422,7 +1427,6 @@ $(function () {
 
     $('.turn-edit-on-off').off("click").on("click", function () {
         //if ($('.modal-open-state').attr("text") == "open") {
-        //	alert("turn edit on off");
         //	$(".modal-open-state").attr("text", "close");
         //	$(".confirm-edit-modal").remove();
         //	return false;
@@ -1643,10 +1647,35 @@ $(function () {
         $.fn.CallPageRequest($itemurl, "delete");
     })
 
-    $('.close-document-modal').off("click").click(function (e) {
-        console.log("click 1")
-        $.fn.CloseModal("documents");
-    })
+    $(".submitOrder").off("click").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("submit order from _ordertab");
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+
+        $(".submitOrder").prop('disabled', true)
+        if (!valid) {
+
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            $("#loading").show();
+            var orderMethod = $(this).attr("id");
+            console.log("orderMethod " + orderMethod)
+            if ($(this).hasClass('additional-requests')) {
+                $("#AdditionalRequests").val(true)
+            }
+            $.fn.SubmitOrderFromAddItemView(orderMethod);
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, .location-error:hidden,.location-error:hidden, input:visible, textarea:visible)';
+    });
+
 });
 
 

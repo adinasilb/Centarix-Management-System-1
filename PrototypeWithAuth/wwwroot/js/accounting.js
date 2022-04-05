@@ -81,18 +81,7 @@
 	});
 
 	$.fn.AddBorderBySectionType = function (element) {
-		switch ($('#masterSectionType').attr('value')) {
-			case 'LabManagement': 
-				$(element).closest("tr").addClass("clicked-border-lab-man");
-				break;
-			case 'Requests':
-				$(element).closest("tr").addClass("clicked-border-orders-inv");
-				break;
-			case 'Accounting':
-				$(element).closest("tr").addClass("clicked-border-acc");
-				console.log(element)
-				break;
-        }
+		$(element).closest("tr").addClass("clicked-border");
     }
 
 	$(".remove-invoice-item").off("click").on("click", function (e) {
@@ -129,7 +118,7 @@
 		console.log("vendor: " + vendorid);
 		//console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorId=" + vendorid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "payments-pay");
 	});
@@ -146,7 +135,7 @@
 	//	$("#loading").show();
 	//	$.fn.CallModal(itemurl, "payments-invoice");
 	//});
-	$(".pay-invoice-one").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-invoice-one").on("click", ".pay-invoice-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var typeEnum = $("#masterSidebarType").val();
@@ -156,12 +145,13 @@
 		$.fn.CallModal(itemUrl, "payments-invoice");
 	});
 
-	$(".pay-one").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-one").on("click", ".pay-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log('clicked')
 		var typeEnum = $("#masterSidebarType").val();
-		var requestid = $(this).attr("value");
-		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
+		var paymentId = $(this).attr("value");
+		var itemUrl = "/Requests/PaymentsPayModal/?paymentIds=" + paymentId + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-pay");
 	});
@@ -171,15 +161,17 @@
 		//var itemUrl = "/Requests/PaymentsInvoiceModal/?accountingPaymentsEnum=" + typeEnum;
 		//$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-invoice");
 	//});
-	$(".pay-selected").off("click").on("click", function (e) {
+	$("body").off("click", ".pay-selected").on("click", ".pay-selected", function (e) {
 		var typeEnum = $(this).attr("type");
 		var itemUrl = "/Requests/PaymentsPayModal/?accountingPaymentsEnum=" + typeEnum;
-		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay");
+		var parameterName = 'paymentIds';
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay", parameterName);
 	});
 
-	$(".invoice-add-all").off("click").on("click", function (e) {
+	$("body").off("click", ".invoice-add-all").on("click", ".invoice-add-all", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log('invoice add all')
 		var vendorid = $(this).attr("value");
 		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
 		$("#loading").show();
@@ -187,14 +179,17 @@
 	});
 
 	$(".add-to-selected").off("click").on("click", function (e) {
+		console.log('add to selected')
 		var itemUrl = "/Requests/AddInvoiceModal/";
-		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice");
+		var parameterName = 'requestIds';
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice", parameterName);
 
 	});
 
-	$(".invoice-add-one").off("click").on("click", function (e) {
+	$("body").off("click", ".invoice-add-one").on("click", ".invoice-add-one", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log('invoice add one')
 		var requestid = $(this).attr("value");
 		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
 		$("#loading").show();
@@ -249,6 +244,7 @@
 		});
 	});
 	$(".save-invoice").click(function (e) {
+		console.log('save invoice')
 		e.preventDefault();
 		$("#myForm").data("validator").settings.ignore = "";
 		var valid = $("#myForm").valid();
@@ -279,7 +275,7 @@
 				error: function (jqxhr) {
 					console.log("Error")
 					//$.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
-					$('.accounting-form .error-message').html(jqxhr.responseText);
+					$('.Accounting .error-message').html(jqxhr.responseText);
 				}
 			})
 		}

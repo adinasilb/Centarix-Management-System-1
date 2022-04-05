@@ -1,0 +1,68 @@
+﻿$(function () {
+    $(".order-type").off("click").on("click", function (e) {
+        e.preventDefault()
+        var recurringOrderStyles = $("#recurring").attr("class")
+        var singleOrderStyles = $("#single").attr("class")
+        $("#single").attr("class", recurringOrderStyles)
+        $("#recurring").attr("class", singleOrderStyles)
+        if ($(this).attr("id") == "single") {
+            $(".recurring-info").addClass("d-none")
+            $("#OrderType").val("SingleOrder")
+            ReplaceProductTypeNames("RecurringOrder", "SingleOrder")
+        }
+        else {
+            $(".recurring-info").removeClass("d-none")
+            //if standing order is checked - ordertype = 3
+            $("#OrderType").val("RecurringOrder")
+            ReplaceProductTypeNames("SingleOrder", "RecurringOrder")
+        }
+    })
+    $('.ordersItemForm').on('click', "#alreadyPaid", function (e) {
+        console.log("pay")
+        if ($("#alreadyPaid:checkbox").is(":checked")) {
+            $(".paid-info").addClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", false)
+            $("#Paid").val(false)
+        }
+        else {
+            $(".paid-info").removeClass("d-none")
+            $("#alreadyPaid:checkbox").prop("checked", true)
+            $("#standingOrder:checkbox").prop("checked", false)
+            $("#Paid").val(true)
+        }
+
+    });
+
+    $(".recurring-end-id").off('click').on('click', function (e) {
+        $(".recurring-end-info").attr("disabled", true)
+        $(this).closest(".row").find(".recurring-end-info").attr("disabled", false)
+    })
+
+    $('.ordersItemForm').on('click', "#standingOrder", function (e) {
+        console.log("pay")
+        if ($("#standingOrder:checkbox").is(":checked")) {
+            $(".paid-info").addClass("d-none")
+            $("#standingOrder:checkbox").prop("checked", false)
+            $("#OrderType").val("RecurringOrder")
+            ReplaceProductTypeNames("StandingOrder", "RecurringOrder")
+        }
+        else {
+            $(".paid-info").removeClass("d-none")
+            $("#standingOrder:checkbox").prop("checked", true)
+            $("#alreadyPaid:checkbox").prop("checked", false)
+            $("#Paid").val(false)
+            $("#OrderType").val("StandingOrder")
+            ReplaceProductTypeNames("RecurringOrder", "StandingOrder")
+        }
+
+    });
+    function ReplaceProductTypeNames(prevProductType, newProductType) {
+        $("input, select, textarea").each(function () {
+            var name = $(this).attr("name")
+            if (name != null) {
+                name = name.replace(prevProductType, newProductType)
+                $(this).attr("name", name)
+            }
+        })
+    }
+})

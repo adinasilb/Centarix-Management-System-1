@@ -1,4 +1,7 @@
 ﻿@using PrototypeWithAuth.AppData.UtilityModels
+@using React.AspNet
+@using React.Router
+@using PrototypeWithAuth.AppData 
 @{
     Layout = null;
 }
@@ -20,7 +23,6 @@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Master.css" asp-append-version="true" />
-    <link href="~/css/forms.css" rel="stylesheet" />
     <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
@@ -63,7 +65,9 @@
                 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/addons/datatables.min.css" />*@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
+
+    <link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @*<link href="~/css/datepicker.min.css" rel="stylesheet" type="text/css">*@
 
@@ -79,10 +83,6 @@
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
-    <div class="modals">
-        @{await Html.RenderPartialAsync("ModalLoader"); }
-    </div>
-
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
@@ -170,8 +170,8 @@
 
 
     <script type="module" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
+    <script type="text/babel" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
 
     <script src="~/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/cards.js"></script>
@@ -483,7 +483,7 @@
                     }
                     console.log("enable subunits with onlyms: " + onlyMS);
                     $.fn.EnableSubUnits(onlyMS);
-                    
+
                 }
                 if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
                     console.log("no quote")
@@ -560,7 +560,7 @@
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
             $('.open-archive-modal').removeClass('disabled-background-color');
-            $('.open-archive-modal').addClass('order-inv-background-color');
+            $('.open-archive-modal').addClass('section-bg-color');
         }
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -696,7 +696,7 @@
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
             $("." + modalClass + ' .location-icon').addClass('d-none');
             $("." + modalClass + ' .open-archive-modal').addClass('disabled-background-color');
-            $("." + modalClass + ' .open-archive-modal').removeClass('order-inv-background-color');
+            $("." + modalClass + ' .open-archive-modal').removeClass('section-bg-color');
 
             //console.log('locations edot mode off');
             //$("." + modalClass +".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
@@ -713,7 +713,7 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             $.fn.TurnToDetails("edits");
-            $('.open-document-modal').attr("showSwitch", true);
+            $('.open-document-modal').attr("show-switch", true);
             if (!$('.turn-edit-on-off').hasClass('locations')) {
                 $('.edits .mdb-select').materialSelect();
                 $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
@@ -956,12 +956,12 @@
         };
 
 
-        $("table tr .order-inv-form .form-check-input").click(function () {
+        $(".Requests table tr .form-check-input").click(function () {
             if ($(this).is(':checked')) {
-                $(this).closest("tr").addClass("clicked-border-orders-inv");
+                $(this).closest("tr").addClass("clicked-border");
             }
             else {
-                $(this).closest("tr").removeClass("clicked-border-orders-inv");
+                $(this).closest("tr").removeClass("clicked-border");
             }
         });
 
@@ -1251,21 +1251,23 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-        $.fn.getRequestIndexString = function(status){
+        $.fn.getRequestIndexString = function(status, tabName){
             var selectedPriceSort = "";
             $("#priceSortContent1 .priceSort:checked").each(function (e) {
                 selectedPriceSort += "&SelectedPriceSort=" + $(this).attr("enum");
             })
             console.log(selectedPriceSort)
 
-            var requestStatusId = status;
             if (status === undefined) {
-                requestStatusId = $(".request-status-id").val();
+                status = $(".request-status-id").val();
             }
-
+            if(tabName === undefined)
+            {
+                tabName = $(".countStatus.active").attr("value")
+            }
             var queryString =
                 "PageNumber=" + $('.page-number').val() +
-                "&RequestStatusID=" + requestStatusId +
+                "&RequestStatusID=" + status +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
                 "&SidebarType=" + $('#masterSidebarType').val() +
@@ -1273,7 +1275,8 @@
                 "&SidebarFilterID=" + $('.sideBarFilterID').val() +
                 "&CategorySelected=" + $('#categorySortContent .select-category').is(":checked") +
                 "&SubCategorySelected=" + $('#categorySortContent .select-subcategory').is(":checked") +
-                "&ListID="+$("#ListID").val();
+                "&ListID="+$("#ListID").val() +
+                "&TabName="+tabName;
             queryString += selectedPriceSort;
             console.log(queryString)
             return queryString;
@@ -1290,6 +1293,7 @@
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
+            console.log('in open doc modal')
             var urlbeginning = "/Requests/"
             if (section === "Protocols") {
                 urlbeginning = "/Protocols/"
@@ -1341,7 +1345,7 @@
                     //    console.log("don't allow multiples")
                     //    $(".upload-file").attr('disabled', true)
                     //    $(".upload-file").addClass('disabled-background-color')
-                    //    $(".upload-file").removeClass('protocols-background-color')
+                    //    $(".upload-file").removeClass('section-bg-color')
                     //    $(".file-select").attr('disabled', true)
                     //}
                     if ($(".addFunctionForm").length >0)
@@ -1349,7 +1353,7 @@
                         if (numCards < 1) {
                             $(".upload-file").attr('disabled', false)
                             $(".upload-file").removeClass('disabled-background-color')
-                            $(".upload-file").addClass('protocols-background-color')
+                            $(".upload-file").addClass('section-bg-color')
                             $(".file-select").attr('disabled', false)
                             $(".upload-file").removeClass("d-none");
                             $(".saveFunction").addClass("d-none");
@@ -1358,7 +1362,7 @@
                         else {
                             $(".upload-file").attr('disabled', true)
                             $(".upload-file").addClass('disabled-background-color')
-                            $(".upload-file").removeClass('protocols-background-color')
+                            $(".upload-file").removeClass('section-bg-color')
                             $(".file-select").attr('disabled', true)
                             $(".upload-file").addClass("d-none");
                             $(".saveFunction").attr('disabled', false)
@@ -1372,23 +1376,20 @@
             return true;
         };
 
+        $.fn.ReloadDocumentCard = function (folderEnumString, requestId, section, parentFolder, modalType) {
+            $.ajax({
+                async: true,
+                url: "/Requests/_DocumentsCard?requestFolderNameEnum=" + folderEnumString + "&id=" + requestId + "&sectionType=" + section + "&parentFolderName=" + parentFolder + "&modalType=" + modalType,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $(".doc-card." + folderEnumString).html(data)
+                    $(".doc-card." + folderEnumString + " .open-document-modal").attr("showSwitch", showSwitch)
+                    $(".doc-card." + folderEnumString + " .open-document-modal").attr("data-val", isEdittable)
+                }
+            });
+        }
 
-        //$.fn.AppendModalToBody = function(data)
-        //{
-        //    $(".modal").modal('hide');
-        //    $(".modal").replaceWith('');
-        //    var modal = $(data);
-        //    $('body').append(modal);
-        //    $(".modal").modal({
-        //        backdrop: true,
-        //        keyboard: false,
-        //    });
-        //    //shows the modal
-        //    $(".modal").modal('show');
-        //    $('.modal-content a:first').tab('show');
-        //    $(".mdb-select").materialSelect();
-
-        //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             console.log("open modal")
             console.log(modalClass);
@@ -1554,9 +1555,11 @@
             return {
                 SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation,
                 SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived, CatalogNumber: catalogNumber,
-                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText" :searchText
+                SelectedTypesIDs: selectedType, NumFilters: $("#NumFilters").val(), "SearchText": searchText
             }
         }
+
+
 
 
 
@@ -1612,6 +1615,7 @@
             var catalogNumber = $('.popover .search-by-catalog-number').val()
             //reset page number
             $('.page-number').val(1);
+            var tabName = $(".countStatus.active").attr("value")
 
             var reloadDiv = '_IndexTableData';
             if ($('.' + reloadDiv).length == 0) { //if it's showing the nothing is here page. not just using indextable when don't have to, so don't lose price and category filters
@@ -1619,11 +1623,11 @@
             }
 
             if (sectionType == "Protocols") {
-                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                url = "/Protocols/" + reloadDiv + "?" + $.fn.getRequestIndexString(undefined, tabName) + "&numFilters=" + numFilters,
                     popoverID = "protocolFilterPopover";
             }
             else {
-                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString() + "&numFilters=" + numFilters,
+                url = "/Requests/" + reloadDiv + "?" + $.fn.getRequestIndexString(undefined, tabName) + "&numFilters=" + numFilters,
                     popoverID = "invFilterPopover";
             }
             //console.log(data);
@@ -1643,10 +1647,10 @@
                     $('.search-by-name-in-filter').attr('value', searchText);
                     $('.search-by-catalog-number').attr('value', catalogNumber);
                     $('body').removeClass('popover-open');
-                    $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
-                    $('#invFilterPopover').addClass('custom-order-inv');
-                    $('#protocolFilterPopover').removeClass('protocols-background-color custom-button-font');
-                    $('#protocolFilterPopover').addClass('custom-protocols');
+                    $('#invFilterPopover').removeClass('section-bg-color custom-button-font');
+                    $('#invFilterPopover').addClass('section-outline-color');
+                    $('#protocolFilterPopover').removeClass('section-bg-color custom-button-font');
+                    $('#protocolFilterPopover').addClass('section-outline-color');
                 }
             });
         }
@@ -1726,7 +1730,7 @@
             });
         }
 
-        $.fn.CancelModal = function (modalClass, orderType, orderOrigin) {
+        $.fn.CancelModal = function (modalClass, orderMethod, orderOrigin) {
             var modalType = $('#RequestIndexObject_ModalType').val();
             var guid = $('#GUID').val();
             $.ajax({
@@ -1802,13 +1806,29 @@
                 vendorPriceWarning.html(vendorWarningText);
             }
         }
-
+    
+        $("#invFilterPopover").click(function () {
+            $('[data-toggle="popover"]').popover('dispose');
+            $('#invFilterPopover').popover({
+                sanitize: false,
+                placement: 'bottom',
+                container: '#inventoryFilterContentDiv',
+                html: true,
+                trigger: 'manual',
+                content: function () {
+                    return $('#inventoryFilterContent').html();
+                }
+            });
+            $('#invFilterPopover').popover('toggle');
+            $('#invFilterPopover').addClass('section-bg-color custom-button-font');
+            $('#invFilterPopover').removeClass('section-outline-color');
+            //$('#inventoryFilterContent').style.display = "block";
+        });
     </script>
-
+    
     @if (IsSectionDefined("requestNavScript"))
     {
         @RenderSection("requestNavScript", required: true)
     }
-
 </body>
 </html>
