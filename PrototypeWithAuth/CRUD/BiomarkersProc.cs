@@ -1337,23 +1337,34 @@ namespace PrototypeWithAuth.CRUD
                 };
                 _context.Add(testoutergroup);
                 _context.SaveChanges();
-                var testgroup = new TestGroup()
+                var togID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID;
+                var testgroup1 = new TestGroup()
                 {
-                    IsNone = true,
-                    TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
-                        .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                    Name = "First Measure",
+                    TestOuterGroupID = togID,
                     SequencePosition = 1
                 };
-                _context.Add(testgroup);
+                _context.Add(testgroup1);
                 _context.SaveChanges();
-                var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
-                    .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var testgroup2 = new TestGroup()
+                {
+                    Name = "Second Measure",
+                    TestOuterGroupID = togID,
+                    SequencePosition = 2
+                };
+                _context.Add(testgroup2);
+                _context.SaveChanges();
+                var tgId1 = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                         .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+                var tgId2 = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                         .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
                 var rightarm = new TestHeader()
                 {
                     Name = "Right Arm",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 1,
-                    TestGroupID = tgId,
+                    TestGroupID = tgId1,
                 };
                 _context.Add(rightarm);
                 await _context.SaveChangesAsync();
@@ -1362,7 +1373,25 @@ namespace PrototypeWithAuth.CRUD
                     Name = "Left Arm",
                     Type = AppUtility.DataTypeEnum.Double.ToString(),
                     SequencePosition = 2,
-                    TestGroupID = tgId,
+                    TestGroupID = tgId1,
+                };
+                _context.Add(leftarm);
+                await _context.SaveChangesAsync();
+                var rightarm2 = new TestHeader()
+                {
+                    Name = "Right Arm",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 1,
+                    TestGroupID = tgId2,
+                };
+                _context.Add(rightarm);
+                await _context.SaveChangesAsync();
+                var leftarm2 = new TestHeader()
+                {
+                    Name = "Left Arm",
+                    Type = AppUtility.DataTypeEnum.Double.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId2,
                 };
                 _context.Add(leftarm);
                 await _context.SaveChangesAsync();
@@ -1424,6 +1453,14 @@ namespace PrototypeWithAuth.CRUD
                     SequencePosition = 1,
                     TestGroupID = tgId,
                 };
+                var procText = new TestHeader()
+                {
+                    Name = "Details",
+                    Type = AppUtility.DataTypeEnum.String.ToString(),
+                    SequencePosition = 2,
+                    TestGroupID = tgId
+                };
+
                 _context.Add(procDoc);
                 await _context.SaveChangesAsync();
             }

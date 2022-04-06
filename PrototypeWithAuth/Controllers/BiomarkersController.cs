@@ -768,9 +768,7 @@ namespace PrototypeWithAuth.Controllers
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-
-
-
+                await _biomarkersProc.RunScriptsAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)
