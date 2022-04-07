@@ -1399,11 +1399,11 @@ namespace PrototypeWithAuth.CRUD
             Test test = new Test()
             {
                 Name = "Procedure Document",
-                SiteID = _context.Sites.Where(s => s.Name == "02").Select(s => s.SiteID).FirstOrDefault()
+                SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
             };
             _context.Add(test);
             _context.SaveChanges();
-            var testId = _context.Tests.Where(t => t.Name == "Procedure Document").Select(t => t.TestID).FirstOrDefault();
+            var testId = _context.Tests.Where(t => t.Name == "Procedure Document" && t.Site.Name=="O2").Select(t => t.TestID).FirstOrDefault();
             var experimentTest = new ExperimentTest()
             {
                 TestID = testId,

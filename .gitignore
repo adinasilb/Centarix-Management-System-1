@@ -255,3 +255,4 @@ paket-files/
 /PrototypeWithAuth/Models/Resource
 /PrototypeWithAuth/wwwroot/Reports/2121/Files
 /PrototypeWithAuth/wwwroot/dist
+/PrototypeWithAuth/Properties/ServiceDependencies/ElixirTestV1 - Web Deploy/profile.arm.json
