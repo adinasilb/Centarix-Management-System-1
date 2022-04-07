@@ -160,7 +160,7 @@
                             </div>
                         </div>
                     }
-                    if (testgroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 9 && testgroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
+                    if (testgroups[0].IsNone && testgroups[0].TestHeaders.Count == 9 && testgroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
                     {
                         <div class="col-8 px-4">
                             @{
@@ -216,7 +216,7 @@
                     if (testgroups[0].IsNone && (testgroups[0].TestHeaders.Count == 2 || testgroups[0].TestHeaders.Count == 1))
                     {
                         <div class="col-3 p-3">
-                            @{ var header1 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
+                            @{ var header1 = testgroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
 
                             <div class="row p-3">
                                 @{

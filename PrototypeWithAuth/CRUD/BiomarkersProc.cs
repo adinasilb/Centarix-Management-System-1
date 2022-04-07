@@ -1044,10 +1044,20 @@ namespace PrototypeWithAuth.CRUD
                     .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
                 SequencePosition = 1
             };
-            _context.Add(testgroup);
+            _context.Add(testgroup); 
+            var testgroupFooter = new TestGroup()
+            {
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                     .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 2,
+                Name = "Footer"
+            };
+            _context.Add(testgroupFooter);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                 .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var tgFooterId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var file1 = new TestHeader()
             {
                 Name = "Results File",
@@ -1065,6 +1075,14 @@ namespace PrototypeWithAuth.CRUD
                 TestGroupID = tgId,
             };
             _context.Add(file2);
+            var notesFooter = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgFooterId
+            };
+            _context.Add(notesFooter);
             await _context.SaveChangesAsync();
 
         }
@@ -1108,9 +1126,19 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 1
             };
             _context.Add(testgroup);
+            var testgroupFooter = new TestGroup()
+            {
+                Name="Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 2
+            };
+            _context.Add(testgroupFooter);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                 .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var tgIdFooter = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var file1 = new TestHeader()
             {
                 Name = "Results File",
@@ -1128,6 +1156,14 @@ namespace PrototypeWithAuth.CRUD
                 TestGroupID = tgId,
             };
             _context.Add(file2);
+            var footerNotes = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgIdFooter
+            };
+            _context.Add(footerNotes);
             await _context.SaveChangesAsync();
 
         }
@@ -1171,9 +1207,19 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 1
             };
             _context.Add(testgroup);
+            var testGroupFooter = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 2
+            };
+            _context.Add(testGroupFooter);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                 .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var tgIdFooter = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var file1 = new TestHeader()
             {
                 Name = "Results File",
@@ -1191,6 +1237,14 @@ namespace PrototypeWithAuth.CRUD
                 TestGroupID = tgId,
             };
             _context.Add(file2);
+            var footerNotes = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgIdFooter
+            };
+            _context.Add(footerNotes);
             await _context.SaveChangesAsync();
 
         }
@@ -1299,7 +1353,6 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 1
             };
             _context.Add(testgroup1);
-            _context.SaveChanges();
             var testgroup2 = new TestGroup()
             {
                 Name = "Second Measure",
@@ -1307,11 +1360,20 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 2
             };
             _context.Add(testgroup2);
+            var testGroupFooter = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = togID,
+                SequencePosition = 3
+            };
+            _context.Add(testGroupFooter);
             _context.SaveChanges();
             var tgId1 = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                      .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
             var tgId2 = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                      .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var tgIdfooter = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                     .Where(tg => tg.SequencePosition == 3).Select(tg => tg.TestGroupID).FirstOrDefault();
             var rightarm = new TestHeader()
             {
                 Name = "Right Arm",
@@ -1347,6 +1409,22 @@ namespace PrototypeWithAuth.CRUD
                 TestGroupID = tgId2,
             };
             _context.Add(leftarm2);
+            var notesFooter = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 2,
+                TestGroupID = tgIdfooter
+            };
+            _context.Add(notesFooter);
+            var notesDoc = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgIdfooter
+            };
+            _context.Add(notesDoc);
             await _context.SaveChangesAsync();
 
         }
