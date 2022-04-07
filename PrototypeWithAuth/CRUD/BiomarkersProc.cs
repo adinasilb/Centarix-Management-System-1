@@ -955,17 +955,28 @@ namespace PrototypeWithAuth.CRUD
             };
             _context.Add(testoutergroup);
             _context.SaveChanges();
+            var testoutergroupid = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID;
             var testgroup = new TestGroup()
             {
                 IsNone = true,
-                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
-                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                TestOuterGroupID = testoutergroupid,
                 SequencePosition = 1
             };
             _context.Add(testgroup);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                 .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var testgroupfooter = new TestGroup()
+            {
+                TestOuterGroupID = testoutergroupid,
+                SequencePosition = 2,
+                Name = "Footer"
+            };
+            _context.Add(testgroupfooter);
+            _context.SaveChanges();
+            var tgIdFooter = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var file1 = new TestHeader()
             {
                 Name = "Results File",
@@ -983,6 +994,14 @@ namespace PrototypeWithAuth.CRUD
                 TestGroupID = tgId,
             };
             _context.Add(file2);
+            var notes = new TestHeader()
+            {
+                Name="Notes",
+                Type=AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgIdFooter
+            };
+            _context.Add(notes);
             await _context.SaveChangesAsync();
 
         }
@@ -1403,7 +1422,7 @@ namespace PrototypeWithAuth.CRUD
             };
             _context.Add(test);
             _context.SaveChanges();
-            var testId = _context.Tests.Where(t => t.Name == "Procedure Document" && t.Site.Name=="O2").Select(t => t.TestID).FirstOrDefault();
+            var testId = _context.Tests.Where(t => t.Name == "Procedure Document" && t.Site.Name == "O2").Select(t => t.TestID).FirstOrDefault();
             var experimentTest = new ExperimentTest()
             {
                 TestID = testId,

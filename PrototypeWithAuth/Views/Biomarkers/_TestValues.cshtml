@@ -86,6 +86,7 @@
 
     @if (Model.Test.TestOuterGroups != null)
     {
+        var testgroups = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name != "Footer").ToList();
         <div class="row under-row-margin">
             @if (Model.Test.TestOuterGroups.Count == 1)
             {
@@ -95,9 +96,9 @@
                         @Model.Test.TestOuterGroups[0].Name
                     </span>
                 }
-                @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 1)
+                @if (testgroups.Count == 1)
                 {
-                    if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 5) //ECG
+                    if (testgroups[0].IsNone && testgroups[0].TestHeaders.Count == 5) //ECG
                     {
                         <div class="col-4 px-4">
                             <div class="row p-3">
@@ -159,7 +160,7 @@
                             </div>
                         </div>
                     }
-                    if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 9 && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
+                    if (testgroups[0].IsNone && Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 9 && testgroups[0].TestHeaders.Where(th => th.Calculation != null).Any())
                     {
                         <div class="col-8 px-4">
                             @{
@@ -212,7 +213,7 @@
                             }
                         </div>
                     }
-                    if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && (Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 2 || Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 1))
+                    if (testgroups[0].IsNone && (testgroups[0].TestHeaders.Count == 2 || testgroups[0].TestHeaders.Count == 1))
                     {
                         <div class="col-3 p-3">
                             @{ var header1 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
@@ -255,9 +256,9 @@
                         }
                     }
                 }
-                @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 3 || Model.Test.TestOuterGroups[0].TestGroups.Count == 2)
+                @if (testgroups.Count == 3 || testgroups.Count == 2)
                 {
-                    @foreach (var tog in Model.Test.TestOuterGroups[0].TestGroups.OrderBy(tg => tg.SequencePosition))
+                    @foreach (var tog in testgroups.OrderBy(tg => tg.SequencePosition))
                     {
                         <div class="col-4 px-4">
                             <span class="biomarkers-color">@tog.Name</span>
@@ -350,6 +351,37 @@
                     }
                 </div>
             }
+        </div>
+        <div class="row under-row-margin">
+            @if (Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer") != null)
+            {
+                 var header1 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.File.ToString()).FirstOrDefault();
+                if (header1 != null)
+                {
+                    <div class="col-3 p-3">
+                        <div class="row p-3">
+                            @{
+                                var fieldViewModel = GetFieldViewModel(header1, listNumber);
+                                listNumber++;
+                                await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                            }
+                        </div>
+                    </div>
+                }
+
+                { var header2 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.String.ToString()).FirstOrDefault();
+                    if (header2 != null)
+                    {
+                        <div class="col-5 p-3">
+                            @{var fieldViewModel2 = GetFieldViewModel(header2, listNumber);
+                                listNumber++;
+                                await Html.RenderPartialAsync("_FieldView", fieldViewModel2);
+                            }
+                        </div>
+                    }
+                }
+            }
+
         </div>
     }
 </div>
