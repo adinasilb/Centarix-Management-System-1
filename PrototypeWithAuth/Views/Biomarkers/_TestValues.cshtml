@@ -214,7 +214,7 @@
                     }
                     if (Model.Test.TestOuterGroups[0].TestGroups[0].IsNone && (Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 2 || Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 1))
                     {
-                        <div class="row p-3">
+                        <div class="col-3 p-3">
                             @{ var header1 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
 
                             <div class="row p-3">
@@ -227,21 +227,35 @@
                         </div>
                         if (Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Count == 2)
                         {
-                            <div class="row p-3">
-                                @{ var header2 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 2).FirstOrDefault();}
+                            var header2 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 2).FirstOrDefault();
 
-                                <div class="row p-3">
+                            if (header2.Type == AppUtility.DataTypeEnum.File.ToString())
+                            {
+                                <div class="col-3 p-3">
+
+                                    <div class="row p-3">
+                                        @{
+                                            fieldViewModel = GetFieldViewModel(header2, listNumber);
+                                            listNumber++;
+                                            await Html.RenderPartialAsync("_FieldView", fieldViewModel);
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-9">
                                     @{
                                         fieldViewModel = GetFieldViewModel(header2, listNumber);
                                         listNumber++;
                                         await Html.RenderPartialAsync("_FieldView", fieldViewModel);
                                     }
                                 </div>
-                            </div>
+                            }
                         }
                     }
                 }
-                @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 3)
+                @if (Model.Test.TestOuterGroups[0].TestGroups.Count == 3 || Model.Test.TestOuterGroups[0].TestGroups.Count == 2)
                 {
                     @foreach (var tog in Model.Test.TestOuterGroups[0].TestGroups.OrderBy(tg => tg.SequencePosition))
                     {
