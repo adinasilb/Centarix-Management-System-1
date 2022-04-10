@@ -82,12 +82,12 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirTestUpload"), sqlServerOptions => sqlServerOptions.CommandTimeout(400));   
+                    Configuration.GetConnectionString("ElixirTestNew"), sqlServerOptions => sqlServerOptions.CommandTimeout(400));
             });
 
             services.AddControllersWithViews();
             services.AddReact();
-            
+
             services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
             .AddV8();
 
@@ -182,7 +182,7 @@ namespace PrototypeWithAuth
                 config.UseServerSideRendering = false;
                 config.JsonSerializerSettings = new JsonSerializerSettings
                 {
-                    Converters= new List<JsonConverter> { new StringEnumConverter() },
+                    Converters = new List<JsonConverter> { new StringEnumConverter() },
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 };
             });
@@ -212,6 +212,7 @@ namespace PrototypeWithAuth
                 WriteAppUtilityJsx();
                 WriteElixirStringsJsx();
             }
+            //AddRoles(serviceProvider).Wait();
             //CreateRoles(serviceProvider).Wait();
             //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer").Wait();
 
@@ -234,15 +235,15 @@ namespace PrototypeWithAuth
 
         //Seed database with new roles
 
-        //private async Task AddRoles(IServiceProvider serviceProvider)
-        //{
-        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await UserManager.FindByEmailAsync("adina@centarix.com");
-        //    await UserManager.AddToRoleAsync(user, "LabManagement");
-        //    ////await UserManager.AddToRoleAsync(user, "CEO");
-        //    //var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-        //    //var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
-        //}
+        private async Task AddRoles(IServiceProvider serviceProvider)
+        {
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            await UserManager.AddToRoleAsync(user, "Users");
+            ////await UserManager.AddToRoleAsync(user, "CEO");
+            //var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+            //var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
@@ -250,15 +251,15 @@ namespace PrototypeWithAuth
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             List<string> roleNames = AppUtility.RequestRoleEnums().Select(x => x.RoleDefinition).ToList();
-            roleNames.Concat(AppUtility.OperationRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.ProtocolRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.BiomarkerRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.TimekeeperRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.LabManagementRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.AccountingRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.ReportsRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.IncomeRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.UsersRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames = roleNames.Concat(AppUtility.OperationRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.ProtocolRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.BiomarkerRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.TimekeeperRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.LabManagementRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.AccountingRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.ReportsRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.IncomeRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.UsersRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
 
             IdentityResult roleResult;
             //var roleCheck = await RoleManager.RoleExistsAsync("Admin");
@@ -346,7 +347,7 @@ namespace PrototypeWithAuth
             {
                 await UserManager.AddToRoleAsync(adminuser, "Users");
             }
-        } 
+        }
 
         private void WriteAppUtilityJsx()
         {

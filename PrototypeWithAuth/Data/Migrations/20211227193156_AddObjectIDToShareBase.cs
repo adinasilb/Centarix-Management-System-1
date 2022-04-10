@@ -7,7 +7,7 @@ namespace PrototypeWithAuth.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ShareProtocols_Protocols_ProtocolID",
+                name: "FK_ShareProtocols_ProtocolVersions_ProtocolVersionID",
                 table: "ShareProtocols");
 
             migrationBuilder.DropForeignKey(
@@ -35,7 +35,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "ShareRequestLists");
 
             migrationBuilder.DropIndex(
-                name: "IX_ShareProtocols_ProtocolID",
+                name: "IX_ShareProtocols_ProtocolVersionID",
                 table: "ShareProtocols");
 
             migrationBuilder.AddColumn<int>(
@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             migrationBuilder.Sql("UPDATE ShareRequestLists SET ObjectID = RequestListID ");
 
-            migrationBuilder.Sql("UPDATE ShareProtocols SET ObjectID = ProtocolID ");
+            migrationBuilder.Sql("UPDATE ShareProtocols SET ObjectID = ProtocolVersionID ");
 
         }
 
@@ -105,12 +105,12 @@ namespace PrototypeWithAuth.Data.Migrations
                 column: "RequestListID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShareProtocols_ProtocolID",
+                name: "IX_ShareProtocols_ProtocolVersionID",
                 table: "ShareProtocols",
-                column: "ProtocolVID");
+                column: "ProtocolID");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ShareProtocols_Protocols_ProtocolID",
+                name: "FK_ShareProtocols_ProtocolVersions_ProtocolVersionID",
                 table: "ShareProtocols",
                 column: "ProtocolID",
                 principalTable: "Protocols",
