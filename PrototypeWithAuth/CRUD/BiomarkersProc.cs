@@ -211,10 +211,17 @@ namespace PrototypeWithAuth.CRUD
                 Name = "Third Measure",
                 SequencePosition = 3,
                 TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID
+            }; 
+            TestGroup footertestgruop = new TestGroup()
+            {
+                Name = "Footer",
+                SequencePosition = 4,
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID
             };
             _context.Add(bptg1);
             _context.Add(bptg2);
             _context.Add(bptg3);
+            _context.Add(footertestgruop);
             _context.SaveChanges();
             TestHeader Pulse1 = new TestHeader()
             {
@@ -288,6 +295,22 @@ namespace PrototypeWithAuth.CRUD
                 Type = AppUtility.DataTypeEnum.Double.ToString()
             };
             _context.Add(Diastolic3);
+            TestHeader fileFooter = new TestHeader()
+            {
+                Name = "Notes",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 4).FirstOrDefault().TestGroupID,
+                SequencePosition = 1,
+                Type = AppUtility.DataTypeEnum.String.ToString()
+            };
+            _context.Add(fileFooter);
+            TestHeader notesFooter = new TestHeader()
+            {
+                Name = "Notes",
+                TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 4).FirstOrDefault().TestGroupID,
+                SequencePosition = 2,
+                Type = AppUtility.DataTypeEnum.File.ToString()
+            };
+            _context.Add(notesFooter);
             _context.SaveChanges();
         }
 
@@ -331,8 +354,17 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 1
             };
             _context.Add(testgroup);
+            var testgroup2 = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 2
+            };
+            _context.Add(testgroup2);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var footerId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var avgHr = new TestHeader()
             {
                 Name = "Average Hr",
@@ -373,6 +405,14 @@ namespace PrototypeWithAuth.CRUD
             _context.Add(rnsdd);
             _context.Add(sdsd);
             _context.Add(file);
+            var notes = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 1,
+                TestGroupID = footerId
+            };
+            _context.Add(notes);
             _context.SaveChanges();
         }
 
@@ -415,9 +455,19 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 1
             };
             _context.Add(testgroup);
+            var footertestgroup = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 2
+            };
+            _context.Add(footertestgroup);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                 .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var footerId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var weight = new TestHeader()
             {
                 Name = "Weight (kg)",
@@ -489,6 +539,22 @@ namespace PrototypeWithAuth.CRUD
             _context.Update(waistCircumferance);
             _context.Update(underBellyCircumferance);
             _context.Update(bmi);
+            var notesFooter = new TestHeader()
+            {
+                Name = "Notes",
+                SequencePosition = 1,
+                TestGroupID = footerId,
+                Type = AppUtility.DataTypeEnum.String.ToString()
+            };
+            var docFooter = new TestHeader()
+            {
+                Name = "Notes",
+                SequencePosition = 2,
+                TestGroupID = footerId,
+                Type = AppUtility.DataTypeEnum.File.ToString()
+            };
+            _context.Add(notesFooter);
+            _context.Add(docFooter);
             _context.SaveChanges();
 
         }
@@ -549,6 +615,13 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 3
             };
             _context.Add(testgroup3);
+            var footertestgroup = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = togID,
+                SequencePosition = 4
+            };
+            _context.Add(footertestgroup);
             _context.SaveChanges();
             var tgId1 = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                      .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
@@ -556,6 +629,8 @@ namespace PrototypeWithAuth.CRUD
                      .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var tgId3 = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                      .Where(tg => tg.SequencePosition == 3).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var footertgid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                     .Where(tg => tg.SequencePosition == 4).Select(tg => tg.TestGroupID).FirstOrDefault();
             var distance1 = new TestHeader()
             {
                 Name = "Distance from toes (cm)",
@@ -580,6 +655,22 @@ namespace PrototypeWithAuth.CRUD
             _context.Add(distance1);
             _context.Add(distance2);
             _context.Add(distance3);
+            var notesFooter = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 1,
+                TestGroupID = footertgid
+            };
+            _context.Add(notesFooter);
+            var docFooter = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                SequencePosition = 2,
+                TestGroupID = footertgid
+            };
+            _context.Add(docFooter);
             _context.SaveChanges();
         }
 
@@ -637,8 +728,15 @@ namespace PrototypeWithAuth.CRUD
                 TestOuterGroupID = eyesOpenId,
                 SequencePosition = 2
             };
+            var footerTestGroup = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = eyesOpenId,
+                SequencePosition = 3
+            };
             _context.Add(eyesopenleftleg);
             _context.Add(eyesopenrightleg);
+            _context.Add(footerTestGroup);
             _context.SaveChanges();
             var eyesclosedleftleg = new TestGroup()
             {
@@ -659,6 +757,7 @@ namespace PrototypeWithAuth.CRUD
             var eyesopenrightlegid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 2 && tg.TestOuterGroupID == eyesOpenId).Select(tg => tg.TestGroupID).FirstOrDefault();
             var eyesclosedleftlegid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 1 && tg.TestOuterGroupID == eyesClosedId).Select(tg => tg.TestGroupID).FirstOrDefault();
             var eyesclosedrightlegid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 2 && tg.TestOuterGroupID == eyesClosedId).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var footertgid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 3 && tg.TestOuterGroupID == eyesOpenId).Select(tg => tg.TestGroupID).FirstOrDefault();
             var firstmeasure1 = new TestHeader()
             {
                 Name = "First Measure (sec)",
@@ -723,6 +822,21 @@ namespace PrototypeWithAuth.CRUD
             _context.Add(secondmeasure2);
             _context.Add(secondmeasure3);
             _context.Add(secondmeasure4);
+            var notesFooter = new TestHeader() { 
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                TestGroupID = footertgid,
+                SequencePosition = 1
+            };
+            _context.Add(notesFooter);
+            var docfooter = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                TestGroupID = footertgid,
+                SequencePosition = 2
+            };
+            _context.Add(docfooter);
             _context.SaveChanges();
 
         }
@@ -781,6 +895,13 @@ namespace PrototypeWithAuth.CRUD
                 TestOuterGroupID = handgripId,
                 SequencePosition = 2
             };
+            var footerGroup = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = handgripId,
+                SequencePosition = 3,
+            };
+            _context.Add(footerGroup);
             _context.Add(lefthandhandgrip);
             _context.Add(righthandhandgrip);
             _context.SaveChanges();
@@ -803,6 +924,7 @@ namespace PrototypeWithAuth.CRUD
             var righthandhandgripid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 2 && tg.TestOuterGroupID == handgripId).Select(tg => tg.TestGroupID).FirstOrDefault();
             var leftleglegextensionid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 1 && tg.TestOuterGroupID == legextesnionId).Select(tg => tg.TestGroupID).FirstOrDefault();
             var rightleglegextensionid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 2 && tg.TestOuterGroupID == legextesnionId).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var footerid = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId).Where(tg => tg.SequencePosition == 3 && tg.TestOuterGroupID == handgripId).Select(tg => tg.TestGroupID).FirstOrDefault();
             var firstmeasure1 = new TestHeader()
             {
                 Name = "First Measure",
@@ -867,6 +989,23 @@ namespace PrototypeWithAuth.CRUD
             _context.Add(secondmeasure2);
             _context.Add(secondmeasure3);
             _context.Add(secondmeasure4);
+            var notesFooter = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 1,
+                TestGroupID = footerid
+            };
+            _context.Add(notesFooter);
+            var docFooter = new TestHeader()
+            {
+                Name = "Notes",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                SequencePosition = 2,
+                TestGroupID = footerid
+            };
+            _context.Add(notesFooter);
+            _context.Add(docFooter);
             _context.SaveChanges();
 
         }
@@ -909,9 +1048,19 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 1
             };
             _context.Add(testgroup);
+            var footertestgroup = new TestGroup()
+            {
+                SequencePosition = 2,
+                Name = "Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID
+            };
+            _context.Add(footertestgroup);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                 .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var footerID = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var file = new TestHeader()
             {
                 Name = "File",
@@ -920,6 +1069,14 @@ namespace PrototypeWithAuth.CRUD
                 TestGroupID = tgId,
             };
             _context.Add(file);
+            var footerNotes = new TestHeader()
+            {
+                Name = "Notes",
+                SequencePosition = 1,
+                TestGroupID = footerID,
+                Type = AppUtility.DataTypeEnum.String.ToString()
+            };
+            _context.Add(footerNotes);
             await _context.SaveChangesAsync();
 
         }
@@ -1289,9 +1446,19 @@ namespace PrototypeWithAuth.CRUD
                 SequencePosition = 1
             };
             _context.Add(testgroup);
+            var footertestgroup = new TestGroup()
+            {
+                Name = "Footer",
+                SequencePosition = 2,
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID
+            };
+            _context.Add(footertestgroup);
             _context.SaveChanges();
             var tgId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
                 .Where(tg => tg.SequencePosition == 1).Select(tg => tg.TestGroupID).FirstOrDefault();
+            var footerId = _context.TestGroups.Where(tg => tg.TestOuterGroup.TestID == testId)
+                .Where(tg => tg.SequencePosition == 2).Select(tg => tg.TestGroupID).FirstOrDefault();
             var file1 = new TestHeader()
             {
                 Name = "Echogardiagram File",
@@ -1309,6 +1476,14 @@ namespace PrototypeWithAuth.CRUD
                 TestGroupID = tgId,
             };
             _context.Add(file2);
+            var notesFooter = new TestHeader()
+            {
+                SequencePosition = 1,
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                TestGroupID = footerId,
+                Name = "Notes"
+            };
+            _context.Add(notesFooter);
             await _context.SaveChangesAsync();
 
         }

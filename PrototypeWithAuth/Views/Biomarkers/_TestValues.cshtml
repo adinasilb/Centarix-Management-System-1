@@ -102,7 +102,7 @@
                     {
                         <div class="col-4 px-4">
                             <div class="row p-3">
-                                @{ var header1 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
+                                @{ var header1 = testgroups[0].TestHeaders.Where(th => th.SequencePosition == 1).FirstOrDefault();}
 
                                 <div class="row p-3">
                                     @{
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="row p-3">
-                                @{ var header2 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 2).FirstOrDefault();}
+                                @{ var header2 = testgroups[0].TestHeaders.Where(th => th.SequencePosition == 2).FirstOrDefault();}
 
                                 <div class="row p-3">
                                     @{
@@ -124,7 +124,7 @@
                                 </div>
                             </div>
                             <div class="row p-3">
-                                @{ var header5 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 5).FirstOrDefault();}
+                                @{ var header5 = testgroups[0].TestHeaders.Where(th => th.SequencePosition == 5).FirstOrDefault();}
 
                                 <div class="row p-3">
                                     @{
@@ -137,7 +137,7 @@
                         </div>
                         <div class="col-4 px-4">
                             <div class="row p-3">
-                                @{ var header3 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 3).FirstOrDefault();}
+                                @{ var header3 = testgroups[0].TestHeaders.Where(th => th.SequencePosition == 3).FirstOrDefault();}
 
                                 <div class="row p-3">
                                     @{
@@ -148,7 +148,7 @@
                                 </div>
                             </div>
                             <div class="row p-3">
-                                @{ var header4 = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders.Where(th => th.SequencePosition == 4).FirstOrDefault();}
+                                @{ var header4 = testgroups[0].TestHeaders.Where(th => th.SequencePosition == 4).FirstOrDefault();}
 
                                 <div class="row p-3">
                                     @{
@@ -326,7 +326,7 @@
                             </span>
                             <div class="row under-row-margin"></div>
                             <div class="row">
-                                @if (testoutergroup.TestGroups.Count == 2)
+                                @if (testoutergroup.TestGroups.Where(tg => tg.Name != "Footer").ToList().Count == 2)
                                 {
                                     @foreach (var testgroup in testoutergroup.TestGroups.OrderBy(tg => tg.SequencePosition))
                                     {
