@@ -82,7 +82,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirTestNew"), sqlServerOptions => sqlServerOptions.CommandTimeout(400));   
+                    Configuration.GetConnectionString("ElixirTestUpload"), sqlServerOptions => sqlServerOptions.CommandTimeout(400));   
             });
 
             services.AddControllersWithViews();
@@ -205,7 +205,7 @@ namespace PrototypeWithAuth
 
             //ChangePassword(serviceProvider).Wait();
 
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
 
             if (_hostEnvironment.IsDevelopment())
             {
@@ -213,7 +213,7 @@ namespace PrototypeWithAuth
                 WriteElixirStringsJsx();
             }
             //CreateRoles(serviceProvider).Wait();
-            CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer").Wait();
+            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer").Wait();
 
 
             //AddRoles(serviceProvider).Wait();
