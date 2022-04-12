@@ -164,7 +164,7 @@
                     {
                         <div class="col-8 px-4">
                             @{
-                                var orderedList = Model.Test.TestOuterGroups[0].TestGroups[0].TestHeaders
+                                var orderedList = testgroups[0].TestHeaders
                                     .OrderBy(th => th.SequencePosition).ToList();
                                 var fieldsOfOrderedList = orderedList.Where(ol => ol.Calculation == null).ToList();
                                 var calculationsOfOrderedList = orderedList.Where(ol => ol.Calculation != null).ToList();
@@ -328,7 +328,7 @@
                             <div class="row">
                                 @if (testoutergroup.TestGroups.Where(tg => tg.Name != "Footer").ToList().Count == 2)
                                 {
-                                    @foreach (var testgroup in testoutergroup.TestGroups.OrderBy(tg => tg.SequencePosition))
+                                    @foreach (var testgroup in testoutergroup.TestGroups.Where(tg => tg.Name != "Footer").OrderBy(tg => tg.SequencePosition))
                                     {
                                         <div class="col-6 m-2">
                                             <span class="biomarkers-color">@testgroup.Name</span>
@@ -355,7 +355,13 @@
         <div class="row under-row-margin">
             @if (Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer") != null)
             {
-                 var header1 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.File.ToString()).FirstOrDefault();
+                var header1 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.File.ToString()).FirstOrDefault();
+
+                if (header1 == null && Model.Test.TestOuterGroups.Count > 1)
+                {
+                    var header3 = Model.Test.TestOuterGroups[1].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.File.ToString()).FirstOrDefault();
+                    if (header3 != null) { header1 = header3; }
+                }
                 if (header1 != null)
                 {
                     <div class="col-3 p-3">
@@ -369,7 +375,16 @@
                     </div>
                 }
 
-                { var header2 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.String.ToString()).FirstOrDefault();
+                {
+                    var header2 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.String.ToString()).FirstOrDefault();
+                    if (header2 == null && Model.Test.TestOuterGroups.Count > 1)
+                    {
+                        var header4 = Model.Test.TestOuterGroups[1].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.String.ToString()).FirstOrDefault();
+                        if (header4 != null)
+                        {
+                            header2 = header4;
+                        }
+                    }
                     if (header2 != null)
                     {
                         <div class="col-5 p-3">

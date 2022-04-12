@@ -99,7 +99,8 @@ namespace PrototypeWithAuth.CRUD
             await _15InsertAgeReaderTest();
             await _16InsertProcedureDocTest();
             await _17InsertProcedureDocTest02();
-
+            await _18InsertAdverseEvents();
+            await _19InsertAdverseEvents();
 
         }
 
@@ -1729,5 +1730,125 @@ namespace PrototypeWithAuth.CRUD
 
         }
 
+        public async Task _18InsertAdverseEvents()
+        {
+            Test test = new Test()
+            {
+                Name = "Adverse Events",
+                SiteID = _context.Sites.Where(s => s.Name == "Centarix Biotech").Select(s => s.SiteID).FirstOrDefault()
+            };
+            _context.Add(test);
+            _context.SaveChanges();
+            var testId = _context.Tests.Where(t => t.Name == "Adverse Events").Select(t => t.TestID).FirstOrDefault();
+            var experimentTest = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            var experimentTest2 = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            _context.Add(experimentTest);
+            _context.Add(experimentTest2);
+            _context.SaveChanges();
+            var testoutergroup = new TestOuterGroup()
+            {
+                IsNone = true,
+                TestID = testId,
+                SequencePosition = 1
+            };
+            _context.Add(testoutergroup);
+            _context.SaveChanges();
+            var testgroup = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 1
+            };
+            _context.Add(testgroup);
+            await _context.SaveChangesAsync();
+            var tgID = testgroup.TestGroupID; 
+            var procDoc = new TestHeader()
+            {
+                Name = "File",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgID,
+            };
+            var procText = new TestHeader()
+            {
+                Name = "Details",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 2,
+                TestGroupID = tgID
+            };
+
+            _context.Add(procDoc);
+            _context.Add(procText);
+            await _context.SaveChangesAsync();
+        }
+        public async Task _19InsertAdverseEvents()
+        {
+            Test test = new Test()
+            {
+                Name = "Adverse Events",
+                SiteID = _context.Sites.Where(s => s.Name == "O2").Select(s => s.SiteID).FirstOrDefault()
+            };
+            _context.Add(test);
+            _context.SaveChanges();
+            var testId = test.TestID;
+            var experimentTest = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            var experimentTest2 = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            _context.Add(experimentTest);
+            _context.Add(experimentTest2);
+            _context.SaveChanges();
+            var testoutergroup = new TestOuterGroup()
+            {
+                IsNone = true,
+                TestID = testId,
+                SequencePosition = 1
+            };
+            _context.Add(testoutergroup);
+            _context.SaveChanges();
+            var testgroup = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 1
+            };
+            _context.Add(testgroup);
+            await _context.SaveChangesAsync();
+            var tgID = testgroup.TestGroupID;
+            var procDoc = new TestHeader()
+            {
+                Name = "File",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgID,
+            };
+            var procText = new TestHeader()
+            {
+                Name = "Details",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 2,
+                TestGroupID = tgID
+            };
+
+            _context.Add(procDoc);
+            _context.Add(procText);
+            await _context.SaveChangesAsync();
+        }
     }
 }

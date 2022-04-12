@@ -38,7 +38,7 @@
         </div>
         <div class="col-6">
             <div class="entries-header font-weight-medium text float-right">
-                Entry Number: <span class="biomarkers-color">@Model.ExperimentEntry.VisitNumber </span> |
+                Entry Number: <span class="biomarkers-color">@AppUtility.BiomarkerVisitTypes().Where(v => v.Int == Model.ExperimentEntry.VisitNumber).FirstOrDefault().String </span> |
                 Date: <span class="biomarkers-color">@Model.ExperimentEntry.DateTime.GetElixirDateFormat() </span>
                 <select asp-for="Guid" class="mdb-select custom select-dropdown form-control-plaintext" id="entries-list">
                     @foreach (var e in Model.ExperimentEntries)

@@ -483,6 +483,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             modelBuilder.Entity<TempRequestJson>().Property(t => t.Json).HasColumnType("ntext");
             modelBuilder.Entity<TempLinesJson>().Property(t => t.Json).HasColumnType("ntext");
+            modelBuilder.Entity<TestValue>().Property(t => t.Value).HasColumnType("ntext");
             modelBuilder.Entity<Protocol>().HasIndex(p => new { p.UniqueCode }).IsUnique();
             modelBuilder.Entity<ProtocolVersion>().HasIndex(p => new { p.ProtocolID, p.VersionNumber }).IsUnique();
             modelBuilder.Entity<ProtocolVersion>().Ignore(p => p.Name);

@@ -204,6 +204,19 @@ namespace PrototypeWithAuth.AppData
             return ure;
         }
 
+        public static List<StringWithInt> BiomarkerVisitTypes()
+        {
+            List<StringWithInt> visitList = new List<StringWithInt>
+            {
+                new StringWithInt(){ String="Early Termination", Int =-1},
+                new StringWithInt(){ String="Remote Visit", Int =-2}
+            };
+            for (var i = 1; i <= 10; i++)
+            {
+                visitList.Add(new StringWithInt() { String = i.ToString(), Int = i });
+            };
+            return visitList;
+        }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { None, NIS, USD }
         public enum PaymentsPopoverEnum
@@ -1021,7 +1034,7 @@ namespace PrototypeWithAuth.AppData
         public static bool GetPermissionsForPriceTabMarkReadonly(List<String> UserRoles, Request Request)
         {
             bool ReturnVal = false;
-            if(Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
+            if (Request.RequestStatusID == 3 && !UserRoles.Contains("RequestEditReceived"))
             {
                 ReturnVal = true;
             }
