@@ -442,7 +442,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         new TDViewModel()
                         {
-                             Value = ee.VisitNumber.ToString(),
+                             Value = AppUtility.BiomarkerVisitTypes().Where(v => v.Int.ToString()== ee.VisitNumber).FirstOrDefault().String,
                              Link = "Test",
                              ID = ee.ExperimentEntryID
                         },
@@ -460,7 +460,7 @@ namespace PrototypeWithAuth.Controllers
                         },
                         new TDViewModel()
                         {
-                             Value = ee.VisitNumber.ToString()
+                             Value = AppUtility.BiomarkerVisitTypes().Where(v => v.Int.ToString()== ee.VisitNumber).FirstOrDefault().String
                         }
                     }
                     );
@@ -471,27 +471,38 @@ namespace PrototypeWithAuth.Controllers
         public async Task<ActionResult> _NewEntry(int ID)
         {
             //var visits =
-            var visits = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
-            visits = visits == 0 ? 10 : visits;
+            //var visits = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
+            //var visits = AppUtility.BiomarkerVisitTypes().Select(x => x.StringName);
             //var lastVisitNum = 0;
-            var prevVisitNums = new List<int>();
+            var prevVisitNums = new List<string>();
             if (_participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.Experiment).Any())
             {
                 prevVisitNums = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.ExperimentEntries.Select(ee => ee.VisitNumber)).FirstOrDefault().ToList();
             }
 
             var visitList = new List<SelectListItem>();
-            for (int v = 1; v <= visits; v++)
+            foreach (var visit in AppUtility.BiomarkerVisitTypes())
             {
-                if (!prevVisitNums.Contains(v))
+                if ((visit.Int == -1 || visit.Int == -2)|| !prevVisitNums.Contains(visit.Int.ToString()))
                 {
                     visitList.Add(new SelectListItem()
                     {
-                        Text = v.ToString(),
-                        Value = v.ToString()
+                        Text = visit.String.ToString(),
+                        Value = visit.Int.ToString()
                     });
                 }
-            };
+            }
+            //for (int v = 1; v <= visits; v++)
+            //{
+            //    if (!prevVisitNums.Contains(v))
+            //    {
+            //        visitList.Add(new SelectListItem()
+            //        {
+            //            Text = v.ToString(),
+            //            Value = v.ToString()
+            //        });
+            //    }
+            //};
             NewEntryViewModel nevm = new NewEntryViewModel()
             {
                 Sites = _sitesProc.Read(),
@@ -501,6 +512,7 @@ namespace PrototypeWithAuth.Controllers
             };
             return PartialView(nevm);
         }
+
 
         [HttpPost]
         public async Task<ActionResult> _NewEntry(NewEntryViewModel newEntryViewModel)
@@ -559,16 +571,26 @@ namespace PrototypeWithAuth.Controllers
                 Guid = Guid.NewGuid(),
                 Tests = tests,
                 TestValues = testValues,
-                ExperimentEntries = _experimentEntriesProc.Read(new List<Expression<Func<ExperimentEntry, bool>>> { ee2 => ee2.ParticipantID == ee.ParticipantID })
-                                  .Select(
-                                      e => new SelectListItem
-                                      {
-                                          Text = "Entry " + e.VisitNumber + " - " + e.Site.Name,
-                                          Value = e.ExperimentEntryID.ToString()
-                                      }
-                                  ).ToList(),
                 FilesPrevFilled = filesPrevFilled
             };
+            var ExperimentEntriesList = _experimentEntriesProc.Read(new List<Expression<Func<ExperimentEntry, bool>>> { ee2 => ee2.ParticipantID == ee.ParticipantID },
+                new List<ComplexIncludes<ExperimentEntry, ModelBase>> { new ComplexIncludes<ExperimentEntry, ModelBase> { Include = e => e.Site } }).ToList();
+            //testViewModel.ExperimentEntries = new List<SelectListItem>();
+            //foreach (var entry in ExperimentEntriesList)
+            //{
+            //    testViewModel.ExperimentEntries.Add(new SelectListItem
+            //    {
+            //        Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int == entry.VisitNumber).FirstOrDefault().String + " - " + entry.Site.Name,
+            //        Value = entry.ExperimentEntryID.ToString()
+            //    });
+            //}
+            testViewModel.ExperimentEntries = ExperimentEntriesList.Select(
+                                     e => new SelectListItem
+                                     {
+                                         Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int.ToString() == e.VisitNumber).FirstOrDefault().String + " - " + e.Site.Name,
+                                         Value = e.ExperimentEntryID.ToString()
+                                     }
+                                 ).ToList();
             return View(testViewModel);
         }
 
@@ -768,9 +790,7 @@ namespace PrototypeWithAuth.Controllers
             StringWithBool ReturnVal = new StringWithBool();
             try
             {
-
-
-
+                await _biomarkersProc.RunScriptsAsync();
                 ReturnVal.SetStringAndBool(true, null);
             }
             catch (Exception ex)

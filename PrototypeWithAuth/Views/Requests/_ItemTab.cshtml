@@ -45,7 +45,7 @@
         + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
     var vendorCategories = AppUtility.ParentCategoryEnum.Consumables
-+ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
+//+ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Biological
 + " " + AppUtility.ParentCategoryEnum.Reusable
 + " " + AppUtility.ParentCategoryEnum.Clinical
@@ -227,7 +227,7 @@
             <div class="form-group">
                 @* IN MIDDLE *@
                 <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
+                <input value="@Model.Requests[0].Product.Vendor?.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled />
                 @*don't need a validation here because you it's not saving*@
             </div>
         </div>

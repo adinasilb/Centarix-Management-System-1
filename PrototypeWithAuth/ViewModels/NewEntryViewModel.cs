@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Date")]
         public DateTime Date { get; set; }
         public DateTime Date_submit { get { return Date; } set { Date = value; } }
-        public int VisitNumber { get; set; }
+        public string VisitNumber { get; set; }
         public int SiteID { get; set; }
         public IEnumerable<Site> Sites { get; set; }
         public int ParticipantID { get; set; }

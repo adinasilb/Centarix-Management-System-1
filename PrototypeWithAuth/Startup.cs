@@ -177,10 +177,13 @@ namespace PrototypeWithAuth
 
 
 
-            //ChangePassword(serviceProvider).Wait();
+            //AddRoleToUser(serviceProvider, "adinasilberberg@gmail.com", "Users").Wait();
+
+            CreateRoles(serviceProvider).Wait();
+            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
             //CreateRoles(serviceProvider).Wait();
-            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
+            //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer").Wait();
 
 
             //AddRoles(serviceProvider).Wait();
@@ -189,14 +192,15 @@ namespace PrototypeWithAuth
             //app.UseApplicationInsightsExceptionTelemetry();
         }
 
-        //private async Task ChangePassword(IServiceProvider serviceProvider)
-        //{
-        //    var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await _userManager.FindByEmailAsync("debbie@centarix.com");
-        //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-        //    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        //    var result = await _userManager.ResetPasswordAsync(user, code, "Centarix.2020");
-        //}
+        private async Task AddRoleToUser(IServiceProvider serviceProvider, string email, string rolename)
+        {
+            var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await _userManager.FindByEmailAsync(email);
+            var userResult = await _userManager.AddToRoleAsync(user, rolename);
+            //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            ////code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            //var result = await _userManager.ResetPasswordAsync(user, code, "Centarix.2020");
+        }
 
 
         //Seed database with new roles
@@ -217,15 +221,15 @@ namespace PrototypeWithAuth
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             List<string> roleNames = AppUtility.RequestRoleEnums().Select(x => x.RoleDefinition).ToList();
-            roleNames.Concat(AppUtility.OperationRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.ProtocolRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.BiomarkerRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.TimekeeperRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.LabManagementRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.AccountingRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.ReportsRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.IncomeRoleEnums().Select(x => x.RoleDefinition).ToList());
-            roleNames.Concat(AppUtility.UsersRoleEnums().Select(x => x.RoleDefinition).ToList());
+            roleNames = roleNames.Concat(AppUtility.OperationRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.ProtocolRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.BiomarkerRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.TimekeeperRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.LabManagementRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.AccountingRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.ReportsRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.IncomeRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
+            roleNames = roleNames.Concat(AppUtility.UsersRoleEnums().Select(x => x.RoleDefinition).ToList()).ToList();
 
             IdentityResult roleResult;
             //var roleCheck = await RoleManager.RoleExistsAsync("Admin");

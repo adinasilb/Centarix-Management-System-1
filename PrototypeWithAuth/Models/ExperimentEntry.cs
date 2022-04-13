@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.Models
         public DateTime DateTime { get; set; }
         public int ParticipantID { get; set; }
         public Participant Participant { get; set; }
-        public int VisitNumber { get; set; }
+        public string VisitNumber { get; set; }
         public string ApplicationUserID { get; set; }
         public Employee ApplicationUser { get; set; }
         public int SiteID { get; set; }

@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.Controllers
         protected readonly CRUD.ParentQuotesProc _parentQuotesProc;
         protected readonly CRUD.InvoicesProc _invoicesProc;
         protected readonly CRUD.CategoryBasesProc _categoryBasesProc;
+        protected readonly CRUD.BiomarkersProc _biomarkersProc;
 
         protected readonly CRUD.TestHeadersProc _testHeadersProc;
 
@@ -166,6 +167,7 @@ namespace PrototypeWithAuth.Controllers
             _invoicesProc = new CRUD.InvoicesProc(context);
             _categoryBasesProc = new CRUD.CategoryBasesProc(context);
             _testHeadersProc = new CRUD.TestHeadersProc(context);
+            _biomarkersProc = new CRUD.BiomarkersProc(context);
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)

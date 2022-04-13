@@ -32,7 +32,7 @@ namespace PrototypeWithAuth.CRUD
                     if (fieldTest.TestValueID != 0)
                     {
                         testValue = (TestValue)this.ReadOne(new List<Expression<Func<TestValue, bool>>> 
-                                                            { tv => tv.TestValueID == fieldTest.TestValueID });
+                                                            { tv => tv.TestValueID == fieldTest.TestValueID }).FirstOrDefault();
                     }
                     else
                     {
