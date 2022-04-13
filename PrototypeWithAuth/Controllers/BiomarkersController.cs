@@ -513,6 +513,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(nevm);
         }
 
+
         [HttpPost]
         public async Task<ActionResult> _NewEntry(NewEntryViewModel newEntryViewModel)
         {
@@ -572,23 +573,24 @@ namespace PrototypeWithAuth.Controllers
                 TestValues = testValues,
                 FilesPrevFilled = filesPrevFilled
             };
-            var ExperimentEntriesList = _experimentEntriesProc.Read(new List<Expression<Func<ExperimentEntry, bool>>> { ee2 => ee2.ParticipantID == ee.ParticipantID }).ToList();
-            testViewModel.ExperimentEntries = new List<SelectListItem>();
-            foreach (var entry in ExperimentEntriesList)
-            {
-                testViewModel.ExperimentEntries.Add(new SelectListItem
-                {
-                    Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int == entry.VisitNumber).FirstOrDefault().String + " - " + entry.Site.Name,
-                    Value = entry.ExperimentEntryID.ToString()
-                });
-            }
-             //testViewModel.ExperimentEntries = ExperimentEntriesList.Select(
-             //                         e => new SelectListItem
-             //                         {
-             //                             Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int == e.VisitNumber).FirstOrDefault().String + " - " + e.Site.Name,
-             //                             Value = e.ExperimentEntryID.ToString()
-             //                         }
-             //                     ).ToList() ;
+            var ExperimentEntriesList = _experimentEntriesProc.Read(new List<Expression<Func<ExperimentEntry, bool>>> { ee2 => ee2.ParticipantID == ee.ParticipantID },
+                new List<ComplexIncludes<ExperimentEntry, ModelBase>> { new ComplexIncludes<ExperimentEntry, ModelBase> { Include = e => e.Site } }).ToList();
+            //testViewModel.ExperimentEntries = new List<SelectListItem>();
+            //foreach (var entry in ExperimentEntriesList)
+            //{
+            //    testViewModel.ExperimentEntries.Add(new SelectListItem
+            //    {
+            //        Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int == entry.VisitNumber).FirstOrDefault().String + " - " + entry.Site.Name,
+            //        Value = entry.ExperimentEntryID.ToString()
+            //    });
+            //}
+            testViewModel.ExperimentEntries = ExperimentEntriesList.Select(
+                                     e => new SelectListItem
+                                     {
+                                         Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int == e.VisitNumber).FirstOrDefault().String + " - " + e.Site.Name,
+                                         Value = e.ExperimentEntryID.ToString()
+                                     }
+                                 ).ToList();
             return View(testViewModel);
         }
 

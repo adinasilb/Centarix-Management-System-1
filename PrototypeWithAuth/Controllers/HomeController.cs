@@ -210,7 +210,7 @@ namespace PrototypeWithAuth.Controllers
 
                     //instantiate the body builder
                     var builder = new BodyBuilder();                                                                                                                
-                    var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Email == "elixir@centarix.com" });
+                    var currentUser = await _employeesProc.ReadOneAsync(new List<Expression<Func<Employee, bool>>> { u => u.Email == "adina@centarix.com" });
                     string ownerEmail = currentUser.Email;
                     string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                     string ownerPassword = currentUser.SecureAppPass;

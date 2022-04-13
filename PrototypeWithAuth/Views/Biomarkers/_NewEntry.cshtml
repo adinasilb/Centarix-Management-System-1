@@ -33,7 +33,7 @@
                    m.VisitNumber,
                   Model.VisitNumbers,
                    optionLabel: "Select Visit",
-                   htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value", }
+                   htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext visits", @searchable = "default value", }
                    )
                         <span asp-validation-for="VisitNumber" class="text-danger-centarix"></span>
                     </div>
@@ -41,7 +41,22 @@
                 <div class="row under-row-margin">
                     <div class="col-12">
                         <label class="control-label">Site</label>
-                        @Html.DropDownListFor(
+                        <select class="mdb-select custom select-dropdown form-control-plaintext " searchable>
+                            @foreach (var site in Model.Sites)
+                            {
+                                {
+                                    if (site.Name.Contains("Remote"))
+                                    {
+                                        <option class="remote-hidden" value="@site.SiteID" style="display: none;">@site.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@site.SiteID">@site.Name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        @*@Html.DropDownListFor(
                         m =>
                    m.SiteID,
                   new SelectList(
@@ -50,7 +65,7 @@
                                             dataTextField: "Name"),
                    optionLabel: "Select Site",
                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value", }
-                   )
+                   )*@
                         <span asp-validation-for="SiteID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -69,6 +84,19 @@
 </div>
 
 <script>
+    $(".visits").on("click", function (e) {
+        e.preventDefault();
+        alert($(this).value);
+        var hiddenInput = $(".remote-hidden");
+        if (ParseFloat($(this).value) > 0) {
+            hiddenInput.css("display", "none");
+            console.log("hiding...");
+        }
+        else {
+            hiddenInput.css("display", "");
+            console.log("showing...");
+        }
+    });
     $(".cancel-add").on("click", function (e) {
         e.preventDefault();
         $.fn.CloseModal('new-entry');

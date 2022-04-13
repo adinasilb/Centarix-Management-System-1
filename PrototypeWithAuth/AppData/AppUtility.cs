@@ -209,7 +209,7 @@ namespace PrototypeWithAuth.AppData
             List<StringWithInt> visitList = new List<StringWithInt>
             {
                 new StringWithInt(){ String="Early Termination", Int =-1},
-                new StringWithInt(){ String="Remote Visit", Int =-2}
+                new StringWithInt(){ String="Unscheduled Visit", Int =-2}
             };
             for (var i = 1; i <= 10; i++)
             {

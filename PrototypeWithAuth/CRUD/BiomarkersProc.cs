@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.CRUD
             await _17InsertProcedureDocTest02();
             await _18InsertAdverseEvents();
             await _19InsertAdverseEvents();
-
+            await _20RemoteVisit();
         }
 
 
@@ -161,6 +161,16 @@ namespace PrototypeWithAuth.CRUD
                 PhoneNumber = "055-9876543"
             };
             _context.Add(O2);
+            Site Remote = new Site()
+            {
+                Name = "Remote Visit",
+                Line1Address = "",
+                City = "",
+                Country = "Jerusalem",
+                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PhoneNumber = ""
+            };
+            _context.Add(Remote);
             _context.SaveChanges();
         }
 
@@ -1832,6 +1842,65 @@ namespace PrototypeWithAuth.CRUD
             await _context.SaveChangesAsync();
             var tgID = testgroup.TestGroupID;
             var procDoc = new TestHeader()
+            {
+                Name = "File",
+                Type = AppUtility.DataTypeEnum.File.ToString(),
+                SequencePosition = 1,
+                TestGroupID = tgID,
+            };
+            var procText = new TestHeader()
+            {
+                Name = "Details",
+                Type = AppUtility.DataTypeEnum.String.ToString(),
+                SequencePosition = 2,
+                TestGroupID = tgID
+            };
+
+            _context.Add(procDoc);
+            _context.Add(procText);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task _20RemoteVisit()
+        {
+            Test test = new Test()
+            {
+                Name = "Remote Visit",
+                SiteID = _context.Sites.Where(s => s.Name.Contains("Remote")).FirstOrDefault().SiteID
+            };
+            _context.Add(test);
+            _context.SaveChanges();
+            var testId = test.TestID;
+            var experimentTest = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex1").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            var experimentTest2 = new ExperimentTest()
+            {
+                TestID = testId,
+                ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
+            };
+            _context.Add(experimentTest);
+            await _context.SaveChangesAsync();
+            var testoutergroup = new TestOuterGroup()
+            {
+                IsNone = true,
+                TestID = testId,
+                SequencePosition = 1
+            };
+            _context.Add(testoutergroup);
+            _context.SaveChanges();
+            var testgroup = new TestGroup()
+            {
+                Name = "Footer",
+                TestOuterGroupID = _context.TestOuterGroups.Where(tog => tog.TestID == testId)
+                    .Where(tog => tog.SequencePosition == 1).FirstOrDefault().TestOuterGroupID,
+                SequencePosition = 1
+            };
+            _context.Add(testgroup);
+            await _context.SaveChangesAsync();
+            var tgID = testgroup.TestGroupID; var procDoc = new TestHeader()
             {
                 Name = "File",
                 Type = AppUtility.DataTypeEnum.File.ToString(),
