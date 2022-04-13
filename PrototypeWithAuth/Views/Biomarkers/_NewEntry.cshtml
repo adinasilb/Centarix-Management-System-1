@@ -41,31 +41,31 @@
                 <div class="row under-row-margin">
                     <div class="col-12">
                         <label class="control-label">Site</label>
-                        <select class="mdb-select custom select-dropdown form-control-plaintext " searchable>
+                        <input type="hidden" asp-for="SiteID" />
+                        <select class="mdb-select custom select-dropdown form-control-plaintext sites regular-sites" searchable>
+                            @foreach (var site in Model.Sites.Where(s => !s.Name.Contains("Remote")))
+                            {
+                                <option value="@site.SiteID">@site.Name</option>
+
+                            }
+                        </select>
+                        <select class="mdb-select custom select-dropdown form-control-plaintext sites remote-sites hidden" searchable>
                             @foreach (var site in Model.Sites)
                             {
-                                {
-                                    if (site.Name.Contains("Remote"))
-                                    {
-                                        <option class="remote-hidden" value="@site.SiteID" style="display: none;">@site.Name</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@site.SiteID">@site.Name</option>
-                                    }
-                                }
+                                <option value="@site.SiteID">@site.Name</option>
+
                             }
                         </select>
                         @*@Html.DropDownListFor(
-                        m =>
-                   m.SiteID,
-                  new SelectList(
-                                            Model.Sites,
-                                            dataValueField: "SiteID",
-                                            dataTextField: "Name"),
-                   optionLabel: "Select Site",
-                   htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value", }
-                   )*@
+                                  m =>
+                             m.SiteID,
+                            new SelectList(
+                                                      Model.Sites,
+                                                      dataValueField: "SiteID",
+                                                      dataTextField: "Name"),
+                             optionLabel: "Select Site",
+                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext ", @searchable = "default value", }
+                             )*@
                         <span asp-validation-for="SiteID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -84,18 +84,24 @@
 </div>
 
 <script>
-    $(".visits").on("click", function (e) {
+    $("#VisitNumber").on("change", function (e) {
         e.preventDefault();
-        alert($(this).value);
-        var hiddenInput = $(".remote-hidden");
-        if (ParseFloat($(this).value) > 0) {
-            hiddenInput.css("display", "none");
+        var regularsites = $(".regular-sites");
+        var remotesites = $(".remote-sites");
+        if (parseFloat($(this).val()) > 0) {
+            remotesites.addClass("hidden");
+            regularsites.removeClass("hidden");
             console.log("hiding...");
         }
-        else {
-            hiddenInput.css("display", "");
+        else  {
+            remotesites.removeClass("hidden");
+            regularsites.addClass("hidden");
             console.log("showing...");
         }
+    });
+    $(".sites").on("change", function (e) {
+        e.preventDefault();
+        $("#SiteID").val($(this).val());
     });
     $(".cancel-add").on("click", function (e) {
         e.preventDefault();

@@ -442,7 +442,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         new TDViewModel()
                         {
-                             Value = AppUtility.BiomarkerVisitTypes().Where(v => v.Int== ee.VisitNumber).FirstOrDefault().String,
+                             Value = AppUtility.BiomarkerVisitTypes().Where(v => v.Int.ToString()== ee.VisitNumber).FirstOrDefault().String,
                              Link = "Test",
                              ID = ee.ExperimentEntryID
                         },
@@ -460,7 +460,7 @@ namespace PrototypeWithAuth.Controllers
                         },
                         new TDViewModel()
                         {
-                             Value = AppUtility.BiomarkerVisitTypes().Where(v => v.Int== ee.VisitNumber).FirstOrDefault().String
+                             Value = AppUtility.BiomarkerVisitTypes().Where(v => v.Int.ToString()== ee.VisitNumber).FirstOrDefault().String
                         }
                     }
                     );
@@ -474,7 +474,7 @@ namespace PrototypeWithAuth.Controllers
             //var visits = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.Experiment.AmountOfVisits).FirstOrDefault();
             //var visits = AppUtility.BiomarkerVisitTypes().Select(x => x.StringName);
             //var lastVisitNum = 0;
-            var prevVisitNums = new List<int>();
+            var prevVisitNums = new List<string>();
             if (_participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.Experiment).Any())
             {
                 prevVisitNums = _participantsProc.Read(new List<Expression<Func<Participant, bool>>> { p => p.ParticipantID == ID }).Select(p => p.ExperimentEntries.Select(ee => ee.VisitNumber)).FirstOrDefault().ToList();
@@ -483,7 +483,7 @@ namespace PrototypeWithAuth.Controllers
             var visitList = new List<SelectListItem>();
             foreach (var visit in AppUtility.BiomarkerVisitTypes())
             {
-                if ((visit.Int == -1 || visit.Int == -2)|| !prevVisitNums.Contains(visit.Int))
+                if ((visit.Int == -1 || visit.Int == -2)|| !prevVisitNums.Contains(visit.Int.ToString()))
                 {
                     visitList.Add(new SelectListItem()
                     {
@@ -587,7 +587,7 @@ namespace PrototypeWithAuth.Controllers
             testViewModel.ExperimentEntries = ExperimentEntriesList.Select(
                                      e => new SelectListItem
                                      {
-                                         Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int == e.VisitNumber).FirstOrDefault().String + " - " + e.Site.Name,
+                                         Text = "Entry " + AppUtility.BiomarkerVisitTypes().Where(v => v.Int.ToString() == e.VisitNumber).FirstOrDefault().String + " - " + e.Site.Name,
                                          Value = e.ExperimentEntryID.ToString()
                                      }
                                  ).ToList();
