@@ -555,6 +555,8 @@
     <Compile Remove="Data\Migrations\20220118114501_addedCBToContext.Designer.cs" />
     <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.cs" />
     <Compile Remove="Data\Migrations\20220119063031_addedCategoryJsons.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220424093659_testingAddedMigrations.cs" />
+    <Compile Remove="Data\Migrations\20220424093659_testingAddedMigrations.Designer.cs" />
   </ItemGroup>
 
 
