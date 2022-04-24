@@ -1,4 +1,5 @@
-﻿using Abp.Extensions;
+﻿
+using Abp.Extensions;
 using Microsoft.AspNetCore.Routing;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
@@ -212,7 +213,7 @@ namespace PrototypeWithAuth.AppData
                 case AppUtility.MenuItems.Income:
                     break;
                 case AppUtility.MenuItems.Biomarkers:
-                    ActiveClasses = " text-dark biomarkers-filter"; 
+                    ActiveClasses = " text-dark biomarkers-filter";
                     if (pageType == AppUtility.PageTypeEnum.BiomarkersExperiments) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
@@ -275,8 +276,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Settings",
-                        Controller = "Requests",
-                        Action = "SettingsInventory",
+                        //Controller = "Requests",
+                        //Action = "SettingsInventory",
                         RouteValues = new RouteValueDictionary(),
                         Classes = AllClasses
                     });
@@ -299,8 +300,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Workflow",
-                        Controller = "Protocols",
-                        Action = "CurrentProtocols",
+                        //Controller = "Protocols",
+                        //Action = "CurrentProtocols",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
@@ -313,8 +314,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Protocols",
-                        Controller = "Protocols",
-                        Action = "Index",
+                        //Controller = "Protocols",
+                        //Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsProtocols },
@@ -327,8 +328,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Create",
-                        Controller = "Protocols",
-                        Action = "ResearchProtocol",
+                        //Controller = "Protocols",
+                        //Action = "ResearchProtocol",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
@@ -355,8 +356,8 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Resources",
-                        Controller = "Protocols",
-                        Action = "Library",
+                        //Controller = "Protocols",
+                        //Action = "Library",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
@@ -926,7 +927,7 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string Classes = OrigClasses;
-            
+
             if (SidebarTitle == AppUtility.SidebarEnum.List) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
