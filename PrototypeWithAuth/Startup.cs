@@ -179,7 +179,7 @@ namespace PrototypeWithAuth
 
             //AddRoleToUser(serviceProvider, "adinasilberberg@gmail.com", "Users").Wait();
 
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
             //CreateAdminUser(serviceProvider, "adinasilberberg@gmail.com", "ElixirTestSA2063*", "Adina", "Gayer");
 
             //CreateRoles(serviceProvider).Wait();
