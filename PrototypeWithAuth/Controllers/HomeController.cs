@@ -151,7 +151,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (user.LastLogin.Date < DateTime.Today)
                     {
-                        orderLatesUpdated = await fillInOrderLate(user);
+                        orderLatesUpdated = await fillInOrderLate(user); 
                         if (orderLatesUpdated.Bool)
                         {
                             _employeesProc.UpdateLastLoginWithoutSaving(user.Id);
