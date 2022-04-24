@@ -19,7 +19,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "ShareRequestLists");
 
             migrationBuilder.DropColumn(
-                name: "ProtocolVersionID",
+                name: "ProtocolID",
                 table: "ShareProtocols");
 
             migrationBuilder.AlterColumn<int>(
@@ -51,11 +51,11 @@ namespace PrototypeWithAuth.Data.Migrations
                 column: "ObjectID");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ShareProtocols_ProtocolVersions_ObjectID",
+                name: "FK_ShareProtocols_Protocols_ObjectID",
                 table: "ShareProtocols",
                 column: "ObjectID",
-                principalTable: "ProtocolVersions",
-                principalColumn: "ProtocolVersionID",
+                principalTable: "Protocols",
+                principalColumn: "ProtocolID",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
@@ -86,7 +86,7 @@ namespace PrototypeWithAuth.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ShareProtocols_ProtocolVersions_ObjectID",
+                name: "FK_ShareProtocols_Protocols_ObjectID",
                 table: "ShareProtocols");
 
             migrationBuilder.DropForeignKey(
@@ -146,7 +146,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 oldClrType: typeof(int));
 
             migrationBuilder.AddColumn<int>(
-                name: "ProtocolVersionID",
+                name: "ProtocolID",
                 table: "ShareProtocols",
                 type: "int",
                 nullable: true);

@@ -75,9 +75,9 @@ namespace PrototypeWithAuth.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShareProtocols_ProtocolVersionID",
+                name: "IX_ShareProtocols_ProtocolID",
                 table: "ShareProtocols",
-                column: "ProtocolVersionID");
+                column: "ProtocolID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProtocolInstances_ProtocolVersionID",
@@ -198,7 +198,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 name: "ProtocolVersions");
 
             migrationBuilder.DropIndex(
-                name: "IX_ShareProtocols_ProtocolVersionID",
+                name: "IX_ShareProtocols_ProtocolID",
                 table: "ShareProtocols");
 
             migrationBuilder.DropIndex(

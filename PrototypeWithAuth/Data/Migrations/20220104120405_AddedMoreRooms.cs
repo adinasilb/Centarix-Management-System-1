@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
             migrationBuilder.DeleteData(
                 table: "LocationRoomInstances",
                 keyColumn: "LocationRoomInstanceID",
