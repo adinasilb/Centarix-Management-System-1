@@ -440,7 +440,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ShareProtocol>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ShareResource>().Property(sb => sb.TimeStamp).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<TestHeader>().HasIndex(th => new { th.SequencePosition, th.TestGroupID }).IsUnique();
-            modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
+            //modelBuilder.Entity<ExperimentEntry>().HasIndex(ee => new { ee.ParticipantID, ee.VisitNumber }).IsUnique();
             modelBuilder.Entity<Request>().HasIndex(r => r.SerialNumber).IsUnique();
             modelBuilder.Entity<Participant>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<ExperimentEntry>().Property(r => r.DateCreated).HasDefaultValueSql("getdate()");

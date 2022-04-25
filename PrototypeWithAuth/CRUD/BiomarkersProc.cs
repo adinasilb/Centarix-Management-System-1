@@ -147,7 +147,7 @@ namespace PrototypeWithAuth.CRUD
                 Line1Address = "Hamarpe 3",
                 City = "Har Hotzvim",
                 Country = "Jerusalem",
-                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PrimaryContactID = _context.Users.Where(u => u.Email == "itzhak@centarix.com").FirstOrDefault().Id,
                 PhoneNumber = "077-2634302"
             };
             _context.Add(Centarix);
@@ -157,7 +157,7 @@ namespace PrototypeWithAuth.CRUD
                 Line1Address = "",
                 City = "Har Hazofim",
                 Country = "Jerusalem",
-                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PrimaryContactID = _context.Users.Where(u => u.Email == "itzhak@centarix.com").FirstOrDefault().Id,
                 PhoneNumber = "055-9876543"
             };
             _context.Add(O2);
@@ -167,7 +167,7 @@ namespace PrototypeWithAuth.CRUD
                 Line1Address = "",
                 City = "",
                 Country = "Jerusalem",
-                PrimaryContactID = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault().Id,
+                PrimaryContactID = _context.Users.Where(u => u.Email == "itzhak@centarix.com").FirstOrDefault().Id,
                 PhoneNumber = ""
             };
             _context.Add(Remote);
