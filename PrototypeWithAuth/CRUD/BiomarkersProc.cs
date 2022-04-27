@@ -1882,6 +1882,7 @@ namespace PrototypeWithAuth.CRUD
                 ExperimentID = _context.Experiments.Where(e => e.ExperimentCode == "ex2").Select(e => e.ExperimentID).FirstOrDefault()
             };
             _context.Add(experimentTest);
+            _context.Add(experimentTest2);
             await _context.SaveChangesAsync();
             var testoutergroup = new TestOuterGroup()
             {
