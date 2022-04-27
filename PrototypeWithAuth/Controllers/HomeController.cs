@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.Controllers
             var user = await _employeesProc.ReadOneAsync( new List<System.Linq.Expressions.Expression<Func<Employee, bool>>> { e => e.Id==_userManager.GetUserId(User) }, 
                 new List<ComplexIncludes<Employee, ModelBase>> { new ComplexIncludes<Employee, ModelBase> { Include = e => e.SalariedEmployee } });
             var usersLoggedIn = _employeesProc.ReadOne(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>> { u => u.LastLogin.Date == DateTime.Today.Date }).Count();
-            var users =  _employeesProc.Read().ToList();
+            var users =  _employeesProc.Read(new List<Expression<Func<Employee, bool>>> { e => !e.IsSuspended}).ToList();
             HomePageViewModel viewModel = new HomePageViewModel();
 
             //RecurringJob.AddOrUpdate("DailyNotifications", () => DailyNotificationUpdate(users), Cron.Daily);
