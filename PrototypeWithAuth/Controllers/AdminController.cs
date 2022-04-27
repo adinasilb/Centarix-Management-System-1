@@ -391,7 +391,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {
             Employee userSelected = _employeesProc.Read(new List<System.Linq.Expressions.Expression<Func<Employee, bool>>>
-                { u => u.Id == id }).FirstOrDefault();
+                { u => u.Id == id }, new List<ComplexIncludes<Employee, ModelBase>>() { new ComplexIncludes<Employee, ModelBase>(){
+                Include = u => u.JobSubcategoryType.JobCategoryType } }).FirstOrDefault();
             if (userSelected != null)
             {
                 RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
