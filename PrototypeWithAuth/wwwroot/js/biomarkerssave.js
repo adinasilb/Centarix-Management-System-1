@@ -32,6 +32,8 @@
             editLabel.addClass("on")
             $('._testvalues input').attr("disabled", false);
             $('._testvalues input').removeClass("disabled");
+            $('._testvalues textarea').attr("readonly", false);
+            $('._testvalues textarea').removeClass("readonly");
         }
     });
 });

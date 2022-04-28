@@ -1762,6 +1762,8 @@
                     if ($(".edit-mode-input").hasClass("off")) {
                         $('._testvalues input').attr("disabled", true);
                         $('._testvalues input').addClass("disabled");
+                        $('._testvalues textarea').attr("readonly", true);
+                        $('._testvalues textarea').addClass("readonly");
                         $(".open-document-modal").attr("data-val", "false")
                     }
                 }

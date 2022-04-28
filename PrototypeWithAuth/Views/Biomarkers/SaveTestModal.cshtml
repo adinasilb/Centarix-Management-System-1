@@ -47,6 +47,8 @@
             $('.open-document-modal').attr("data-val", false);
             $('._testvalues input').attr("disabled", true);
             $('._testvalues input').addClass("disabled");
+            $('._testvalues textarea').attr("readonly", true);
+            $('._testvalues textarea').addClass("readonly");
             $('.open-document-modal').attr("showSwitch", "false")
             var selected = $(".biomarkers-test-name.selected");
             $.fn.CancelTest(selected);
@@ -92,6 +94,8 @@
                     $('.open-document-modal').attr("data-val", false);
                     $('._testvalues input').attr("disabled", true);
                     $('._testvalues input').addClass("disabled");
+                    $('._testvalues textarea').attr("readonly", true);
+                    $('._testvalues textarea').addClass("readonly");
                     $('.open-document-modal').attr("showSwitch", "false")
                 }
                 $.fn.CloseModal('save-bio-test-modal');

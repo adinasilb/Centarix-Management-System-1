@@ -59,6 +59,11 @@
                 <input asp-for="Bool" id="@BoolID" name="@BoolName" value="@Model.Bool" class="@Model.TestHeader.Name form-control-plaintext border-bottom test-field" />
                 <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
                 break;
+            case AppUtility.DataTypeEnum.LongText:
+                <label class="control-label text-transform-none">@Model.TestHeader.Name</label>
+                <textarea asp-for="String" id="@StringID" name="@StringName" value="@Model.String" class="@Model.TestHeader.Name mark-readonly form-control-plaintext border-bottom test-field" style=" height: 150px; overflow-y:scroll;"></textarea>
+                <span asp-validation-for="Bool" class="text-danger-centarix mark-readonly"></span>
+                break;
             case AppUtility.DataTypeEnum.File:
                 var hasFile = Model.HasFile ? " hasFile " : " ";
                 var iconFilter = Model.HasFile ? " biomarkers-filter " : " ";
@@ -122,6 +127,8 @@
         if ($(".edit-mode-input").hasClass("off")) {
             $('._testvalues input').attr("disabled", true);
             $('._testvalues input').addClass("disabled");
+            $('._testvalues textarea').attr("readonly", true);
+            $('._testvalues textarea').addClass("readonly");
             $(".open-document-modal").attr("data-val", "false")
 
         }

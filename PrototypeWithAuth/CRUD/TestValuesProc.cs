@@ -45,6 +45,7 @@ namespace PrototypeWithAuth.CRUD
                             testValue.Value = fieldTest.Double.ToString();
                             break;
                         case AppUtility.DataTypeEnum.String:
+                        case AppUtility.DataTypeEnum.LongText:
                             testValue.Value = fieldTest.String;
                             break;
                         case AppUtility.DataTypeEnum.DateTime:

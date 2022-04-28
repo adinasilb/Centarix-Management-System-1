@@ -39,6 +39,7 @@
                         fieldViewModel.Double = Convert.ToDouble(dbl);
                         break;
                     case AppUtility.DataTypeEnum.String:
+                    case AppUtility.DataTypeEnum.LongText:
                         var str = data == null ? "" : data;
                         fieldViewModel.String = str;
                         break;
@@ -376,10 +377,10 @@
                 }
 
                 {
-                    var header2 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.String.ToString()).FirstOrDefault();
+                    var header2 = Model.Test.TestOuterGroups[0].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.LongText.ToString()).FirstOrDefault();
                     if (header2 == null && Model.Test.TestOuterGroups.Count > 1)
                     {
-                        var header4 = Model.Test.TestOuterGroups[1].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.String.ToString()).FirstOrDefault();
+                        var header4 = Model.Test.TestOuterGroups[1].TestGroups.Where(tg => tg.Name == "Footer")?.FirstOrDefault()?.TestHeaders.Where(th => th.Type == AppUtility.DataTypeEnum.LongText.ToString()).FirstOrDefault();
                         if (header4 != null)
                         {
                             header2 = header4;
@@ -387,7 +388,7 @@
                     }
                     if (header2 != null)
                     {
-                        <div class="col-5 p-3">
+                        <div class="col-9 p-3 h-100">
                             @{var fieldViewModel2 = GetFieldViewModel(header2, listNumber);
                                 listNumber++;
                                 await Html.RenderPartialAsync("_FieldView", fieldViewModel2);

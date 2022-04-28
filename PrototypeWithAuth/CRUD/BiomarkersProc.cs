@@ -311,7 +311,7 @@ namespace PrototypeWithAuth.CRUD
                 Name = "Notes",
                 TestGroupID = _context.TestGroups.Where(tg => tg.SequencePosition == 4).FirstOrDefault().TestGroupID,
                 SequencePosition = 1,
-                Type = AppUtility.DataTypeEnum.String.ToString()
+                Type = AppUtility.DataTypeEnum.LongText.ToString()
             };
             _context.Add(fileFooter);
             TestHeader notesFooter = new TestHeader()
@@ -419,7 +419,7 @@ namespace PrototypeWithAuth.CRUD
             var notes = new TestHeader()
             {
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 1,
                 TestGroupID = footerId
             };
@@ -555,7 +555,7 @@ namespace PrototypeWithAuth.CRUD
                 Name = "Notes",
                 SequencePosition = 1,
                 TestGroupID = footerId,
-                Type = AppUtility.DataTypeEnum.String.ToString()
+                Type = AppUtility.DataTypeEnum.LongText.ToString()
             };
             var docFooter = new TestHeader()
             {
@@ -669,7 +669,7 @@ namespace PrototypeWithAuth.CRUD
             var notesFooter = new TestHeader()
             {
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 1,
                 TestGroupID = footertgid
             };
@@ -835,7 +835,7 @@ namespace PrototypeWithAuth.CRUD
             _context.Add(secondmeasure4);
             var notesFooter = new TestHeader() { 
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 TestGroupID = footertgid,
                 SequencePosition = 1
             };
@@ -1003,7 +1003,7 @@ namespace PrototypeWithAuth.CRUD
             var notesFooter = new TestHeader()
             {
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 1,
                 TestGroupID = footerid
             };
@@ -1085,7 +1085,7 @@ namespace PrototypeWithAuth.CRUD
                 Name = "Notes",
                 SequencePosition = 1,
                 TestGroupID = footerID,
-                Type = AppUtility.DataTypeEnum.String.ToString()
+                Type = AppUtility.DataTypeEnum.LongText.ToString()
             };
             _context.Add(footerNotes);
             await _context.SaveChangesAsync();
@@ -1165,7 +1165,7 @@ namespace PrototypeWithAuth.CRUD
             var notes = new TestHeader()
             {
                 Name="Notes",
-                Type=AppUtility.DataTypeEnum.String.ToString(),
+                Type=AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 1,
                 TestGroupID = tgIdFooter
             };
@@ -1246,7 +1246,7 @@ namespace PrototypeWithAuth.CRUD
             var notesFooter = new TestHeader()
             {
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 1,
                 TestGroupID = tgFooterId
             };
@@ -1327,7 +1327,7 @@ namespace PrototypeWithAuth.CRUD
             var footerNotes = new TestHeader()
             {
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 1,
                 TestGroupID = tgIdFooter
             };
@@ -1408,7 +1408,7 @@ namespace PrototypeWithAuth.CRUD
             var footerNotes = new TestHeader()
             {
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 1,
                 TestGroupID = tgIdFooter
             };
@@ -1490,7 +1490,7 @@ namespace PrototypeWithAuth.CRUD
             var notesFooter = new TestHeader()
             {
                 SequencePosition = 1,
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 TestGroupID = footerId,
                 Name = "Notes"
             };
@@ -1598,7 +1598,7 @@ namespace PrototypeWithAuth.CRUD
             var notesFooter = new TestHeader()
             {
                 Name = "Notes",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 2,
                 TestGroupID = tgIdfooter
             };
@@ -1667,7 +1667,7 @@ namespace PrototypeWithAuth.CRUD
             var procText = new TestHeader()
             {
                 Name = "Details",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 2,
                 TestGroupID = tgId
             };
@@ -1729,7 +1729,7 @@ namespace PrototypeWithAuth.CRUD
             var procText = new TestHeader()
             {
                 Name = "Details",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 2,
                 TestGroupID = tgId
             };
@@ -1791,7 +1791,7 @@ namespace PrototypeWithAuth.CRUD
             var procText = new TestHeader()
             {
                 Name = "Details",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 2,
                 TestGroupID = tgID
             };
@@ -1851,7 +1851,7 @@ namespace PrototypeWithAuth.CRUD
             var procText = new TestHeader()
             {
                 Name = "Details",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 2,
                 TestGroupID = tgID
             };
@@ -1911,7 +1911,7 @@ namespace PrototypeWithAuth.CRUD
             var procText = new TestHeader()
             {
                 Name = "Details",
-                Type = AppUtility.DataTypeEnum.String.ToString(),
+                Type = AppUtility.DataTypeEnum.LongText.ToString(),
                 SequencePosition = 2,
                 TestGroupID = tgID
             };

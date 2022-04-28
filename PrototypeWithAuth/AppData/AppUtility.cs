@@ -266,7 +266,7 @@ namespace PrototypeWithAuth.AppData
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocols, RequestLists, Product, ParentQuote, ParentRequest, Payment, RequestComment, ProductComment, RequestNotification }
         public enum GlobalInfoType { ExchangeRate, TimekeeperNotificationUpdated, BirthdayNotificationUpdated, LoginUpdates, LastProtocolLine }
-        public enum DataTypeEnum { String, Double, DateTime, Bool, File }
+        public enum DataTypeEnum { String, Double, DateTime, Bool, File, LongText }
         public enum DataCalculation { None, BMI }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
